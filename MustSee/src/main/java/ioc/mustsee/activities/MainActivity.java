@@ -48,29 +48,31 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private static final int GALLERY = 7;
     private static final int PHOTO = 8;
     private static final int HALF_MAP = 9;
-    // Fragments per controlar
+    private static final int MAP = 10;
     public MyMapFragment fragmentAmbMapa;
     FragmentTransaction transaction;
     boolean isMapFragmentVisible = false;
     boolean isListFragmentVisible = false;
+    // Fragments per controlar
     private FrameLayout containerOne;
     private FrameLayout containerTwo;
-    private FrameLayout containerThree;
     private MyListFragment fragmentAmbLlista;
-    private LinkedList<Integer> actions = new LinkedList<Integer>();
+    //private LinkedList<Integer> actions = new LinkedList<Integer>();
     private LinkedList<Boolean> isFrameTwoVisible = new LinkedList<Boolean>();
-
+    private LinkedList<Integer[]> actionList = new LinkedList<Integer[]>();
 
     private boolean pantallaCompleta = false;
 
-    // Locs
+    // Llocs
     private List<Lloc> llocs;
 
     // Categories
     private List<Categoria> categories;
 
     // Gestio de llocs
-    private Lloc current;
+    private Lloc currentLloc;
+    private Categoria currentCategoria;
+
     private List<Lloc> llocsFiltrats;
 
     // En quest bundle s'emmagatzemma la informació que es pasa entre fragments
@@ -213,7 +215,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = false;
                 container = CONTAINER_TWO;
-                Log.d(TAG, "Abriendo detalle para: " + current.nom);
+                Log.d(TAG, "Abriendo detalle para: " + currentLloc.nom);
                 break;
 
             case GALLERY:
@@ -237,20 +239,14 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         }
 
         // Reemplacem el fragment
-        //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Log.d(TAG, "Transaction: " + transaction);
-        Log.d(TAG, "Container: " + container);
-        Log.d(TAG, "Fragment: " + fragment);
+
         transaction.replace(container, fragment);
-        //transaction.addToBackStack(null);
-        //transaction.commit();
 
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -289,24 +285,19 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         Log.d(TAG, "Eligiendo acción: " + action);
         switch (action) {
             case OnFragmentActionListener.ACTION_MAIN:
-                actions.add(action);
+                //actions.add(action);
                 setFragment(MAIN);
                 isFrameTwoVisible.add(false);
+                actionList.add(new Integer[]{MAIN});
                 break;
 
             case OnFragmentActionListener.ACTION_LOG:
-                actions.add(action);
+                //actions.add(action);
                 setFragment(LOGIN);
                 isFrameTwoVisible.add(false);
+                actionList.add(new Integer[]{LOGIN});
                 break;
 
-            case OnFragmentActionListener.ACTION_BACK:
-                actions.removeLast();
-                System.out.println(actions);
-                isFrameTwoVisible.removeLast();
-                setFragment(actions.getLast());
-                Log.d(TAG, "Volviendo al fragmento anterior");
-                break;
 
             case OnFragmentActionListener.ACTION_EXPLORE:
                 // actions.add(action); // No afegim l'acció
@@ -314,49 +305,54 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 isFrameTwoVisible.add(false);
                 isMapFragmentVisible = true;
                 setFragment(FULL_MAP);
-
+                actionList.add(new Integer[]{MAP});
                 break;
 
             case OnFragmentActionListener.ACTION_SEARCH:
-                //actions.add(action);
                 isMapFragmentVisible = true;
                 isListFragmentVisible = true;
                 isFrameTwoVisible.add(true);
                 setFragment(LIST);
                 setFragment(HALF_MAP);
+                actionList.add(new Integer[]{LIST, MAP});
                 break;
 
             case OnFragmentActionListener.ACTION_DETAIL:
-                actions.add(action);
                 isListFragmentVisible = true;
                 isFrameTwoVisible.add(true);
+                if (actionList.getLast()[0] != LIST) {
+                    setFragment(LIST);
+                    Log.d(TAG, "Añadimos la lista al detalle");
+                }
                 setFragment(DETAIL);
+                actionList.add(new Integer[]{LIST, DETAIL});
                 break;
 
             case OnFragmentActionListener.ACTION_GALLERY:
                 Log.d(TAG, "Acción: Gallery");
-                actions.add(action);
                 setFragment(GALLERY);
                 isFrameTwoVisible.add(false);
+                actionList.add(new Integer[]{GALLERY});
                 break;
 
             case OnFragmentActionListener.ACTION_PHOTO:
                 Log.d(TAG, "Acción: Photo");
-                actions.add(action);
                 setFragment(PHOTO);
                 isFrameTwoVisible.add(false);
+                actionList.add(new Integer[]{PHOTO});
                 break;
         }
 
         //Finalitzem la transacció
-
         finishTransaction(guardarAlBackStack);
+        Log.d(TAG, "Elementos en el back de acciones: " + actionList.size());
+        Log.d(TAG, "Elementos en el back de visbilidad: " + isFrameTwoVisible.size());
     }
+
 
     @Override
     public List<Lloc> getLlocs() {
-
-        Log.d(TAG, "Devolviendo el lloc actual: " + llocs);
+        Log.d(TAG, "Devolviendo los llocs actual: " + llocs);
         return llocs;
     }
 
@@ -373,13 +369,15 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     @Override
     public void setLlocsFiltrats(List<Lloc> llocsFiltrats) {
         this.llocsFiltrats = llocsFiltrats;
-        if (fragmentAmbMapa != null && isMapFragmentVisible) {
+        if (fragmentAmbMapa != null) {
+            //if (fragmentAmbMapa != null && isMapFragmentVisible) {
+            //if (fragmentAmbMapa != null && isMapFragmentVisible) {
             Log.d(TAG, "Pasando de Main al fragmento de mapa la lista: " + llocsFiltrats.size());
             fragmentAmbMapa.updateMarkers(llocsFiltrats);
         } else {
-            Log.d(TAG, "No hay fragmento de mapa");
+            Log.d(TAG, "No hay fragmento de mapa? " + fragmentAmbMapa);
+            Log.d(TAG, "Es visible? " + isMapFragmentVisible);
         }
-
     }
 
     @Override
@@ -389,34 +387,53 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
     @Override
     public Lloc getLlocActual() {
-        Log.d(TAG, "Devolviendo el lloc actual: " + current);
-        return current;
+        Log.d(TAG, "Devolviendo el lloc actual: " + currentLloc);
+        return currentLloc;
     }
 
     @Override
     public void setLlocActual(Lloc lloc) {
         Log.d(TAG, "Estableciendo lloc actual, es correcto?");
+        currentLloc = lloc;
 
-        current = lloc;
+
+        // Comprovamos la vista de accion actual
+        Integer[] acciones = actionList.getLast();
+
         // Si hay abierto un fragmento de mapa centra el mapa en este lloc
-        if (fragmentAmbMapa != null && isMapFragmentVisible) {
+        if (acciones[0] == MAP || (acciones.length > 1 && acciones[1] == MAP)) {
             Log.d(TAG, "Existe un fragmento de mapa, haciendo setFocus a: " + lloc.nom);
-            Log.d(TAG, "Existe un fragmento de mapa, es visible? isMapFragmentVisible");
+            Log.d(TAG, "Existe un fragmento de mapa, es visible?" + isMapFragmentVisible);
             fragmentAmbMapa.setFocus(lloc);
-        } else if (fragmentAmbLlista != null && isListFragmentVisible) {
+        } else {
+            Log.d(TAG, "NO EXISTE MAPA");
+        }
+
+        if (acciones.length > 1 && acciones[1] == DETAIL) {
             Log.d(TAG, "Existe un fragmento de lista y no hay mapa, debe haber fragmento de detalle. ");
             OnActionDetected(ACTION_DETAIL);
         }
 
-        if (fragmentAmbLlista != null && isListFragmentVisible) {
-            Log.d(TAG, "Existe un fragmento de lista, haciendo setSelected a: " + lloc.nom);
+        if (acciones[0] == LIST) {
+            Log.d(TAG, "La acción es LIST, Existe un fragmento de lista, haciendo setSelected a: " + lloc.nom);
             fragmentAmbLlista.setSelected(lloc);
         }
+
+    }
+
+    @Override
+    public Categoria getCategoriaActual() {
+        return currentCategoria;
+    }
+
+    @Override
+    public void setCategoriaActual(Categoria categoria) {
+        this.currentCategoria = categoria;
     }
 
     @Override
     public void refreshLlocActual() {
-        setLlocActual(current);
+        setLlocActual(currentLloc);
     }
 
     // Esborrar despres de les proves
@@ -513,10 +530,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
 
-    @Override
-    public void deleteMapFragment() {
-        fragmentAmbMapa = null;
-    }
 
     @Override
     public void onResume() {
@@ -525,9 +538,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     private void restoreLastVisible() {
-        if (isFrameTwoVisible.isEmpty()) return;
 
+        if (isFrameTwoVisible.isEmpty()) return;
         isFrameTwoVisible.removeLast();
+
         if (isFrameTwoVisible.getLast()) {
             containerTwo.setVisibility(View.VISIBLE);
         } else {
@@ -540,9 +554,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (!actionList.isEmpty()) actionList.removeLast();
         restoreLastVisible();
         Log.d(TAG, "pulsado ATRAS");
+        super.onBackPressed();
     }
 
 }

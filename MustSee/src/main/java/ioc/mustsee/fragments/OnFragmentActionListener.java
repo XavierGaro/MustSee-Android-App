@@ -35,8 +35,10 @@ public interface OnFragmentActionListener {
 
     void setLlocsFiltrats(List<Lloc> llocs);
 
-    void refreshLlocActual();
+    Categoria getCategoriaActual();
 
-    void deleteMapFragment();
+    void setCategoriaActual(Categoria categoria);
+
+    void refreshLlocActual();
 
 }

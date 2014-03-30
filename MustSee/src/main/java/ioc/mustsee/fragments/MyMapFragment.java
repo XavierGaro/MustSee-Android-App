@@ -153,7 +153,7 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         if (marker != null) marker.showInfoWindow();
 
         Toast.makeText(getActivity(), "Has cliclado en el marcador de: " + mMarkersToLloc.get(marker).nom, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Entrando de setFocus:" + lloc.nom);
+        Log.d(TAG, "Saliendo de setFocus:" + lloc.nom);
     }
 
 
@@ -234,90 +234,6 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         Log.d(TAG, "Entrando en onInfoWindoclick: " + marker);
         mCallback.OnActionDetected(ACTION_DETAIL);
     }
-
-    /*
-    @Override
-    public void onDestroyView() {
-
-        Fragment fragment = (getChildFragmentManager().findFragmentById(R.id.mapFragment));
-        android.support.v4.app.FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-
-        Log.d(TAG, "Existe el fragmento de mapa? "+fragment);
-
-        if (fragment != null) {
-            Log.d(TAG, "Existe el fragmento de mapa, los eliminamos");
-            try {
-                //FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment);
-                ft.commit();
-                //ft.commit(); // No se puede hacer el commit aquí, lo dejamos pendiente hasta que lo envie la actividad principal
-
-
-            } catch (Exception e) {
-                // TODO esto no se puede dejar así
-                Log.e(TAG, "Error al destruir el fragmento: " + e);
-            }
-        } else {
-            Log.d(TAG, "El fragmento es null");
-
-        }
-
-        super.onDestroyView();
-
-    }
-
-
-        /*
-        Fragment fragment = (getChildFragmentManager().findFragmentById(R.id.mapFragment));
-        android.support.v4.app.FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-
-        if (fragment != null) {
-            Log.d(TAG, "Existe el fragmento de mapa, los eliminamos");
-            try {
-                //FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment);
-                //ft.commit(); // No se puede hacer el commit aquí, lo dejamos pendiente hasta que lo envie la actividad principal
-
-
-            } catch (Exception e) {
-                // TODO esto no se puede dejar así
-                Log.e(TAG, "Error al destruir el fragmento: " + e);
-            }
-        } else {
-            Log.d(TAG, "El fragmento es null");
-        }
-
-
-        /*
-        Fragment fragment = (getFragmentManager().findFragmentById(R.id.mMapFragment));
-
-        if (fragment != null) {
-            Log.d(TAG, "El fragmento NO es null");
-            try {
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment);
-                ft.commit();
-                Log.d(TAG, "Fragmento destruido");
-            } catch (Exception e) {
-                // TODO esto no se puede dejar así
-                Log.e(TAG, "Error al destruir el fragmento");
-            }
-        } else {
-            Log.d(TAG, "El fragmento es null");
-        }
-
-        Log.d(TAG, "Saliendo de onDestroyView");
-*/
-        /*
-
-
-
-        // TODO: mMap es un fragmento nested en otro fragmento, por eso da tantos problemas
-        mCallback.deleteMapFragment();
-        mMap = null;
-        mMapFragment = null;
-        mMarkersToLloc.clear();
-*/
 
 
     @Override

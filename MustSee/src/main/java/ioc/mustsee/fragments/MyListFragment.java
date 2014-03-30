@@ -38,24 +38,17 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
 
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_list, null);
+            initWidgets();
         }
-        /*
-        // Inflate the layout for this fragment
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_list, container, false);
-        }*/
 
-        // Aqui se inicializarian los widgets
         return mView;
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void initWidgets() {
+        Log.d(TAG, "Iniciando Widgets");
         // Afegim les categories al spinner
         categories = mCallback.getCategories();
-        spinnerCategories = (MySpinner) getActivity().findViewById(R.id.spinnerCategoria);
+        spinnerCategories = (MySpinner) mView.findViewById(R.id.spinnerCategoria);
         spinnerCategories.setOnItemSelectedListener(this);
         spinnerCategories.setOnItemSelectedEvenIfUnchangedListener(this);
         adapterCategories = new CategoriaArrayAdapter(getActivity(), categories);
@@ -63,31 +56,28 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
 
         // Afegim els llocs a la list mView
         llocs = mCallback.getLlocs();
-        listViewLlocs = (ListView) getActivity().findViewById(R.id.listViewLlocs);
+        listViewLlocs = (ListView) mView.findViewById(R.id.listViewLlocs);
         listViewLlocs.setOnItemClickListener(this);
         adapterLlocs = new LlocArrayAdapter(getActivity(), llocs);
         listViewLlocs.setAdapter(adapterLlocs);
-        listViewLlocs.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.d(TAG, "Tenemos focus?" + hasFocus);
-                Lloc lloc = (Lloc) listViewLlocs.getSelectedItem();
-                if (!hasFocus && lloc != null) {
-                    mCallback.setLlocActual(lloc);
-                    Log.d(TAG, "Restablecemos el lloc actual despues de restablecer el focus");
-                }
-            }
-        });
+        Log.d(TAG, "Fin de Iniciando Widgets");
+
+    }
+
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "Entrando en onResume");
+        super.onResume();
+        Log.d(TAG, "Saliendo de onResume");
+
     }
 
     // Spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int catId = categories.get(position).id;
-        Log.d(TAG, "Seleccionado: " + categories.get(position).nom);
-        Log.d(TAG, "Categoria: " + categories.get(position).id);
-
-        Log.d(TAG, "Llista de llocs principal: " + llocs.size());
+        Log.d(TAG, "onItemSelected: " + categories.get(position).nom);
 
         if (catId == 0) {
             // Selecciona tot
@@ -95,9 +85,6 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         } else {
             adapterLlocs.getFilter().filter(String.valueOf(catId));
         }
-
-        // TODO: Comprovar si la selecció actual encara està a la llista, i si està marcarla com seleccionada
-
     }
 
 
@@ -111,13 +98,19 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     // List View
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // Establecemos como seleccionado
+        // Establecemos el item como seleccionado
         view.setSelected(true);
         Log.d(TAG, "Está seleccionado? " + view.isSelected());
 
         Lloc selected = (Lloc) parent.getItemAtPosition(position);
         Lloc current = mCallback.getLlocActual();
         Log.d(TAG, "Se ha cliclado el sitio: " + selected.nom);
+        if (current != null) {
+            Log.d(TAG, "El sitio actual es : " + current.nom);
+
+        } else {
+            Log.d(TAG, "El sitio actual es : null");
+        }
 
         // Si el sitio ya está en selected muestra el detalle
         if (current == null || selected.id != current.id) {

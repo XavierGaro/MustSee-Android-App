@@ -30,21 +30,10 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Log.d(TAG, "onCreate de " + TAG);
+        Log.d(TAG, "onCreateView de " + TAG);
 
         mView = inflater.inflate(R.layout.fragment_main, null);
-        // Inflate the layout for this fragment
-
-        /*
-        if (mView == null) {
-            Log.d(TAG, "La mView es null " + mView);
-            mView = inflater.inflate(R.layout.fragment_main, container, false);
-        } else {
-            Log.d(TAG, "La mView es NO es null " + mView);
-        }
-*/
-        initWidgets(mView);
+        initWidgets();
 
         Log.d(TAG, "devolviendo mView de " + TAG + " : " + mView);
         return mView;
@@ -57,20 +46,19 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     }
 
 
-    private void initWidgets(View v) {
+    private void initWidgets() {
         Log.d(TAG, "Inicialitzat widtegs de " + TAG);
-        imageButtonLog = (ImageButton) v.findViewById(R.id.imageButtonLog);
+        imageButtonLog = (ImageButton) mView.findViewById(R.id.imageButtonLog);
         imageButtonLog.setOnClickListener(this);
-        textViewLog = (TextView) v.findViewById(R.id.textViewLog);
+        textViewLog = (TextView) mView.findViewById(R.id.textViewLog);
 
-
-        imageButtonSearch = (ImageButton) v.findViewById(R.id.imageButtonSearch);
+        imageButtonSearch = (ImageButton) mView.findViewById(R.id.imageButtonSearch);
         imageButtonSearch.setOnClickListener(this);
-        textViewSearch = (TextView) v.findViewById(R.id.textViewSearch);
+        textViewSearch = (TextView) mView.findViewById(R.id.textViewSearch);
 
-        imageButtonExplore = (ImageButton) v.findViewById(R.id.imageButtonExplore);
+        imageButtonExplore = (ImageButton) mView.findViewById(R.id.imageButtonExplore);
         imageButtonExplore.setOnClickListener(this);
-        textViewExplore = (TextView) v.findViewById(R.id.textViewExplore);
+        textViewExplore = (TextView) mView.findViewById(R.id.textViewExplore);
         Log.d(TAG, "Widgedts inicializados de " + TAG);
     }
 
