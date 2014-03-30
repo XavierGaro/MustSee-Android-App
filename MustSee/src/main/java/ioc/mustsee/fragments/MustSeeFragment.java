@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 public class MustSeeFragment extends Fragment {
     private static final String TAG = "MustSeeFragment";
@@ -68,7 +69,6 @@ public class MustSeeFragment extends Fragment {
 
         // Si no eliminamos la vista, al hacer atras de detalle a mapa falla.
 
-        /*
         if (mView != null) {
             ViewGroup parentViewGroup = (ViewGroup) mView.getParent();
             Log.d(TAG, "parentViewGroup es null?: " + parentViewGroup);
@@ -78,10 +78,10 @@ public class MustSeeFragment extends Fragment {
                 Log.d(TAG, "Numero de childs despues de eliminar: " + parentViewGroup.getChildCount());
             }
         }
-*/
 
         Log.d(TAG, "Saliendo de onDestroyView: " + fragmentId);
         // Update en activity main la visibilidad de los fragmentos
+
 
         return;
     }

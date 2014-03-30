@@ -38,4 +38,5 @@ public interface OnFragmentActionListener {
     void refreshLlocActual();
 
     void deleteMapFragment();
+
 }

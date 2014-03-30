@@ -12,7 +12,7 @@ import android.widget.TextView;
 import ioc.mustsee.R;
 import ioc.mustsee.data.Usuario;
 
-import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_BACK;
+import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_MAIN;
 import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_REGISTER;
 
 public class LoginFragment extends MustSeeFragment implements View.OnClickListener {
@@ -68,11 +68,11 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
             Log.d(TAG, "Iniciando proceso de autenticación");
             if (autenticar()) {
                 // Si s'ha autenticat correctament tornem enrere.
-                mCallback.OnActionDetected(ACTION_BACK);
+                mCallback.OnActionDetected(ACTION_MAIN);
             }
 
         } else if (v == imageButtonCancel) {
-            mCallback.OnActionDetected(ACTION_BACK);
+            mCallback.OnActionDetected(ACTION_MAIN);
             Log.d(TAG, "Cancelando");
 
         } else if (v == textViewRegister) {

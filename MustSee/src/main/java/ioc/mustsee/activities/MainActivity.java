@@ -58,6 +58,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private FrameLayout containerThree;
     private MyListFragment fragmentAmbLlista;
     private LinkedList<Integer> actions = new LinkedList<Integer>();
+    private LinkedList<Boolean> isFrameTwoVisible = new LinkedList<Boolean>();
 
 
     // Locs
@@ -290,16 +291,19 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
             case OnFragmentActionListener.ACTION_MAIN:
                 actions.add(action);
                 setFragment(MAIN);
+                isFrameTwoVisible.add(false);
                 break;
 
             case OnFragmentActionListener.ACTION_LOG:
                 actions.add(action);
                 setFragment(LOGIN);
+                isFrameTwoVisible.add(false);
                 break;
 
             case OnFragmentActionListener.ACTION_BACK:
                 actions.removeLast();
                 System.out.println(actions);
+                isFrameTwoVisible.removeLast();
                 setFragment(actions.getLast());
                 Log.d(TAG, "Volviendo al fragmento anterior");
                 break;
@@ -307,6 +311,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
             case OnFragmentActionListener.ACTION_EXPLORE:
                 // actions.add(action); // No afegim l'acció
                 Log.d(TAG, "Cargando mapa");
+                isFrameTwoVisible.add(false);
                 isMapFragmentVisible = true;
                 setFragment(FULL_MAP);
 
@@ -316,6 +321,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 //actions.add(action);
                 isMapFragmentVisible = true;
                 isListFragmentVisible = true;
+                isFrameTwoVisible.add(true);
                 setFragment(LIST);
                 setFragment(HALF_MAP);
                 break;
@@ -323,6 +329,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
             case OnFragmentActionListener.ACTION_DETAIL:
                 actions.add(action);
                 isListFragmentVisible = true;
+                isFrameTwoVisible.add(true);
                 setFragment(DETAIL);
                 break;
 
@@ -330,12 +337,14 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 Log.d(TAG, "Acción: Gallery");
                 actions.add(action);
                 setFragment(GALLERY);
+                isFrameTwoVisible.add(false);
                 break;
 
             case OnFragmentActionListener.ACTION_PHOTO:
                 Log.d(TAG, "Acción: Photo");
                 actions.add(action);
                 setFragment(PHOTO);
+                isFrameTwoVisible.add(false);
                 break;
         }
 
@@ -503,6 +512,27 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     public void onResume() {
         super.onResume();
         Log.d("TAG", "Llamado onResume");
+    }
+
+    private void restoreLastVisible() {
+        if (isFrameTwoVisible.isEmpty()) return;
+
+        isFrameTwoVisible.removeLast();
+        if (isFrameTwoVisible.getLast()) {
+            containerTwo.setVisibility(View.VISIBLE);
+        } else {
+            containerTwo.setVisibility(View.GONE);
+        }
+
+        Log.d(TAG, "isMapFragmentVisible?" + isMapFragmentVisible);
+        Log.d(TAG, "isListFragmentVisible?" + isListFragmentVisible);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        restoreLastVisible();
+        Log.d(TAG, "pulsado ATRAS");
     }
 
 }
