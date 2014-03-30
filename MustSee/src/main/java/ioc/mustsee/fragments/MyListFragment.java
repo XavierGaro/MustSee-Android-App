@@ -23,7 +23,6 @@ import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_DETAIL;
 
 public class MyListFragment extends MustSeeFragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final String TAG = "MyListFragment";
-    View view;
     private ListView listViewLlocs;
     private MySpinner spinnerCategories;
     private List<Lloc> llocs;
@@ -40,17 +39,17 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
                              Bundle savedInstanceState) {
 
 
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_list, null);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_list, null);
         }
         /*
         // Inflate the layout for this fragment
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_list, container, false);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_list, container, false);
         }*/
 
         // Aqui se inicializarian los widgets
-        return view;
+        return mView;
     }
 
 
@@ -65,7 +64,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         adapterCategories = new CategoriaArrayAdapter(getActivity(), categories);
         spinnerCategories.setAdapter(adapterCategories);
 
-        // Afegim els llocs a la list view
+        // Afegim els llocs a la list mView
         llocs = mCallback.getLlocs();
         listViewLlocs = (ListView) getActivity().findViewById(R.id.listViewLlocs);
         listViewLlocs.setOnItemClickListener(this);

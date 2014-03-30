@@ -11,7 +11,7 @@ import ioc.mustsee.R;
 
 public class PhotoFragment extends MustSeeFragment {
     private static final String TAG = "GalleryFragment";
-    View view;
+    View mView;
     private ImageView picture;
 
     public PhotoFragment(int fragmentId) {
@@ -23,20 +23,20 @@ public class PhotoFragment extends MustSeeFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        view = inflater.inflate(R.layout.fragment_photo, null);
+        mView = inflater.inflate(R.layout.fragment_photo, null);
 
         Log.d(TAG, "inflando layout foto");
 
         /*
-        if (view == null) {
+        if (mView == null) {
 
-            view = inflater.inflate(R.layout.fragment_photo, container, false);
+            mView = inflater.inflate(R.layout.fragment_photo, container, false);
         }
         */
 
-        initWidgets(view);
+        initWidgets(mView);
 
-        return view;
+        return mView;
     }
 
     private void initWidgets(View v) {

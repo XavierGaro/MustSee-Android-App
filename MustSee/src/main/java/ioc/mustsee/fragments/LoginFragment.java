@@ -22,7 +22,6 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     ImageButton imageButtonLogin;
     ImageButton imageButtonCancel;
     TextView textViewRegister;
-    View view;
 
     // Datos
     Usuario usuario = null;
@@ -37,19 +36,19 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
                              Bundle savedInstanceState) {
 
 
-        view = inflater.inflate(R.layout.fragment_login, null);
+        mView = inflater.inflate(R.layout.fragment_login, null);
         // Inflate the layout for this fragment
 
         /*
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_login, container, false);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_login, container, false);
 
         }
         */
 
-        initWidgets(view);
+        initWidgets(mView);
 
-        return view;
+        return mView;
     }
 
     private void initWidgets(View v) {

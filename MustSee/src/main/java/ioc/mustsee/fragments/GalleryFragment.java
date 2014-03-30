@@ -20,7 +20,7 @@ import ioc.mustsee.ui.ImageItem;
 
 public class GalleryFragment extends MustSeeFragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "GalleryFragment";
-    View view;
+
     private GridView gridView;
     private GridViewAdapter customGridAdapter;
 
@@ -35,15 +35,15 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
         Log.d(TAG, "inflando layout galeria");
 
 
-        view = inflater.inflate(R.layout.fragment_gallery, null);
+        mView = inflater.inflate(R.layout.fragment_gallery, null);
 /*
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_gallery, container, false);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_gallery, container, false);
         }
 */
 
-        initWidgets(view);
-        return view;
+        initWidgets(mView);
+        return mView;
     }
 
     private void initWidgets(View v) {

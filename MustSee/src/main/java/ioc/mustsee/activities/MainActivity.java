@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     // Contenidors de Fragments
     private static final int CONTAINER_ONE = R.id.containerOne;
     private static final int CONTAINER_TWO = R.id.containerTwo;
-    private static final int CONTAINER_THREE = R.id.containerThree;
+
 
     // Referencia per llençar Fragments
     private static final int MAIN = 0;
@@ -103,7 +103,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private void initWidgets() {
         containerOne = (FrameLayout) findViewById(R.id.containerOne);
         containerTwo = (FrameLayout) findViewById(R.id.containerTwo);
-        containerThree = (FrameLayout) findViewById(R.id.containerThree);
     }
 
     private void setFragment(int id) {
@@ -161,30 +160,32 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
         switch (id) {
             case MAIN:
-                fragment = new MainFragment(CONTAINER_THREE);
+                fragment = new MainFragment(CONTAINER_ONE);
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = true;
-                container = CONTAINER_THREE;
+                container = CONTAINER_ONE;
                 break;
 
             case LOGIN:
-                fragment = new LoginFragment(CONTAINER_THREE);
+                fragment = new LoginFragment(CONTAINER_ONE);
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = true;
-                container = CONTAINER_THREE;
+                container = CONTAINER_ONE;
                 break;
 
             case FULL_MAP:
                 // TODO mover esto al final del mètodo
                 fragment = new MyMapFragment(R.id.mapFragment);
+                //fragment = new MyMapFragment(CONTAINER_ONE);
                 pantallaCompleta = true;
-                container = CONTAINER_THREE;
+                container = CONTAINER_ONE;
                 fragmentAmbMapa = (MyMapFragment) fragment;
                 Log.d(TAG, "Añadido el fragmento con mapa: " + fragmentAmbMapa);
                 break;
 
             case HALF_MAP:
                 fragment = new MyMapFragment(R.id.mapFragment);
+                //fragment = new MyMapFragment(CONTAINER_TWO);
                 pantallaCompleta = false;
                 container = CONTAINER_TWO;
                 fragmentAmbMapa = (MyMapFragment) fragment;
@@ -211,31 +212,27 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
             case GALLERY:
                 Log.d(TAG, "Estableciendo fragmento galería:");
-                fragment = new GalleryFragment(CONTAINER_THREE);
+                fragment = new GalleryFragment(CONTAINER_ONE);
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = true;
-                container = CONTAINER_THREE;
+                container = CONTAINER_ONE;
                 break;
 
             case PHOTO:
                 Log.d(TAG, "Estableciendo fragmento photo");
-                fragment = new PhotoFragment(CONTAINER_THREE);
+                fragment = new PhotoFragment(CONTAINER_ONE);
                 //fragment.setArguments(getIntent().getExtras());
                 fragment.setArguments(bundle);
                 pantallaCompleta = true;
-                container = CONTAINER_THREE;
+                container = CONTAINER_ONE;
                 break;
         }
 
         // Ocultem el segon contenidor si no es necessari
         if (pantallaCompleta) {
-            containerOne.setVisibility(View.GONE);
             containerTwo.setVisibility(View.GONE);
-            containerThree.setVisibility(View.VISIBLE);
         } else {
-            containerOne.setVisibility(View.VISIBLE);
             containerTwo.setVisibility(View.VISIBLE);
-            containerThree.setVisibility(View.GONE);
         }
 
         // Reemplacem el fragment
@@ -501,4 +498,11 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     public void deleteMapFragment() {
         fragmentAmbMapa = null;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("TAG", "Llamado onResume");
+    }
+
 }

@@ -22,6 +22,7 @@
         tools:context="ioc.mustsee.activities.MainActivity"
         tools:ignore="MergeRootFrame" />
 
+    <!--
     <FrameLayout
         android:id="@+id/containerThree"
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
         android:layout_weight="1"
         android:visibility="gone"
         tools:context="ioc.mustsee.activities.MainActivity"
-        tools:ignore="MergeRootFrame" />
+        tools:ignore="MergeRootFrame" /-->
 
 
 </LinearLayout>

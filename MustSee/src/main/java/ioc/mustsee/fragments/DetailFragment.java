@@ -24,7 +24,6 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     ImageView imageViewPicture;
     TextView textViewDescription;
     ListView listViewComments;
-    View view;
     private Lloc mLloc;
     private Categoria mCategoria;
 
@@ -38,18 +37,18 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         Log.d(TAG, "Entrando en onCreateView");
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_detail, null);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_detail, null);
         }
         /*
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_detail, container, false);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_detail, container, false);
         }*/
 
-        initWidgets(view);
+        initWidgets(mView);
         carregarDetall();
 
-        return view;
+        return mView;
     }
 
     private void initWidgets(View v) {
@@ -99,7 +98,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         textViewDescription.setText(mLloc.descripcio);
         textViewCategory.setText(mCategoria.nom);
 
-        Log.d(TAG, "Existe la view? " + imageViewPicture);
+        Log.d(TAG, "Existe la mView? " + imageViewPicture);
         Log.d(TAG, "Existe al menos una imagen? " + mLloc.getImatgePrincipal());
         imageViewPicture.setImageBitmap(mLloc.getImatgePrincipal().carregarImatge(getActivity()));
 

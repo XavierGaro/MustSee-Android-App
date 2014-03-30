@@ -24,7 +24,7 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     TextView textViewLog;
     TextView textViewSearch;
     TextView textViewExplore;
-    View view;
+
     private boolean autenticat = false;
 
     public MainFragment(int fragmentId) {
@@ -37,21 +37,21 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
 
         Log.d(TAG, "onCreate de " + TAG);
 
-        view = inflater.inflate(R.layout.fragment_main, null);
+        mView = inflater.inflate(R.layout.fragment_main, null);
         // Inflate the layout for this fragment
 
         /*
-        if (view == null) {
-            Log.d(TAG, "La view es null " + view);
-            view = inflater.inflate(R.layout.fragment_main, container, false);
+        if (mView == null) {
+            Log.d(TAG, "La mView es null " + mView);
+            mView = inflater.inflate(R.layout.fragment_main, container, false);
         } else {
-            Log.d(TAG, "La view es NO es null " + view);
+            Log.d(TAG, "La mView es NO es null " + mView);
         }
 */
-        initWidgets(view);
+        initWidgets(mView);
 
-        Log.d(TAG, "devolviendo view de " + TAG + " : " + view);
-        return view;
+        Log.d(TAG, "devolviendo mView de " + TAG + " : " + mView);
+        return mView;
     }
 
     @Override
