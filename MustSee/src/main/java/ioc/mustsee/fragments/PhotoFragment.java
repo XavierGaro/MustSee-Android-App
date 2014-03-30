@@ -43,7 +43,7 @@ public class PhotoFragment extends MustSeeFragment {
         Log.d(TAG, "Se han pasado los argumentos: " + bundle.getInt("PHOTO"));
 
         picture = (ImageView) v.findViewById(R.id.imageViewPicture);
-        picture.setImageBitmap(mCallback.getLlocActual().getImages().get(bundle.getInt("PHOTO")).carregarImatge(getActivity()));
+        picture.setImageBitmap(mCallback.getCurrentLloc().getImages().get(bundle.getInt("PHOTO")).carregarImatge(getActivity()));
 
     }
 

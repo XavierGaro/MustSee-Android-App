@@ -103,7 +103,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         Log.d(TAG, "Está seleccionado? " + view.isSelected());
 
         Lloc selected = (Lloc) parent.getItemAtPosition(position);
-        Lloc current = mCallback.getLlocActual();
+        Lloc current = mCallback.getCurrentLloc();
         Log.d(TAG, "Se ha cliclado el sitio: " + selected.nom);
         if (current != null) {
             Log.d(TAG, "El sitio actual es : " + current.nom);
@@ -116,7 +116,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         if (current == null || selected.id != current.id) {
             Log.d(TAG, "Estableciendo como actual: " + selected.nom);
             // Centra el sitio en la pantalla y muestra su info (en el principal,aquí solo se setea)
-            mCallback.setLlocActual(selected);
+            mCallback.setCurrentLloc(selected);
         } else {
             Log.d(TAG, "Se debería mostrar detalle de: " + selected.nom);
             // TODO: cambiar la vista de mapa a detalle

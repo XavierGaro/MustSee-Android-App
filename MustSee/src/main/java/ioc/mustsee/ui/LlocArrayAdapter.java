@@ -192,7 +192,7 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
             Log.d(TAG, "Llista de llocs filtrats: " + llocsFiltrats.size());
             // Pasamos la lista filtrada al principal
 
-            ((OnFragmentActionListener) context).setLlocsFiltrats(llocsFiltrats);
+            ((OnFragmentActionListener) context).setFilteredLlocs(llocsFiltrats);
             Log.d(TAG, "Pasando la lista de llosFiltrats: " + llocsFiltrats.size());
             //throw new UnsupportedOperationException();
         }

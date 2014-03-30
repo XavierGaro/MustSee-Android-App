@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,11 +31,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     // Directoris
     public static final String PICTURES_DIRECTORY = "galerias/";
     private static final String TAG = "MainActivity";
-    // Contenidors de Fragments
-    private static final int CONTAINER_ONE = R.id.containerOne;
-    private static final int CONTAINER_TWO = R.id.containerTwo;
-
-
     // Referencia per llençar Fragments
     private static final int MAIN = 0;
     private static final int LOGIN = 1;
@@ -46,518 +40,445 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private static final int DETAIL = 5;
     private static final int FULL_MAP = 6;
     private static final int GALLERY = 7;
-    private static final int PHOTO = 8;
+    private static final int PICTURE = 8;
     private static final int HALF_MAP = 9;
     private static final int MAP = 10;
-    public MyMapFragment fragmentAmbMapa;
-    FragmentTransaction transaction;
-    boolean isMapFragmentVisible = false;
-    boolean isListFragmentVisible = false;
-    // Fragments per controlar
-    private FrameLayout containerOne;
-    private FrameLayout containerTwo;
-    private MyListFragment fragmentAmbLlista;
-    //private LinkedList<Integer> actions = new LinkedList<Integer>();
-    private LinkedList<Boolean> isFrameTwoVisible = new LinkedList<Boolean>();
-    private LinkedList<Integer[]> actionList = new LinkedList<Integer[]>();
 
-    private boolean pantallaCompleta = false;
+    // Per controlar els fragments
+    private FrameLayout mContainerOne;
+    private FrameLayout mContainerTwo;
+    private MyListFragment mListFragment;
+    private MyMapFragment mMapFragment;
+    private FragmentTransaction mTransaction;
+    private LinkedList<Integer[]> mActionHistory = new LinkedList<Integer[]>();
+    private boolean mFullScreen = false;
 
-    // Llocs
-    private List<Lloc> llocs;
+    // Dades
+    private List<Lloc> mLlocs;
+    private List<Categoria> mCategories;
 
-    // Categories
-    private List<Categoria> categories;
+    // Dades seleccionades
+    private Lloc mCurrentLloc;
+    private Categoria mCurrentCategoria;
+    private List<Lloc> mFilteredLlocs;
 
-    // Gestio de llocs
-    private Lloc currentLloc;
-    private Categoria currentCategoria;
-
-    private List<Lloc> llocsFiltrats;
-
-    // En quest bundle s'emmagatzemma la informació que es pasa entre fragments
-    private Bundle bundle;
+    // En aquest mBundle s'emmagatzeman les dades que es pasen entre fragments
+    private Bundle mBundle;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "MainActivity onCreate");
 
+        // Si s'esta restaurant un estat previ no fem res per evitar que es superposin els fragments.
+        if (savedInstanceState != null) return;
 
-        // If we're being restored from a previous state,
-        // then we don't need to do anything and should return or else
-        // we could end up with overlapping fragments.
-        if (savedInstanceState != null) {
-            return;
-        }
-
+        // Inicialitzem els widgets
         initWidgets();
 
-        // TODO: Això es només per les proves
-        // Afegim els llocs
+        // TODO: Això es només per les proves. Carreguem les dades
         initCategories();
         initLlocs();
         initImatges();
 
-        // Cridem a la acció principal
+        // Cridem a la acció principal per carregar el primer fragment.
         OnActionDetected(ACTION_MAIN);
     }
 
+    /**
+     * Inicialitza els contenidors on carregarem els fragments.
+     */
     private void initWidgets() {
-        containerOne = (FrameLayout) findViewById(R.id.containerOne);
-        containerTwo = (FrameLayout) findViewById(R.id.containerTwo);
+        mContainerOne = (FrameLayout) findViewById(R.id.containerOne);
+        mContainerTwo = (FrameLayout) findViewById(R.id.containerTwo);
     }
 
-    private void setFragment(int id) {
-        if (containerTwo == null) {
-            setFragmentSinglePane(id);
-        } else {
-            setFragmentDuePane(id);
-        }
-
-
+    /**
+     * Estableix quin fragment s'ha de carregar segons si la interficie esta composada per un panell
+     * o per dos. TODO: Afegir el control per i la crida al mètode per quan només hi hagi un panell.
+     *
+     * @param reference referencia del tipus de panell que volem carregar.
+     */
+    private void loadFragment(int reference) {
+        loadFragmentDuePane(reference);
     }
 
-    private void setFragmentSinglePane(int id) {
-                    /* TODO ignoramos el modo SinglePane
-
-        Log.d(TAG, "Un Fragment");
+    /**
+     * Carrega el fragment en la posició adecuada per la configuració de dos panells. En el cas del
+     * mapa i la llista també els emmagatzema per poder cridar-los des de altres punts de la
+     * activitat.
+     *
+     * @param reference referencia del tipus de panell que volem carregar.
+     */
+    private void loadFragmentDuePane(int reference) {
         Fragment fragment = null;
+        int container = R.id.containerOne;
+        mFullScreen = true;
 
-        switch (id) {
-
+        switch (reference) {
             case MAIN:
                 fragment = new MainFragment();
-                fragment.setArguments(getIntent().getExtras());
                 break;
 
             case LOGIN:
                 fragment = new LoginFragment();
-                fragment.setArguments(getIntent().getExtras());
                 break;
 
             case FULL_MAP:
                 fragment = new MyMapFragment();
-                fragment.setArguments(getIntent().getExtras());
-                break;
-
-        }
-
-        // Reemplacem el fragment
-        // TODO: afegir animació al canviar els fragments setCustomAnimations()
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(CONTAINER_ONE, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-
-                */
-
-    }
-
-    private void setFragmentDuePane(int id) {
-        Log.d(TAG, "Dos Fragments");
-        Fragment fragment = null;
-        int container = 0;
-
-
-        switch (id) {
-            case MAIN:
-                fragment = new MainFragment();
-                //fragment = new MainFragment(CONTAINER_ONE);
-                //fragment.setArguments(getIntent().getExtras());
-                pantallaCompleta = true;
-                container = CONTAINER_ONE;
-                break;
-
-            case LOGIN:
-                //fragment = new LoginFragment(CONTAINER_ONE);
-                fragment = new LoginFragment();
-                //fragment.setArguments(getIntent().getExtras());
-                pantallaCompleta = true;
-                container = CONTAINER_ONE;
-                break;
-
-            case FULL_MAP:
-                // TODO mover esto al final del mètodo
-                fragment = new MyMapFragment();
-                //fragment = new MyMapFragment(CONTAINER_ONE);
-                pantallaCompleta = true;
-                container = CONTAINER_ONE;
-                fragmentAmbMapa = (MyMapFragment) fragment;
-                Log.d(TAG, "Añadido el fragmento con mapa: " + fragmentAmbMapa);
+                mMapFragment = (MyMapFragment) fragment;
                 break;
 
             case HALF_MAP:
                 fragment = new MyMapFragment();
-                //fragment = new MyMapFragment(CONTAINER_TWO);
-                pantallaCompleta = false;
-                container = CONTAINER_TWO;
-                fragmentAmbMapa = (MyMapFragment) fragment;
-                Log.d(TAG, "Añadido el fragmento con mapa: " + fragmentAmbMapa);
+                mFullScreen = false;
+                container = R.id.containerTwo;
+                mMapFragment = (MyMapFragment) fragment;
                 break;
 
-
             case LIST:
-                //fragment = new MyListFragment(CONTAINER_ONE);
                 fragment = new MyListFragment();
-                //fragment.setArguments(getIntent().getExtras());
-                pantallaCompleta = false;
-                container = CONTAINER_ONE;
-                fragmentAmbLlista = (MyListFragment) fragment;
-                // fragmentAmbMapa =null; lo mantiene si lo hay
+                mFullScreen = false;
+                mListFragment = (MyListFragment) fragment;
                 break;
 
             case DETAIL:
                 fragment = new DetailFragment();
-                //fragment = new DetailFragment(CONTAINER_TWO);
-                //fragment.setArguments(getIntent().getExtras());
-                pantallaCompleta = false;
-                container = CONTAINER_TWO;
-                Log.d(TAG, "Abriendo detalle para: " + currentLloc.nom);
+                mFullScreen = false;
+                container = R.id.containerTwo;
                 break;
 
             case GALLERY:
-                Log.d(TAG, "Estableciendo fragmento galería:");
-                //fragment = new GalleryFragment(CONTAINER_ONE);
                 fragment = new GalleryFragment();
-                //fragment.setArguments(getIntent().getExtras());
-                pantallaCompleta = true;
-                container = CONTAINER_ONE;
                 break;
 
-            case PHOTO:
-                Log.d(TAG, "Estableciendo fragmento photo");
-                //fragment = new PhotoFragment(CONTAINER_ONE);
+            case PICTURE:
                 fragment = new PhotoFragment();
-                //fragment.setArguments(getIntent().getExtras());
-                fragment.setArguments(bundle);
-                pantallaCompleta = true;
-                container = CONTAINER_ONE;
+                fragment.setArguments(mBundle);
                 break;
         }
 
-        // Reemplacem el fragment
-
-        transaction.replace(container, fragment);
-
+        // Reemplacem el fragment al contenidor apropiat.
+        mTransaction.replace(container, fragment);
     }
 
 
+    /**
+     * Infla el menú de la ActionBar.
+     *
+     * @param menu menu a inflar.
+     * @return true sempre.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
+    /**
+     * Listener pels items de la ActionBar.
+     *
+     * @param item item seleccionat
+     * @return true si s'ha consumit la selecció o fals en cas contrari.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        if (id == R.id.action_settings) return true;
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO: Al iniciar las transacciones de fragmentos hacer el commit para todas a la vez, comprovar si es posible.
+    /**
+     * Métode cridat pels fragments adjuntats a aquesta activitat per comunicar-se amb ella. Accepta
+     * un bundle amb la informació extra necessaria per portar a terme l'acció.
+     *
+     * @param action acció a portar a terme.
+     * @param bundle dades necesaries per portar a terme la acció.
+     */
     @Override
     public void OnActionDetected(int action, Bundle bundle) {
-        //Actualitzem el bundle
-        this.bundle = bundle;
+        this.mBundle = bundle;
         OnActionDetected(action);
     }
 
+    /**
+     * Métode cridat pels fragments adjuntats a aquesta activitat per comunicar-se amb ella. En
+     * aquest cas no accepta informació extra.
+     *
+     * @param action acció a portar a terme.
+     */
     @Override
     public void OnActionDetected(int action) {
-        // Inciem la transacció per canviar els fragments
-        transaction = getSupportFragmentManager().beginTransaction();
-        boolean guardarAlBackStack = true;
+        // TODO: Per el moment sempre es guarden totes les accions al BackStack
+        boolean addToBackStack = true;
 
-        isMapFragmentVisible = false;
-        isListFragmentVisible = false;
-        // Reaccionamos según la acción recibida
 
-        Log.d(TAG, "Eligiendo acción: " + action);
+        // Iniciem la transacció per realitzar la acció.
+        mTransaction = getSupportFragmentManager().beginTransaction();
+
+        // Carreguem els fragments segons la acció
         switch (action) {
             case OnFragmentActionListener.ACTION_MAIN:
-                //actions.add(action);
-                setFragment(MAIN);
-                isFrameTwoVisible.add(false);
-                actionList.add(new Integer[]{MAIN});
+                loadFragment(MAIN);
+                addActionHistory(MAIN);
                 break;
 
             case OnFragmentActionListener.ACTION_LOG:
-                //actions.add(action);
-                setFragment(LOGIN);
-                isFrameTwoVisible.add(false);
-                actionList.add(new Integer[]{LOGIN});
+                loadFragment(LOGIN);
+                addActionHistory(LOGIN);
                 break;
 
 
             case OnFragmentActionListener.ACTION_EXPLORE:
-                // actions.add(action); // No afegim l'acció
-                Log.d(TAG, "Cargando mapa");
-                isFrameTwoVisible.add(false);
-                isMapFragmentVisible = true;
-                setFragment(FULL_MAP);
-                actionList.add(new Integer[]{MAP});
+                loadFragment(FULL_MAP);
+                addActionHistory(MAP);
                 break;
 
             case OnFragmentActionListener.ACTION_SEARCH:
-                isMapFragmentVisible = true;
-                isListFragmentVisible = true;
-                isFrameTwoVisible.add(true);
-                setFragment(LIST);
-                setFragment(HALF_MAP);
-                actionList.add(new Integer[]{LIST, MAP});
+                loadFragment(LIST);
+                loadFragment(HALF_MAP);
+                addActionHistory(LIST, MAP);
                 break;
 
             case OnFragmentActionListener.ACTION_DETAIL:
-                isListFragmentVisible = true;
-                isFrameTwoVisible.add(true);
-                if (actionList.getLast()[0] != LIST) {
-                    setFragment(LIST);
-                    Log.d(TAG, "Añadimos la lista al detalle");
-                }
-                setFragment(DETAIL);
-                actionList.add(new Integer[]{LIST, DETAIL});
+                if (!checkActionHistory(LIST)) loadFragment(LIST);
+                loadFragment(DETAIL);
+                addActionHistory(LIST, DETAIL);
                 break;
 
             case OnFragmentActionListener.ACTION_GALLERY:
-                Log.d(TAG, "Acción: Gallery");
-                setFragment(GALLERY);
-                isFrameTwoVisible.add(false);
-                actionList.add(new Integer[]{GALLERY});
+                loadFragment(GALLERY);
+                addActionHistory(GALLERY);
                 break;
 
             case OnFragmentActionListener.ACTION_PHOTO:
-                Log.d(TAG, "Acción: Photo");
-                setFragment(PHOTO);
-                isFrameTwoVisible.add(false);
-                actionList.add(new Integer[]{PHOTO});
+                loadFragment(PICTURE);
+                addActionHistory(PICTURE);
                 break;
         }
 
         //Finalitzem la transacció
-        finishTransaction(guardarAlBackStack);
-        Log.d(TAG, "Elementos en el back de acciones: " + actionList.size());
-        Log.d(TAG, "Elementos en el back de visbilidad: " + isFrameTwoVisible.size());
+        finishTransaction(addToBackStack);
+    }
+
+    /**
+     * Afegeix les dades al historial per poder restaurar les vistes i accions.
+     *
+     * @param actions llista de enters amb les accions.
+     */
+    private void addActionHistory(Integer... actions) {
+        mActionHistory.add(actions);
+    }
+
+    /**
+     * Comprova si la acció es troba a la última posició del historial.
+     *
+     * @param action acció per comprovar.
+     * @return true si la acció es troba a la última posició o false en cas contrari.
+     */
+    private boolean checkActionHistory(int action) {
+        for (Integer checkedAction : mActionHistory.getLast()) {
+            if (action == checkedAction) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Elimina la última posició del stack d'accions i restaura la visibilitat del segon fragment
+     * si troba més d'un fragment.
+     * TODO: Hi ha que adaptar-lo quan només hi hagi un panell.
+     *
+     * @return true si s'ha pogut restaurar o false si no quedan més accions..
+     */
+    private boolean restoreActionHistory() {
+        // Eliminem la última acció
+        mActionHistory.removeLast();
+
+        // Si el historial esta buit finalitzem la activitat.
+        if (mActionHistory.isEmpty()) return false;
+
+        // Comprovem si la acció actual requereix el segon fragment i si es així el mostrem.
+        Integer[] actions = mActionHistory.getLast();
+        if (actions.length > 1) {
+            mContainerTwo.setVisibility(View.VISIBLE);
+        } else {
+            mContainerTwo.setVisibility(View.GONE);
+        }
+        return true;
     }
 
 
+    /**
+     * TODO: Això s'ha de obtenir de la base de dades
+     * Retorna la llista completa de Llocs.
+     *
+     * @return llista completa de llocs.
+     */
     @Override
     public List<Lloc> getLlocs() {
-        Log.d(TAG, "Devolviendo los llocs actual: " + llocs);
-        return llocs;
+        return mLlocs;
     }
 
-
+    /**
+     * TODO: Això s'ha de obtenir de la base de dades
+     * Retorna la llista de llocs filtrats, o la llista completa si no s'ha aplicat cap filtre
+     *
+     * @return llista filtrada o llista completa de llocs.
+     */
     @Override
-    public List<Lloc> getLlocsFiltrats() {
-        if (llocsFiltrats == null) {
-            return llocs;
+    public List<Lloc> getFilteredLlocs() {
+        if (mFilteredLlocs == null) {
+            return mLlocs;
         } else {
-            return llocsFiltrats;
+            return mFilteredLlocs;
         }
     }
 
+    /**
+     * TODO: La llista s'ha de filtrar a la base de dades
+     * Estableix la llista de llocs filtrada i actualitza els marcadors si hi ha el fragment de
+     * mapa carregat.
+     *
+     * @param filteredLlocs
+     */
     @Override
-    public void setLlocsFiltrats(List<Lloc> llocsFiltrats) {
-        this.llocsFiltrats = llocsFiltrats;
-        if (fragmentAmbMapa != null) {
-            //if (fragmentAmbMapa != null && isMapFragmentVisible) {
-            //if (fragmentAmbMapa != null && isMapFragmentVisible) {
-            Log.d(TAG, "Pasando de Main al fragmento de mapa la lista: " + llocsFiltrats.size());
-            fragmentAmbMapa.updateMarkers(llocsFiltrats);
-        } else {
-            Log.d(TAG, "No hay fragmento de mapa? " + fragmentAmbMapa);
-            Log.d(TAG, "Es visible? " + isMapFragmentVisible);
+    public void setFilteredLlocs(List<Lloc> filteredLlocs) {
+        this.mFilteredLlocs = filteredLlocs;
+        if (mMapFragment != null) {
+            mMapFragment.updateMarkers(filteredLlocs);
         }
     }
 
+    /**
+     * TODO: Això s'ha de obtenir de la base de dades
+     * Retorna la llista completa de categories.
+     *
+     * @return llista completa de categories.
+     */
     @Override
     public List<Categoria> getCategories() {
-        return categories;
+        return mCategories;
     }
 
+    /**
+     * Retorna el lloc actual seleccionat.
+     *
+     * @return lloc actual
+     */
     @Override
-    public Lloc getLlocActual() {
-        Log.d(TAG, "Devolviendo el lloc actual: " + currentLloc);
-        return currentLloc;
+    public Lloc getCurrentLloc() {
+        return mCurrentLloc;
     }
 
+    /**
+     * Estableix el lloc actual, i segons la acció actual actualiza els fragments amb aquesta informació.
+     *
+     * @param lloc lloc per establir com actual.
+     */
     @Override
-    public void setLlocActual(Lloc lloc) {
-        Log.d(TAG, "Estableciendo lloc actual, es correcto?");
-        currentLloc = lloc;
+    public void setCurrentLloc(Lloc lloc) {
+        // Establim el lloc com el actual
+        mCurrentLloc = lloc;
 
+        // Comprovem les accions que poden fer servir aquesta informació
+        if (checkActionHistory(MAP)) mMapFragment.setFocus(lloc);
+        if (checkActionHistory(DETAIL)) OnActionDetected(ACTION_DETAIL);
+        if (checkActionHistory(LIST)) mListFragment.setSelected(lloc);
+    }
 
-        // Comprovamos la vista de accion actual
-        Integer[] acciones = actionList.getLast();
-
-        // Si hay abierto un fragmento de mapa centra el mapa en este lloc
-        if (acciones[0] == MAP || (acciones.length > 1 && acciones[1] == MAP)) {
-            Log.d(TAG, "Existe un fragmento de mapa, haciendo setFocus a: " + lloc.nom);
-            Log.d(TAG, "Existe un fragmento de mapa, es visible?" + isMapFragmentVisible);
-            fragmentAmbMapa.setFocus(lloc);
-        } else {
-            Log.d(TAG, "NO EXISTE MAPA");
+    /**
+     * Finalitza la transacció de fragments i la guarda al BackStack segons el valor pasat com
+     * argument.
+     *
+     * @param saveToBackStack true si es vol guardar o false en cas contrari.
+     */
+    private void finishTransaction(boolean saveToBackStack) {
+        if (saveToBackStack) {
+            mTransaction.addToBackStack(null);
         }
 
-        if (acciones.length > 1 && acciones[1] == DETAIL) {
-            Log.d(TAG, "Existe un fragmento de lista y no hay mapa, debe haber fragmento de detalle. ");
-            OnActionDetected(ACTION_DETAIL);
-        }
-
-        if (acciones[0] == LIST) {
-            Log.d(TAG, "La acción es LIST, Existe un fragmento de lista, haciendo setSelected a: " + lloc.nom);
-            fragmentAmbLlista.setSelected(lloc);
-        }
-
-    }
-
-    @Override
-    public Categoria getCategoriaActual() {
-        return currentCategoria;
-    }
-
-    @Override
-    public void setCategoriaActual(Categoria categoria) {
-        this.currentCategoria = categoria;
-    }
-
-    @Override
-    public void refreshLlocActual() {
-        setLlocActual(currentLloc);
-    }
-
-    // Esborrar despres de les proves
-    private void initLlocs() {
-        // Llocs de prueba TODO: Esta información se extrae del web service
-        llocs = new ArrayList<Lloc>();
-
-
-        llocs.add(new Lloc("Playa de Punta Prima", 1, 37.94017f, -0.711672f, "Esta es la playa de Punta Prima. Distintivo Q de calidad turística. Bandera azul."));
-        llocs.add(new Lloc("Cala Mosca", 1, 37.932554f, -0.718925f, "Esta es la playa de Cala Mosca."));
-        llocs.add(new Lloc("Playa Mil Palmeras", 1, 37.885557f, -0.752352f, "Esta es la playa Mil Palmeras. Distintivo Q de calidad turística."));
-
-        llocs.add(new Lloc("Teatro Circo", 2, 38.085333f, -0.943217f, "En su origen fue una construcción de las llamadas \"semipermanentes\" dedicada en principio a espectáculos circenses, acrobáticos, boxeo, etc."));
-        llocs.add(new Lloc("La Lonja", 2, 38.082335f, -0.947454f, "Debido a la construcción de una nueva lonja en el Polígono Industrial Puente Alto, la antigua edificación quedo en desuso, y en la actualidad se ha reformado para destinarla al actual Conservatorio de Música y Auditorio. Inagurado el 24 de octubre de 2008, como \"Conservatorio Pedro Terol\"."));
-
-        llocs.add(new Lloc("Museo Arqueológico Comarcal de Orihuela", 3, 38.086431f, -0.950500f, "Ubicado en parte de las antiguas dependencias del Hospital San Juan de Dios (Hospital Municipal), restauradas en 1997. Ocupa la antigua iglesia de estilo barroco de planta en cruz latina."));
-        llocs.add(new Lloc("Casa Museo Miguel Hernandez", 3, 38.089488f, -0.942205f, "Situada en la Calle de Arriba, próxima al Colegio de Santo Domingo, en el “Rincón Hernandiano”. Sus dependencias son las típicas de una casa con explotación ganadera de principios de siglo pasado, cuenta además con un pequeño huerto situado junto a la sierra."));
-        llocs.add(new Lloc("Museo de la Reconquista", 3, 38.08714f, -0.950126f, "El Museo de la Reconquista fue creado en 1.985, por la Asociación de Fiestas de Moros y Cristianos \"Santas Justa y Rufina\", con sede en los bajos del Palacio de Rubalcava, con el objeto de conservar y mostrar al público trajes festeros de las distintas comparsas, carteles de la fiesta, fotografías, armamento, instrumentos musicales y demás objetos relacionados con la fiesta."));
-    }
-
-    private void initImatges() {
-        // Imatges de prova TODO: Esta informació se extrae del web service
-
-        llocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_01.jpg"));
-        llocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_02.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 1", "test.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 2", "test.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 3", "test.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 4", "test.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 5", "test.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 6", "test.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 7", "test.jpg"));
-        llocs.get(0).addImatge(new Imatge("Test 8", "test.jpg"));
-
-
-        llocs.get(1).addImatge(new Imatge("Cala Mosca", "cala_mosca_01.jpg"));
-        llocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_01.jpg"));
-        llocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_02.jpg"));
-
-        llocs.get(3).addImatge(new Imatge("Teatro Circo", "teatro_circo_01.jpg"));
-        llocs.get(4).addImatge(new Imatge("La Lonja", "la_lonja_02.jpg"));
-
-        llocs.get(5).addImatge(new Imatge("Museo Arqueológico Comarcal de Orihuela", "museo_arqueologico_orihuela_01.jpg"));
-        llocs.get(6).addImatge(new Imatge("Casa Museo Miguel Hernandez", "casa_museo_miguel_hernandez_01.jpg"));
-        llocs.get(7).addImatge(new Imatge("Museo de la Reqconquista", "museo_de_la_reconquista_01.jpg"));
-
-    }
-
-
-    private void initCategories() {
-        categories = new ArrayList<Categoria>();
-
-        // Categorias de prueba TODO: Esta información se extrae del web service
-        Categoria tot = new Categoria(0, "Seleccionar Todo", "Selecciona todas las categorías.");
-        Categoria playas = new Categoria(1, "Playas", "En esta categoría hay playas.");
-        Categoria poi = new Categoria(2, "Puntos de interes", "En esta categoría hay puntos de interes.");
-        Categoria museos = new Categoria(3, "Museos", "En esta categoría hay museos.");
-
-        categories.add(tot);
-        categories.add(playas);
-        categories.add(poi);
-        categories.add(museos);
-    }
-
-    private void finishTransaction(boolean guardarAlBackStack) {
-        // Según la acción hay que cargar 1 o 2 fragmentos y ocultar los demás
-
-        // Ocultamos los layouts que no se van a utilizar
-
-        // Iniciamos la transacción
-
-        // Cargamos los fragmentos necesarios
-
-        // Guardamos en el backstack si es necesario
-        Log.d(TAG, "Dentro de finishTransaction");
-        if (guardarAlBackStack) {
-            Log.d(TAG, "Guardando BackStack");
-            transaction.addToBackStack(null);
-        }
-
-        // Commit de la transacción
-        transaction.commit();
-
+        mTransaction.commit();
 
         // Ocultem el segon contenidor si no es necessari
-        if (pantallaCompleta) {
-            containerTwo.setVisibility(View.GONE);
+        if (mFullScreen) {
+            mContainerTwo.setVisibility(View.GONE);
         } else {
-            containerTwo.setVisibility(View.VISIBLE);
+            mContainerTwo.setVisibility(View.VISIBLE);
         }
-
-
-        Log.d(TAG, "Saliendo de finishTransaction");
-    }
-
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d("TAG", "Llamado onResume");
-    }
-
-    private void restoreLastVisible() {
-
-        if (isFrameTwoVisible.isEmpty()) return;
-        isFrameTwoVisible.removeLast();
-
-        if (isFrameTwoVisible.getLast()) {
-            containerTwo.setVisibility(View.VISIBLE);
-        } else {
-            containerTwo.setVisibility(View.GONE);
-        }
-
-        Log.d(TAG, "isMapFragmentVisible?" + isMapFragmentVisible);
-        Log.d(TAG, "isListFragmentVisible?" + isListFragmentVisible);
     }
 
     @Override
     public void onBackPressed() {
-        if (!actionList.isEmpty()) actionList.removeLast();
-        restoreLastVisible();
-        Log.d(TAG, "pulsado ATRAS");
         super.onBackPressed();
+        if (!restoreActionHistory()) finish();
     }
 
+    /**
+     * TODO: Esborrar despres de les proves. Aquesta informació s'extrau de la base de dades
+     * Llocs de prova
+     */
+    private void initLlocs() {
+        mLlocs = new ArrayList<Lloc>();
+
+        mLlocs.add(new Lloc("Playa de Punta Prima", 1, 37.94017f, -0.711672f, "Esta es la playa de Punta Prima. Distintivo Q de calidad turística. Bandera azul."));
+        mLlocs.add(new Lloc("Cala Mosca", 1, 37.932554f, -0.718925f, "Esta es la playa de Cala Mosca."));
+        mLlocs.add(new Lloc("Playa Mil Palmeras", 1, 37.885557f, -0.752352f, "Esta es la playa Mil Palmeras. Distintivo Q de calidad turística."));
+
+        mLlocs.add(new Lloc("Teatro Circo", 2, 38.085333f, -0.943217f, "En su origen fue una construcción de las llamadas \"semipermanentes\" dedicada en principio a espectáculos circenses, acrobáticos, boxeo, etc."));
+        mLlocs.add(new Lloc("La Lonja", 2, 38.082335f, -0.947454f, "Debido a la construcción de una nueva lonja en el Polígono Industrial Puente Alto, la antigua edificación quedo en desuso, y en la actualidad se ha reformado para destinarla al actual Conservatorio de Música y Auditorio. Inagurado el 24 de octubre de 2008, como \"Conservatorio Pedro Terol\"."));
+
+        mLlocs.add(new Lloc("Museo Arqueológico Comarcal de Orihuela", 3, 38.086431f, -0.950500f, "Ubicado en parte de las antiguas dependencias del Hospital San Juan de Dios (Hospital Municipal), restauradas en 1997. Ocupa la antigua iglesia de estilo barroco de planta en cruz latina."));
+        mLlocs.add(new Lloc("Casa Museo Miguel Hernandez", 3, 38.089488f, -0.942205f, "Situada en la Calle de Arriba, próxima al Colegio de Santo Domingo, en el “Rincón Hernandiano”. Sus dependencias son las típicas de una casa con explotación ganadera de principios de siglo pasado, cuenta además con un pequeño huerto situado junto a la sierra."));
+        mLlocs.add(new Lloc("Museo de la Reconquista", 3, 38.08714f, -0.950126f, "El Museo de la Reconquista fue creado en 1.985, por la Asociación de Fiestas de Moros y Cristianos \"Santas Justa y Rufina\", con sede en los bajos del Palacio de Rubalcava, con el objeto de conservar y mostrar al público trajes festeros de las distintas comparsas, carteles de la fiesta, fotografías, armamento, instrumentos musicales y demás objetos relacionados con la fiesta."));
+    }
+
+    /**
+     * TODO: Esborrar despres de les proves. Aquesta informació s'extrau de la base de dades
+     * Imatges de prova
+     */
+    private void initImatges() {
+        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_01.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_02.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 1", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 2", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 3", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 4", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 5", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 6", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 7", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Test 8", "test.jpg"));
+
+        mLlocs.get(1).addImatge(new Imatge("Cala Mosca", "cala_mosca_01.jpg"));
+        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_01.jpg"));
+        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_02.jpg"));
+
+        mLlocs.get(3).addImatge(new Imatge("Teatro Circo", "teatro_circo_01.jpg"));
+        mLlocs.get(4).addImatge(new Imatge("La Lonja", "la_lonja_02.jpg"));
+
+        mLlocs.get(5).addImatge(new Imatge("Museo Arqueológico Comarcal de Orihuela", "museo_arqueologico_orihuela_01.jpg"));
+        mLlocs.get(6).addImatge(new Imatge("Casa Museo Miguel Hernandez", "casa_museo_miguel_hernandez_01.jpg"));
+        mLlocs.get(7).addImatge(new Imatge("Museo de la Reqconquista", "museo_de_la_reconquista_01.jpg"));
+    }
+
+    /**
+     * TODO: Esborrar despres de les proves. Aquesta informació s'extrau de la base de dades
+     * Categories de proves
+     */
+    private void initCategories() {
+        mCategories = new ArrayList<Categoria>();
+
+        // Categorias de prueba TODO: Esta información se extrae del web service
+        Categoria tot = new Categoria(0, "Seleccionar Todo", "Selecciona todas las categorías.");
+        Categoria platjes = new Categoria(1, "Playas", "En esta categoría hay playas.");
+        Categoria poi = new Categoria(2, "Puntos de interes", "En esta categoría hay puntos de interes.");
+        Categoria museus = new Categoria(3, "Museos", "En esta categoría hay museos.");
+        Categoria buida = new Categoria(3, "Vacía", "En esta categoría no hay nada.");
+
+        mCategories.add(tot);
+        mCategories.add(platjes);
+        mCategories.add(poi);
+        mCategories.add(museus);
+        mCategories.add(buida);
+    }
 }

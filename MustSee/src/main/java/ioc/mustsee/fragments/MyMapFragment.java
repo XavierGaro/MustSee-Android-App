@@ -137,13 +137,12 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         int width = width2 * 3 / 4;
 
         if (animar) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bc.build(),
-                    width, height, 100), 2000, null);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), width, height, 100), 2000, null);
         } else {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bc.build(),
-                    width, height, 100));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), width, height, 100));
         }
         Log.d(TAG, "Saliendo de fixZoom");
+
     }
 
     public void setFocus(Lloc lloc) {
@@ -175,14 +174,14 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         Log.d(TAG, "Entrando en onMarkerClick");
 
         // Comprobamos si ya està seleccionado
-        if (mMarkersToLloc.get(marker) == mCallback.getLlocActual()) {
+        if (mMarkersToLloc.get(marker) == mCallback.getCurrentLloc()) {
             // Es el mismo, abrimos detalle
             mCallback.OnActionDetected(ACTION_DETAIL);
             Log.d(TAG, "Saliendo de onMarkerClick.");
             return true; // Consumimos el click, no se ejecuta el comportamiento normal.
         } else {
             // Llamamos a main activity para que lo procese, despues pasarà a setFocus o mostrar detalle.
-            mCallback.setLlocActual(mMarkersToLloc.get(marker));
+            mCallback.setCurrentLloc(mMarkersToLloc.get(marker));
             // Devolvemos false, asi que se  ejecuta el efecto normal de clicar, que es mostrar el detalle y centrar (no consumimos el evento).
             Log.d(TAG, "Saliendo de onMarkerClick.");
             return false;

@@ -75,7 +75,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
 
     private void carregarDetall() {
         // Obtenim el mLloc actual
-        mLloc = ((OnFragmentActionListener) getActivity()).getLlocActual();
+        mLloc = ((OnFragmentActionListener) getActivity()).getCurrentLloc();
 
         // Obtenim el nom de la categoria corresponent: TODO esto se debe extraer de la BD
         List<Categoria> categories = ((OnFragmentActionListener) getActivity()).getCategories();

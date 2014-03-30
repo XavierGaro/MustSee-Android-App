@@ -27,18 +27,12 @@ public interface OnFragmentActionListener {
 
     List<Categoria> getCategories();
 
-    Lloc getLlocActual();
+    Lloc getCurrentLloc();
 
-    void setLlocActual(Lloc lloc);
+    void setCurrentLloc(Lloc lloc);
 
-    List<Lloc> getLlocsFiltrats();
+    List<Lloc> getFilteredLlocs();
 
-    void setLlocsFiltrats(List<Lloc> llocs);
-
-    Categoria getCategoriaActual();
-
-    void setCategoriaActual(Categoria categoria);
-
-    void refreshLlocActual();
+    void setFilteredLlocs(List<Lloc> llocs);
 
 }

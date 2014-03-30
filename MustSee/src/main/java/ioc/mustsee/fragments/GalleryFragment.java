@@ -65,9 +65,9 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
     // TODO no deben usarse imageItem, solo Imatges, modificar esto y el adaptador
     private ArrayList getData() {
         // Obtiene la galeria de imagenes del curren lloc
-        Log.d(TAG, "Gallery: Intentando recuperar lloc actual:" + mCallback.getLlocActual());
-        Log.d(TAG, "Gallery: Imatges." + mCallback.getLlocActual().getImages());
-        List<Imatge> imatges = mCallback.getLlocActual().getImages();
+        Log.d(TAG, "Gallery: Intentando recuperar lloc actual:" + mCallback.getCurrentLloc());
+        Log.d(TAG, "Gallery: Imatges." + mCallback.getCurrentLloc().getImages());
+        List<Imatge> imatges = mCallback.getCurrentLloc().getImages();
 
         final ArrayList imageItems = new ArrayList();
 
