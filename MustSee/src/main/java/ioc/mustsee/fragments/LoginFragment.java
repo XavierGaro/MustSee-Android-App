@@ -26,10 +26,6 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     // Datos
     Usuario usuario = null;
 
-    public LoginFragment(int fragmentId) {
-        super(fragmentId);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

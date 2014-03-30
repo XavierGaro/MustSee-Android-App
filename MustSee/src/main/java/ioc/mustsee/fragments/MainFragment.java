@@ -27,10 +27,6 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
 
     private boolean autenticat = false;
 
-    public MainFragment(int fragmentId) {
-        super(fragmentId);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

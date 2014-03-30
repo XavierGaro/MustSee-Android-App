@@ -61,6 +61,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private LinkedList<Boolean> isFrameTwoVisible = new LinkedList<Boolean>();
 
 
+    private boolean pantallaCompleta = false;
+
     // Locs
     private List<Lloc> llocs;
 
@@ -155,20 +157,21 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private void setFragmentDuePane(int id) {
         Log.d(TAG, "Dos Fragments");
         Fragment fragment = null;
-        boolean pantallaCompleta = false;
         int container = 0;
 
 
         switch (id) {
             case MAIN:
-                fragment = new MainFragment(CONTAINER_ONE);
+                fragment = new MainFragment();
+                //fragment = new MainFragment(CONTAINER_ONE);
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = true;
                 container = CONTAINER_ONE;
                 break;
 
             case LOGIN:
-                fragment = new LoginFragment(CONTAINER_ONE);
+                //fragment = new LoginFragment(CONTAINER_ONE);
+                fragment = new LoginFragment();
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = true;
                 container = CONTAINER_ONE;
@@ -176,7 +179,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
             case FULL_MAP:
                 // TODO mover esto al final del mètodo
-                fragment = new MyMapFragment(R.id.mapFragment);
+                fragment = new MyMapFragment();
                 //fragment = new MyMapFragment(CONTAINER_ONE);
                 pantallaCompleta = true;
                 container = CONTAINER_ONE;
@@ -185,7 +188,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 break;
 
             case HALF_MAP:
-                fragment = new MyMapFragment(R.id.mapFragment);
+                fragment = new MyMapFragment();
                 //fragment = new MyMapFragment(CONTAINER_TWO);
                 pantallaCompleta = false;
                 container = CONTAINER_TWO;
@@ -195,7 +198,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
 
             case LIST:
-                fragment = new MyListFragment(CONTAINER_ONE);
+                //fragment = new MyListFragment(CONTAINER_ONE);
+                fragment = new MyListFragment();
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = false;
                 container = CONTAINER_ONE;
@@ -204,7 +208,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 break;
 
             case DETAIL:
-                fragment = new DetailFragment(CONTAINER_TWO);
+                fragment = new DetailFragment();
+                //fragment = new DetailFragment(CONTAINER_TWO);
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = false;
                 container = CONTAINER_TWO;
@@ -213,7 +218,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
             case GALLERY:
                 Log.d(TAG, "Estableciendo fragmento galería:");
-                fragment = new GalleryFragment(CONTAINER_ONE);
+                //fragment = new GalleryFragment(CONTAINER_ONE);
+                fragment = new GalleryFragment();
                 //fragment.setArguments(getIntent().getExtras());
                 pantallaCompleta = true;
                 container = CONTAINER_ONE;
@@ -221,19 +227,13 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
             case PHOTO:
                 Log.d(TAG, "Estableciendo fragmento photo");
-                fragment = new PhotoFragment(CONTAINER_ONE);
+                //fragment = new PhotoFragment(CONTAINER_ONE);
+                fragment = new PhotoFragment();
                 //fragment.setArguments(getIntent().getExtras());
                 fragment.setArguments(bundle);
                 pantallaCompleta = true;
                 container = CONTAINER_ONE;
                 break;
-        }
-
-        // Ocultem el segon contenidor si no es necessari
-        if (pantallaCompleta) {
-            containerTwo.setVisibility(View.GONE);
-        } else {
-            containerTwo.setVisibility(View.VISIBLE);
         }
 
         // Reemplacem el fragment
@@ -499,6 +499,16 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
         // Commit de la transacción
         transaction.commit();
+
+
+        // Ocultem el segon contenidor si no es necessari
+        if (pantallaCompleta) {
+            containerTwo.setVisibility(View.GONE);
+        } else {
+            containerTwo.setVisibility(View.VISIBLE);
+        }
+
+
         Log.d(TAG, "Saliendo de finishTransaction");
     }
 

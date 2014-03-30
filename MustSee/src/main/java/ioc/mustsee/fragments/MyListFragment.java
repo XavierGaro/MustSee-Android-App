@@ -30,9 +30,6 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     private ArrayAdapter<Lloc> adapterLlocs;
     private ArrayAdapter<Categoria> adapterCategories;
 
-    public MyListFragment(int fragmentId) {
-        super(fragmentId);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

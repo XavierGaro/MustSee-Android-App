@@ -24,9 +24,6 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
     private GridView gridView;
     private GridViewAdapter customGridAdapter;
 
-    public GalleryFragment(int fragmentId) {
-        super(fragmentId);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -2,7 +2,9 @@ package ioc.mustsee.fragments;
 
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,9 +40,6 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
     private SupportMapFragment mMapFragment;
     private List<Lloc> mLlocs;
 
-    public MyMapFragment(int fragmentId) {
-        super(fragmentId);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -338,4 +337,49 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
     }
 
 
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "Entrando en onDestroyView");
+
+        // Esto es llamado cuando se hace BackStack, eliminamos el fragmento
+
+        super.onDestroyView();
+
+
+        Fragment fragment = (getFragmentManager().findFragmentById(R.id.mapFragment));
+
+        if (fragment != null) {
+            Log.d(TAG, "El fragmento NO es null");
+            try {
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.remove(fragment);
+                ft.commit();
+                Log.d(TAG, "Fragmento destruido");
+            } catch (Exception e) {
+                // TODO esto no se puede dejar así
+                Log.e(TAG, "Error al destruir el fragmento");
+            }
+        } else {
+            Log.d(TAG, "El fragmento es null");
+        }
+
+
+        // Si no eliminamos la vista, al hacer atras de detalle a mapa falla.
+
+        if (mView != null) {
+            ViewGroup parentViewGroup = (ViewGroup) mView.getParent();
+            Log.d(TAG, "parentViewGroup es null?: " + parentViewGroup);
+            if (parentViewGroup != null) {
+                Log.d(TAG, "Numero de childs antes de eliminar: " + parentViewGroup.getChildCount());
+                parentViewGroup.removeAllViews();
+                Log.d(TAG, "Numero de childs despues de eliminar: " + parentViewGroup.getChildCount());
+            }
+        }
+
+        Log.d(TAG, "Saliendo de onDestroyView.");
+        // Update en activity main la visibilidad de los fragmentos
+
+
+        return;
+    }
 }

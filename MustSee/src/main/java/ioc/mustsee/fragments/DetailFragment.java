@@ -27,10 +27,6 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     private Lloc mLloc;
     private Categoria mCategoria;
 
-    public DetailFragment(int fragmentId) {
-        super(fragmentId);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

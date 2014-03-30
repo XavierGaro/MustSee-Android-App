@@ -14,9 +14,6 @@ public class PhotoFragment extends MustSeeFragment {
     View mView;
     private ImageView picture;
 
-    public PhotoFragment(int fragmentId) {
-        super(fragmentId);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
