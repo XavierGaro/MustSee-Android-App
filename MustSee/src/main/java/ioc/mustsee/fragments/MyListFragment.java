@@ -30,16 +30,13 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     private static final String TAG = "MyListFragment";
 
     private ListView mListViewLlocs;
-    private MySpinner mSpinnerCategories;
-    private List<Lloc> mLlocs;
     private List<Categoria> mCategories;
     private ArrayAdapter<Lloc> mAdapterLlocs;
-    private ArrayAdapter<Categoria> mAdapterCategories;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si la vista no existeix la inflem i inicalitzem els widgets
+        // Si la vista no existeix la inflem i inicialitzem els widgets
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_list, null);
             initWidgets();
@@ -48,21 +45,21 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     }
 
     /**
-     * Incialitzem el Spinner i el ListView amb la informació de la activitat principal, i els
+     * Inicialitzem el Spinner i el ListView amb la informació de la activitat principal, i els
      * afegim els listener corresponents.
      */
     void initWidgets() {
         // Afegim les categories al Spinner
         mCategories = mCallback.getCategories();
-        mAdapterCategories = new CategoriaArrayAdapter(getActivity(), mCategories);
-        mSpinnerCategories = (MySpinner) mView.findViewById(R.id.spinnerCategoria);
-        mSpinnerCategories.setOnItemSelectedListener(this);
-        mSpinnerCategories.setOnItemSelectedEvenIfUnchangedListener(this);
-        mSpinnerCategories.setAdapter(mAdapterCategories);
+        ArrayAdapter<Categoria> adapterCategories = new CategoriaArrayAdapter(getActivity(), mCategories);
+        MySpinner spinnerCategories = (MySpinner) mView.findViewById(R.id.spinnerCategoria);
+        spinnerCategories.setOnItemSelectedListener(this);
+        spinnerCategories.setOnItemSelectedEvenIfUnchangedListener(this);
+        spinnerCategories.setAdapter(adapterCategories);
 
         // Afegim els llocs a la ListView
-        mLlocs = mCallback.getLlocs();
-        mAdapterLlocs = new LlocArrayAdapter(getActivity(), mLlocs);
+        List<Lloc> llocs = mCallback.getLlocs();
+        mAdapterLlocs = new LlocArrayAdapter(getActivity(), llocs);
         mListViewLlocs = (ListView) mView.findViewById(R.id.listViewLlocs);
         mListViewLlocs.setOnItemClickListener(this);
         mListViewLlocs.setAdapter(mAdapterLlocs);
@@ -92,7 +89,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     /**
      * Aquest mètode es obligatori implementar-lo encara que no fem res amb ell.
      *
-     * @param parent
+     * @param parent adaptador
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
@@ -118,7 +115,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         Lloc selectedLloc = (Lloc) parent.getItemAtPosition(position);
         Lloc currentLloc = mCallback.getCurrentLloc();
 
-        if (currentLloc == null || selectedLloc.id != currentLloc.id) {
+        if (currentLloc == null || (selectedLloc != null && selectedLloc.id != currentLloc.id)) {
             // Si no hi ha cap lloc actual, o el lloc actual i el seleccionat son diferents establim
             // el lloc com a actual
             mCallback.setCurrentLloc(selectedLloc);
@@ -129,10 +126,10 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     }
 
     /**
-     * Estableix el lloc pasat com arguemnt com a lloc seleccionat, intenta marcarlo com seleccionat
+     * Estableix el lloc passat com argument com a lloc seleccionat, intenta marcarlo com seleccionat
      * i mou la barra de scroll suaument fins a la seva posició. Aquest mètode es cridat des de la
      * activitat principal per actualitzar la posició de la llista. Degut al funcionament del focus
-     * i el mode Touch es es normal que no es mostri la seleccio quan toquem altres parts de la
+     * i el mode Touch es es normal que no es mostri la selecció quan toquem altres parts de la
      * pantalla.
      *
      * @param selectedLloc lloc per establir com seleccionat.

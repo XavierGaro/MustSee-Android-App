@@ -18,13 +18,10 @@ import ioc.mustsee.ui.GridViewGalleryAdapter;
 public class GalleryFragment extends MustSeeFragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "GalleryFragment";
 
-    private GridView mGridView;
-    private GridViewGalleryAdapter mCustomGridAdapter;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si la vista no existeix la inflem i inicalitzem els widgets
+        // Si la vista no existeix la inflem i inicialitzem els widgets
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_gallery, null);
             initWidgets();
@@ -33,15 +30,15 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
     }
 
     /**
-     * Inicialitzem la graella, li asignem l'adaptador i l'associem amb el listener.
+     * Inicialitzem la graella, li assignem l'adaptador i l'associem amb el listener.
      */
     @Override
     void initWidgets() {
-        mGridView = (GridView) mView.findViewById(R.id.gridView);
-        mCustomGridAdapter = new GridViewGalleryAdapter(getActivity(), R.layout.grid_row_gallery,
-                mCallback.getCurrentLloc().getImages());
-        mGridView.setAdapter(mCustomGridAdapter);
-        mGridView.setOnItemClickListener(this);
+        GridView gridView = (GridView) mView.findViewById(R.id.gridView);
+        GridViewGalleryAdapter customGridAdapter = new GridViewGalleryAdapter(getActivity(),
+                R.layout.grid_row_gallery, mCallback.getCurrentLloc().getImages());
+        gridView.setAdapter(customGridAdapter);
+        gridView.setOnItemClickListener(this);
     }
 
     /**
@@ -59,5 +56,4 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
         bundle.putInt("PICTURE", position);
         mCallback.OnActionDetected(OnFragmentActionListener.ACTION_PICTURE, bundle);
     }
-
 }

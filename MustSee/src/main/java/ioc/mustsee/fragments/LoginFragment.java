@@ -35,7 +35,7 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si la vista no existeix la inflem i inicalitzem els widgets
+        // Si la vista no existeix la inflem i inicialitzem els widgets
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_login, null);
             initWidgets();

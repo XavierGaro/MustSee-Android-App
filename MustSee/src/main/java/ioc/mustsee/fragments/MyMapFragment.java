@@ -29,7 +29,7 @@ import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_DETAIL;
 /**
  * A aquest fragment es on es gestiona el mapa, tant en la vista a pantalla completa com parcial.
  *
- * @autor Javier García
+ * @author Javier García
  */
 public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = "MyMapFragment";
@@ -108,7 +108,7 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
     /**
      * Afegeix el lloc passat com argument al mapa de marcadors.
      *
-     * @param lloc
+     * @param lloc lloc del que volem afegir el marcador.
      * @return marcador creat.
      */
     private Marker addMarker(Lloc lloc) {
@@ -252,7 +252,7 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
      * Al crear-se la activitat comprovem si ja existeix un fragment niuat amb el mapa i si no es així
      * generem una nova instància.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

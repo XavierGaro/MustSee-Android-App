@@ -38,7 +38,7 @@ public interface OnFragmentActionListener {
      * Aquest mètode es cridat pels fragments quan necesiten realitzar alguna acció i no cal cap
      * informació extra.
      *
-     * @param action
+     * @param action acció a realitzar, que ha de correspondre amb una de les constants
      */
     void OnActionDetected(int action);
 
@@ -85,6 +85,7 @@ public interface OnFragmentActionListener {
     /**
      * Retorna la llista de llocs filtrada.
      * TODO: Això s'ha de implementar a la base de dades.
+     *
      * @return llista de llocs filtrada.
      */
     List<Lloc> getFilteredLlocs();

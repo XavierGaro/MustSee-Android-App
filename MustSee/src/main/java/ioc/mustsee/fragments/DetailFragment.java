@@ -29,14 +29,12 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     TextView mTextViewDescription;
     ListView mListViewComments;
 
-    // Dades del lloc del que mostrem el detall
-    private Lloc mLloc;
     private Categoria mCategoria;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si la vista no existeix la inflem i inicalitzem els widgets
+        // Si la vista no existeix la inflem i inicialitzem els widgets
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_detail, null);
             initWidgets();
@@ -78,23 +76,23 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
      */
     private void loadDetail() {
         // Obtenim el mLloc actual
-        mLloc = mCallback.getCurrentLloc();
+        Lloc lloc = mCallback.getCurrentLloc();
 
         // Obtenim el nom de la categoria corresponent. TODO això s'extraurà de la base de dades
         List<Categoria> categories = mCallback.getCategories();
         for (Categoria categoria : categories) {
-            if (categoria.id == mLloc.categoriaId) {
+            if (categoria.id == lloc.categoriaId) {
                 mCategoria = categoria;
                 break;
             }
         }
 
         // Omplim els widgets
-        if (mLloc == null) throw new NullPointerException("Error, el mLloc es null");
+        if (lloc == null) throw new NullPointerException("Error, el mLloc es null");
         if (mCategoria == null) throw new NullPointerException("Error, el mCategory es null");
-        mTextViewName.setText(mLloc.nom);
-        mTextViewDescription.setText(mLloc.descripcio);
+        mTextViewName.setText(lloc.nom);
+        mTextViewDescription.setText(lloc.descripcio);
         mTextViewCategory.setText(mCategoria.nom);
-        mImageViewPicture.setImageBitmap(mLloc.getImatgePrincipal().carregarImatge(getActivity()));
+        mImageViewPicture.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(getActivity()));
     }
 }

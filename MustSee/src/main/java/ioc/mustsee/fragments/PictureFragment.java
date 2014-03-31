@@ -14,12 +14,10 @@ import ioc.mustsee.R;
 public class PictureFragment extends MustSeeFragment {
     private static final String TAG = "PictureFragment";
 
-    private ImageView mImageViewPicture;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si la vista no existeix la inflem i inicalitzem els widgets
+        // Si la vista no existeix la inflem i inicialitzem els widgets
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_picture, null);
             initWidgets();
@@ -31,11 +29,13 @@ public class PictureFragment extends MustSeeFragment {
      * Inicialitzem la imatge amb la id que s'ha passat com amb el bundle al crear el fragment.
      */
     void initWidgets() {
+        ImageView imageViewPicture;
+
         Bundle bundle = getArguments();
         int imatgeId = bundle.getInt("PICTURE");
 
-        mImageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
-        mImageViewPicture.setImageBitmap(mCallback
+        imageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
+        imageViewPicture.setImageBitmap(mCallback
                         .getCurrentLloc()
                         .getImages()
                         .get(imatgeId)
