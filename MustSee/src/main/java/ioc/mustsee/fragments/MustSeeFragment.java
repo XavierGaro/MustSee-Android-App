@@ -7,31 +7,53 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * Aquesta es la classe de la que hereten tots els fragments de la aplicació. La activitat que els
+ * adjunti ha de implementar la interfície OnFragmentActionListener o llençarà una excepció.
+ *
+ * @author Javier García
+ * @see ioc.mustsee.fragments.OnFragmentActionListener
+ */
 public abstract class MustSeeFragment extends Fragment {
     private static final String TAG = "MustSeeFragment";
 
+    private static final String PREFERENCES_FILENAME = "mustsee";
+
+
+    // Activitat a la que s'adjunta el fragment per poder fer les crides.
     OnFragmentActionListener mCallback;
+
+    // Arxiu de preferències
     SharedPreferences mPreferences;
+
+    // Vista a la que es mostra el fragment
     View mView;
 
+    /**
+     * Quan s'adjunta el fragment a una activitat establim l'arxiu de preferencies i comprovem que
+     * la activitat implementi la interfície de callback.
+     *
+     * @param activity a la que s'adjunta el fragment.
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        // Establecemos el archivo de preferencias
-        mPreferences = this.getActivity().getSharedPreferences("mustsee", Context.MODE_PRIVATE);
+        // Establim l'arxiu de preferències
+        mPreferences = this.getActivity().getSharedPreferences(PREFERENCES_FILENAME, Context.MODE_PRIVATE);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
+        // Si l'activitat no implementa la interfície de callback llencem una excepció informant
         try {
             mCallback = (OnFragmentActionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " debe implementar OnFragmentActionListener");
+                    + " ha d'implementar OnFragmentActionListener");
         }
     }
 
-
+    /**
+     * Quan es destrueix la vista ens assegurem que totes les vistes associades son eliminades també.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -43,5 +65,8 @@ public abstract class MustSeeFragment extends Fragment {
         }
     }
 
+    /**
+     * Obliguem a totes els fragments a implementar aquest mètode, on s'inicialitzaran els widgets.
+     */
     abstract void initWidgets();
 }

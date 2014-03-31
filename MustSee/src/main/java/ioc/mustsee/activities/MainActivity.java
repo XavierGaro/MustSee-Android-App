@@ -33,9 +33,10 @@ import ioc.mustsee.fragments.PictureFragment;
  * @author Javier García
  */
 public class MainActivity extends ActionBarActivity implements OnFragmentActionListener {
+    private static final String TAG = "MainActivity";
+
     // Directoris
     public static final String PICTURES_DIRECTORY = "galerias/";
-    private static final String TAG = "MainActivity";
 
     // Referencia per llençar Fragments
     private static final int MAIN = 0;

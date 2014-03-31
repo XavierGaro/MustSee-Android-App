@@ -1,7 +1,6 @@
 package ioc.mustsee.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +8,13 @@ import android.widget.ImageView;
 
 import ioc.mustsee.R;
 
+/**
+ * Aquest fragment mostra una imatge que s'obté del lloc actual de la activitat principal.
+ */
 public class PictureFragment extends MustSeeFragment {
     private static final String TAG = "PictureFragment";
-    private ImageView picture;
 
+    private ImageView mImageViewPicture;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -25,13 +27,19 @@ public class PictureFragment extends MustSeeFragment {
         return mView;
     }
 
+    /**
+     * Inicialitzem la imatge amb la id que s'ha passat com amb el bundle al crear el fragment.
+     */
     void initWidgets() {
-        Log.d(TAG, "Inicialitzat widtegs de " + TAG);
-
         Bundle bundle = getArguments();
-        Log.d(TAG, "Se han pasado los argumentos: " + bundle.getInt("PICTURE"));
+        int imatgeId = bundle.getInt("PICTURE");
 
-        picture = (ImageView) mView.findViewById(R.id.imageViewPicture);
-        picture.setImageBitmap(mCallback.getCurrentLloc().getImages().get(bundle.getInt("PICTURE")).carregarImatge(getActivity()));
+        mImageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
+        mImageViewPicture.setImageBitmap(mCallback
+                        .getCurrentLloc()
+                        .getImages()
+                        .get(imatgeId)
+                        .carregarImatge(getActivity())
+        );
     }
 }
