@@ -1,4 +1,4 @@
 package ioc.mustsee.data;
 
-public class Usuario {
+public class Usuari {
 }
