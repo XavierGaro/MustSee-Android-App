@@ -12,52 +12,53 @@ import java.util.List;
 import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
 
+/**
+ * ArrayAdapter per el Spinner que mostra el nom i la descripció de cada categoría.
+ * TODO: Fer més genéric incluint la id del layout del Spinner a inflar en el constructor.
+ *
+ * @author Javier García
+ * @see ioc.mustsee.data.Categoria
+ */
 public class CategoriaArrayAdapter extends ArrayAdapter<Categoria> {
-
     private static final String TAG = "MobileArrayAdapter";
-    private final Context context;
-    private List<Categoria> categorias;
 
-    public CategoriaArrayAdapter(Context context, List<Categoria> categorias) {
-        super(context, R.layout.spinner_category, categorias);
-        this.context = context;
-        this.categorias = categorias;
+    private final Context mContext;
+    private List<Categoria> mCategories;
+
+    public CategoriaArrayAdapter(Context context, List<Categoria> categories) {
+        super(context, R.layout.spinner_category, categories);
+        this.mContext = context;
+        this.mCategories = categories;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+        return getCustomView(position, parent);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getCustomView(position, convertView, parent);
+        return getCustomView(position, parent);
     }
 
-    public View getCustomView(int position, View convertView,
-                              ViewGroup parent) {
+    /**
+     * Aquest métode retorna la vista personalitzada. Aquí es on s'afegeix el text a mostrar a la
+     * vista.
+     *
+     * @param position posicio de la vista al adaptador
+     * @param parent   grup al que pertany la vista
+     * @return
+     */
+    public View getCustomView(int position, ViewGroup parent) {
+        LayoutInflater inflater =
+                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewSpinner = inflater.inflate(R.layout.spinner_category, parent, false);
+        TextView textViewMain = (TextView) viewSpinner.findViewById(R.id.textViewTitle);
+        TextView textViewSub = (TextView) viewSpinner.findViewById(R.id.textViewDescription);
+        textViewMain.setText(mCategories.get(position).nom);
+        textViewSub.setText(mCategories.get(position).descripcio);
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-        View mySpinner = inflater.inflate(R.layout.spinner_category, parent,
-                false);
-        TextView main_text = (TextView) mySpinner
-                .findViewById(R.id.text_main_seen);
-        main_text.setText(categorias.get(position).nom);
-
-        TextView subSpinner = (TextView) mySpinner
-                .findViewById(R.id.sub_text_seen);
-        subSpinner.setText(categorias.get(position).descripcio);
-
-        /* Sin implementar
-        ImageView left_icon = (ImageView) mySpinner
-                .findViewById(R.id.left_pic);
-        left_icon.setImageResource(categorias.get(position).icon);
-        */
-
-        return mySpinner;
+        return viewSpinner;
     }
 }
 
