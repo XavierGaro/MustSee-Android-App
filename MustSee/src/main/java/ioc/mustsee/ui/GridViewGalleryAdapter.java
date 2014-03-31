@@ -1,6 +1,5 @@
 package ioc.mustsee.ui;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,13 +16,15 @@ import ioc.mustsee.R;
 import ioc.mustsee.data.Imatge;
 
 /**
- * Classe adaptador per personalitzar un GridView com una galeria de imatges que mostrarà la imatge
- * i el titòl de la imatge.
+ * Adaptador per personalitzar un GridView com una galeria de imatges que mostrarà la imatge i el
+ * títol de la imatge.
  *
  * @author Javier García
  * @see ioc.mustsee.data.Imatge
  */
 public class GridViewGalleryAdapter extends ArrayAdapter {
+    private static final String TAG = "GridViewGalleryAdapter";
+
     private Context mContext;
     private int mLayoutResourceId;
     private List<Imatge> mImatges = new ArrayList<Imatge>();

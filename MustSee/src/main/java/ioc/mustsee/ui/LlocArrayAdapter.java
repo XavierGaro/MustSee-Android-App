@@ -1,8 +1,6 @@
 package ioc.mustsee.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,72 +16,95 @@ import ioc.mustsee.R;
 import ioc.mustsee.data.Lloc;
 import ioc.mustsee.fragments.OnFragmentActionListener;
 
-
+/**
+ * Adaptador per el ListView que mostra una llista de llocs. Fem servir un objecte per sincronitzar
+ * les operacions d'escriptura al filtre.
+ *
+ * @author Javier García
+ * @see ioc.mustsee.data.Lloc
+ */
 public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
     private static final String TAG = "MobileArrayAdapter";
-    private final Context context;
-    private final Object mLock = new Object();
-    private ItemsFilter mFilter;
-    private List<Lloc> llocsFiltrats;
-    private List<Lloc> llocsOriginal;
 
-    public LlocArrayAdapter(Context context, List<Lloc> llocsOriginal) {
-        super(context, R.layout.list_item_lloc, llocsOriginal);
-        this.context = context;
-        this.llocsOriginal = llocsOriginal;
+    private final Object mLock = new Object();
+    private final Context mContext;
+    private ItemsFilter mFilter;
+    private List<Lloc> mFilteredLlocs;
+    private List<Lloc> mOriginalLlocs;
+
+    /**
+     * El constructor requereix el context de la activitat i la llista de llocs completa.
+     *
+     * @param context       context de la activitat.
+     * @param originalLlocs llista de llocs original.
+     */
+    public LlocArrayAdapter(Context context, List<Lloc> originalLlocs) {
+        super(context, R.layout.list_item_lloc, originalLlocs);
+        this.mContext = context;
+        this.mOriginalLlocs = originalLlocs;
     }
 
+    /**
+     * Retornem la vista modificada amb les dades del lloc.
+     *
+     * @param position    posició al adaptador
+     * @param convertView vista original
+     * @param parent      grup al que pertany la vista
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Obtenim el layout
-        LayoutInflater inflater = (LayoutInflater) context
+        // Obtenim el layout de la fila i l'inflem
+        LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.list_item_lloc, parent, false);
+        View viewRow = inflater.inflate(R.layout.list_item_lloc, parent, false);
 
         // Obtenim la referencia als widgets
-        TextView textViewName = (TextView) rowView.findViewById(R.id.textViewName);
-        TextView textViewDistance = (TextView) rowView.findViewById(R.id.textViewDistance);
-        TextView textViewDescription = (TextView) rowView.findViewById(R.id.textViewDescription);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.imageViewThumbnail);
+        TextView textViewName = (TextView) viewRow.findViewById(R.id.textViewName);
+        TextView textViewDistance = (TextView) viewRow.findViewById(R.id.textViewDistance);
+        TextView textViewDescription = (TextView) viewRow.findViewById(R.id.textViewDescription);
+        ImageView imageView = (ImageView) viewRow.findViewById(R.id.imageViewThumbnail);
 
         // Apliquem els valors del Lloc als widgets
-        Lloc lloc = llocsFiltrats.get(position);
+        Lloc lloc = mFilteredLlocs.get(position);
         textViewName.setText(lloc.nom);
-        textViewDistance.setText("100" + " km."); // TODO Esto se calcula respecto a la posicion actual y la posición del lloc
+        textViewDistance.setText("??" + " km."); // TODO: aquest valor serà calculat
         textViewDescription.setText(lloc.descripcio);
-        imageView.setImageBitmap(carregarThumbnailLloc(lloc));
+        imageView.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(mContext));
 
-        // Retornem la vista d'aquesta fila
-        return rowView;
+        return viewRow;
     }
 
+    /**
+     * Neteja la llista i notifica que les dades han canviat.
+     */
     @Override
     public void clear() {
-        // Netegem la llista
-        llocsFiltrats.clear();
+        mFilteredLlocs.clear();
         notifyDataSetChanged();
     }
 
-
-    private Bitmap carregarThumbnailLloc(Lloc lloc) {
-        Bitmap bitmap = lloc.getImatgePrincipal().carregarImatge(context);
-        // TODO Ajustar tamaño? Si no hace falta ajustar nada se puede eliminar el método
-
-        return bitmap;
-    }
-
-
-    public List<Lloc> getFiltered() {
-        if (llocsFiltrats != null) {
-            return llocsFiltrats;
-        } else if (llocsOriginal != null) {
-            return llocsOriginal;
+    /**
+     * Retorna la llista de llocs filtrats.
+     *
+     * @return la llista de llocs filtrats si existeix, la llista de llocs originals o una llista
+     * buida si no existeix cap de les dues anteriors.
+     */
+    private List<Lloc> getFilteredLlocs() {
+        if (mFilteredLlocs != null) {
+            return mFilteredLlocs;
+        } else if (mOriginalLlocs != null) {
+            return mOriginalLlocs;
         } else {
             return new ArrayList<Lloc>();
         }
-
     }
 
+    /**
+     * Si no hi ha filtre crea un de nou, si existeix retorna l'anterior.
+     *
+     * @return el filtre anterior o un nou si no existeix.
+     */
     @Override
     public Filter getFilter() {
         if (mFilter == null) {
@@ -92,21 +113,25 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         return mFilter;
     }
 
+    /**
+     * Retorna la quantitat d'objectes filtrats.
+     *
+     * @return quantitat d'objectes filtrats o 0 si no hi ha llocs filtrats.
+     */
     @Override
     public int getCount() {
-        if (llocsFiltrats == null) return 0;
-        return llocsFiltrats.size();
-
+        if (mFilteredLlocs == null) return 0;
+        return mFilteredLlocs.size();
     }
 
     @Override
     public Lloc getItem(int position) {
-        return llocsFiltrats.get(position);
+        return mFilteredLlocs.get(position);
     }
 
     @Override
     public int getPosition(Lloc item) {
-        return llocsFiltrats.indexOf(item);
+        return mFilteredLlocs.indexOf(item);
     }
 
     @Override
@@ -114,87 +139,80 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         return position;
     }
 
-    // Este filtro se aplica a los items que empiecen por los caracteres introducidos
+    /**
+     * Aquesta classe implementa un filtre que retorna els llocs que coincideixin amb la categoría
+     * passada com a prefix al mètode performFiltering().
+     * TODO: Afegir un parser de manera que el prefix accepti una cadena preparada per filtrar per
+     * categoria i per paraules.
+     */
     private class ItemsFilter extends Filter {
-        protected FilterResults performFiltering(CharSequence prefix) {
-            // Initiate our results object
-            FilterResults results = new FilterResults();
-            // If the adapter array is empty, check the actual items array and use it
-            if (llocsFiltrats == null) {
-                synchronized (mLock) { // Notice the declaration above
-                    Log.d(TAG, "No existeix la llista de llocsFiltrats. Es crea un arraylist buit");
-                    llocsFiltrats = new ArrayList<Lloc>(llocsOriginal);
 
+        /**
+         * Retorna un objecte amb els resultats filtrats segons la categoria pasada per argument. La
+         * categoria es converteix a enter i es compara amb el id de la categoria dels llocs,
+         * deixant només els que coincideixin.
+         *
+         * @param prefix condició que han de acomplir.
+         * @return resultats filtrats.
+         */
+        @Override
+        protected FilterResults performFiltering(CharSequence prefix) {
+            FilterResults results = new FilterResults();
+
+            // Si no hi ha resultats filtrats, creem un nou array
+            if (mFilteredLlocs == null) {
+                synchronized (mLock) {
+                    mFilteredLlocs = new ArrayList<Lloc>(mOriginalLlocs);
                 }
             }
-            // No prefix is sent to filter by so we're going to send back the original array
-            Log.d(TAG, "Prefix: " + prefix);
 
             if (prefix == null || prefix.length() == 0) {
+                // Si no s'ha passat cap prefix, retornem el filtre amb la llista original.
                 synchronized (mLock) {
-                    results.values = llocsOriginal;
-                    results.count = llocsOriginal.size();
+                    results.values = mOriginalLlocs;
+                    results.count = mOriginalLlocs.size();
                 }
             } else {
-                // Compare lower case strings
-                // String prefixString = prefix.toString().toLowerCase();
-                // Local to here so we're not changing actual array
-                final List<Lloc> items = llocsFiltrats;
+                // Creem un nou array on emmagatzemar els resultats que anem filtrant.
+                List<Lloc> newLlocs = new ArrayList<Lloc>(mOriginalLlocs.size());
+                int prefixCategoriaId = Integer.parseInt(prefix.toString());
 
-                final int count = llocsOriginal.size();
-                Log.d(TAG, "Items al adaptador original: " + count);
-                final ArrayList<Lloc> newItems = new ArrayList<Lloc>(count);
-
-                for (int i = 0; i < count; i++) {
-                    final Lloc item = llocsOriginal.get(i);
-                    // final String itemName = item.nom.toString().toLowerCase();
-                    final int itemId = item.categoriaId;
-                    Log.d(TAG, "id del item: " + item.categoriaId);
-                    if (itemId == Integer.parseInt(prefix.toString())) {
-                        newItems.add(item);
-                    }
-
-                    /* TODO: Este código filtra los lugares que empiezan por la palabra
-                    // First match against the whole, non-splitted value
-                    if (itemName.startsWith(prefixString)) {
-                        newItems.add(item);
-                    } else {
-                    } /* This is option and taken from the source of ArrayAdapter
-                            final String[] words = itemName.split(" ");
-                            final int wordCount = words.length;
-                            for (int k = 0; k < wordCount; k++) {
-                                if (words[k].startsWith(prefixString)) {
-                                    newItems.add(item);
-                                    break;
-                                }
-                            }
-                        } */
+                // Recorrem els llocs originals i comprovem si pertanyen a la categoria del prefix
+                for (Lloc lloc : mOriginalLlocs) {
+                    int categoriaId = lloc.categoriaId;
+                    if (categoriaId == prefixCategoriaId) newLlocs.add(lloc);
                 }
-                // Set and return
-                results.values = newItems;
-                results.count = newItems.size();
+
+                // Assignem els llocs filtrats al resultat
+                results.values = newLlocs;
+                results.count = newLlocs.size();
             }
             return results;
         }
 
-        //@SuppressWarnings("unchecked")
+        /**
+         * Es crida desde el fil de la UI per filtrar els resultats del adaptador segons el prefix
+         * enviat.
+         *
+         * @param prefix
+         * @param results
+         */
+        @SuppressWarnings("unchecked")
+        @Override
         protected void publishResults(CharSequence prefix, FilterResults results) {
-            //noinspection unchecked
-            llocsFiltrats = (ArrayList<Lloc>) results.values;
-            // Let the adapter know about the updated list
+            // Establim la llista de llocs filtrats als llocs retornats pel filtre.
+            mFilteredLlocs = (ArrayList<Lloc>) results.values;
+
+            // Notifiquem a l'adaptador dels canvis
             if (results.count > 0) {
                 notifyDataSetChanged();
             } else {
                 notifyDataSetInvalidated();
             }
 
-            List<Lloc> llocsFiltrats = getFiltered();
-            Log.d(TAG, "Llista de llocs filtrats: " + llocsFiltrats.size());
-            // Pasamos la lista filtrada al principal
-
-            ((OnFragmentActionListener) context).setFilteredLlocs(llocsFiltrats);
-            Log.d(TAG, "Pasando la lista de llosFiltrats: " + llocsFiltrats.size());
-            //throw new UnsupportedOperationException();
+            // Passem aquesta llista a la activitat principal.
+            // TODO: Això s'ha de controlar desde la base de dades
+            ((OnFragmentActionListener) mContext).setFilteredLlocs(getFilteredLlocs());
         }
     }
 }

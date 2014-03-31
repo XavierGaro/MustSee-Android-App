@@ -13,18 +13,25 @@ import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
 
 /**
- * ArrayAdapter per el Spinner que mostra el nom i la descripció de cada categoría.
- * TODO: Fer més genéric incluint la id del layout del Spinner a inflar en el constructor.
+ * Adaptador per el Spinner que mostra el nom i la descripció de cada categoría.
  *
  * @author Javier García
  * @see ioc.mustsee.data.Categoria
  */
 public class CategoriaArrayAdapter extends ArrayAdapter<Categoria> {
-    private static final String TAG = "MobileArrayAdapter";
+    private static final String TAG = "CategoriaArrayAdapter";
 
     private final Context mContext;
     private List<Categoria> mCategories;
 
+    /**
+     * Constructor de la classe al que se li passa el context de la aplicació i la llista de
+     * categories.
+     * TODO: Fer més genéric incluint la id del layout del Spinner a inflar en el constructor.
+     *
+     * @param context    context de la aplicació original
+     * @param categories llista de categories
+     */
     public CategoriaArrayAdapter(Context context, List<Categoria> categories) {
         super(context, R.layout.spinner_category, categories);
         this.mContext = context;
@@ -47,7 +54,7 @@ public class CategoriaArrayAdapter extends ArrayAdapter<Categoria> {
      *
      * @param position posicio de la vista al adaptador
      * @param parent   grup al que pertany la vista
-     * @return
+     * @return vista modificada
      */
     public View getCustomView(int position, ViewGroup parent) {
         LayoutInflater inflater =
