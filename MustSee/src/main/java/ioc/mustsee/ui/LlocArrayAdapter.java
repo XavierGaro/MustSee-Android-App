@@ -191,11 +191,11 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         }
 
         /**
-         * Es crida desde el fil de la UI per filtrar els resultats del adaptador segons el prefix
-         * enviat.
+         * Es cridat desde el fil de la UI per filtrar els resultats del adaptador segons el prefix
+         * enviat. No es crida manualment.
          *
-         * @param prefix
-         * @param results
+         * @param prefix prefix per filtrar
+         * @param results resultat del filtratge
          */
         @SuppressWarnings("unchecked")
         @Override
