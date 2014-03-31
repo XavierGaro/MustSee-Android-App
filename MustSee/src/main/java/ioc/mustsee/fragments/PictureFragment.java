@@ -17,21 +17,11 @@ public class PictureFragment extends MustSeeFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        mView = inflater.inflate(R.layout.fragment_photo, null);
-
-        Log.d(TAG, "inflando layout foto");
-
-        /*
+        // Si la vista no existeix la inflem i inicalitzem els widgets
         if (mView == null) {
-
-            mView = inflater.inflate(R.layout.fragment_photo, container, false);
+            mView = inflater.inflate(R.layout.fragment_picture, null);
+            initWidgets();
         }
-        */
-
-        initWidgets();
-
         return mView;
     }
 
@@ -43,7 +33,5 @@ public class PictureFragment extends MustSeeFragment {
 
         picture = (ImageView) mView.findViewById(R.id.imageViewPicture);
         picture.setImageBitmap(mCallback.getCurrentLloc().getImages().get(bundle.getInt("PICTURE")).carregarImatge(getActivity()));
-
     }
-
 }

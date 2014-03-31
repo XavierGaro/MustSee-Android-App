@@ -30,20 +30,11 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
-        mView = inflater.inflate(R.layout.fragment_login, null);
-        // Inflate the layout for this fragment
-
-        /*
+        // Si la vista no existeix la inflem i inicalitzem els widgets
         if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_login, container, false);
-
+            mView = inflater.inflate(R.layout.fragment_login, null);
+            initWidgets();
         }
-        */
-
-        initWidgets();
-
         return mView;
     }
 
@@ -98,7 +89,7 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
 
     private void guardarUsuario() {
         // TODO: Implementar los datos del usuario correctamente
-        SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString("NOM_USUARI", "Xavier");
         editor.commit();
         Log.d(TAG, "Preferencias guardadas");

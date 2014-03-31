@@ -36,11 +36,12 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si no existeix la vista la inflem
-        if (mView == null) mView = inflater.inflate(R.layout.fragment_detail, null);
-
-        initWidgets();
-        carregarDetall();
+        // Si la vista no existeix la inflem i inicalitzem els widgets
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_detail, null);
+            initWidgets();
+            loadDetail();
+        }
         return mView;
     }
 
@@ -75,7 +76,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     /**
      * Obté les dades del lloc a mostrar i actualitza els widgets per mostrar-les.
      */
-    private void carregarDetall() {
+    private void loadDetail() {
         // Obtenim el mLloc actual
         mLloc = mCallback.getCurrentLloc();
 

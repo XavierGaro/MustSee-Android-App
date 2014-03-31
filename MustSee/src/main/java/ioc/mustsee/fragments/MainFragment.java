@@ -30,12 +30,11 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView de " + TAG);
-
-        mView = inflater.inflate(R.layout.fragment_main, null);
-        initWidgets();
-
-        Log.d(TAG, "devolviendo mView de " + TAG + " : " + mView);
+        // Si la vista no existeix la inflem i inicalitzem els widgets
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_main, null);
+            initWidgets();
+        }
         return mView;
     }
 
@@ -82,14 +81,14 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     }
 
     private void borrarPreferencias() {
-        SharedPreferences.Editor editor = prefs.edit();
+        SharedPreferences.Editor editor = mPreferences.edit();
         editor.remove("NOM_USUARI");
         editor.commit();
     }
 
     private void actualizarEstado() {
         // Comprovem si hi han preferencies
-        if (prefs.contains("NOM_USUARI")) {
+        if (mPreferences.contains("NOM_USUARI")) {
             Log.d(TAG, "Encontradas preferencias");
             // El botó es logout i no login
             imageButtonLog.setBackgroundResource(R.drawable.ic_action_remove);

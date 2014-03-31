@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 
 public abstract class MustSeeFragment extends Fragment {
     private static final String TAG = "MustSeeFragment";
+
     OnFragmentActionListener mCallback;
-
-    SharedPreferences prefs;
-
+    SharedPreferences mPreferences;
     View mView;
 
     @Override
@@ -20,7 +19,7 @@ public abstract class MustSeeFragment extends Fragment {
         super.onAttach(activity);
 
         // Establecemos el archivo de preferencias
-        prefs = this.getActivity().getSharedPreferences("mustsee", Context.MODE_PRIVATE);
+        mPreferences = this.getActivity().getSharedPreferences("mustsee", Context.MODE_PRIVATE);
 
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception

@@ -44,11 +44,11 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Log.d(TAG, "Entrando en onCreateView");
-        mView = inflater.inflate(R.layout.fragment_map, container, false);
-        Log.d(TAG, "Saliendo de onCreateView");
-        initWidgets();
+        // Si la vista no existeix la inflem i inicalitzem els widgets
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_map, null);
+            initWidgets();
+        }
         return mView;
     }
 

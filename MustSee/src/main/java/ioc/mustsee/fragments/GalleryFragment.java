@@ -30,10 +30,11 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si no existeix la vista la inflem
-        if (mView == null) mView = inflater.inflate(R.layout.fragment_gallery, null);
-
-        initWidgets();
+        // Si la vista no existeix la inflem i inicalitzem els widgets
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_gallery, null);
+            initWidgets();
+        }
         return mView;
     }
 
