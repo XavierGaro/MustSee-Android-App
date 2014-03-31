@@ -2,7 +2,6 @@ package ioc.mustsee.fragments;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +20,21 @@ import ioc.mustsee.ui.MySpinner;
 
 import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_DETAIL;
 
+/**
+ * Aquest fragment mostra un Spinner personalitzat amb les categories i un ListView amb la
+ * informació dels llocs que coincideixin amb la categoria seleccionada.
+ *
+ * @author Javier García
+ */
 public class MyListFragment extends MustSeeFragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final String TAG = "MyListFragment";
-    private ListView listViewLlocs;
-    private MySpinner spinnerCategories;
-    private List<Lloc> llocs;
-    private List<Categoria> categories;
-    private ArrayAdapter<Lloc> adapterLlocs;
-    private ArrayAdapter<Categoria> adapterCategories;
 
+    private ListView mListViewLlocs;
+    private MySpinner mSpinnerCategories;
+    private List<Lloc> mLlocs;
+    private List<Categoria> mCategories;
+    private ArrayAdapter<Lloc> mAdapterLlocs;
+    private ArrayAdapter<Categoria> mAdapterCategories;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,130 +47,107 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         return mView;
     }
 
+    /**
+     * Incialitzem el Spinner i el ListView amb la informació de la activitat principal, i els
+     * afegim els listener corresponents.
+     */
     void initWidgets() {
-        Log.d(TAG, "Iniciando Widgets");
-        // Afegim les categories al spinner
-        categories = mCallback.getCategories();
-        spinnerCategories = (MySpinner) mView.findViewById(R.id.spinnerCategoria);
-        spinnerCategories.setOnItemSelectedListener(this);
-        spinnerCategories.setOnItemSelectedEvenIfUnchangedListener(this);
-        adapterCategories = new CategoriaArrayAdapter(getActivity(), categories);
-        spinnerCategories.setAdapter(adapterCategories);
+        // Afegim les categories al Spinner
+        mCategories = mCallback.getCategories();
+        mAdapterCategories = new CategoriaArrayAdapter(getActivity(), mCategories);
+        mSpinnerCategories = (MySpinner) mView.findViewById(R.id.spinnerCategoria);
+        mSpinnerCategories.setOnItemSelectedListener(this);
+        mSpinnerCategories.setOnItemSelectedEvenIfUnchangedListener(this);
+        mSpinnerCategories.setAdapter(mAdapterCategories);
 
-        // Afegim els llocs a la list mView
-        llocs = mCallback.getLlocs();
-        listViewLlocs = (ListView) mView.findViewById(R.id.listViewLlocs);
-        listViewLlocs.setOnItemClickListener(this);
-        adapterLlocs = new LlocArrayAdapter(getActivity(), llocs);
-        listViewLlocs.setAdapter(adapterLlocs);
-        Log.d(TAG, "Fin de Iniciando Widgets");
-
+        // Afegim els llocs a la ListView
+        mLlocs = mCallback.getLlocs();
+        mAdapterLlocs = new LlocArrayAdapter(getActivity(), mLlocs);
+        mListViewLlocs = (ListView) mView.findViewById(R.id.listViewLlocs);
+        mListViewLlocs.setOnItemClickListener(this);
+        mListViewLlocs.setAdapter(mAdapterLlocs);
     }
 
-
-    @Override
-    public void onResume() {
-        Log.d(TAG, "Entrando en onResume");
-        super.onResume();
-        Log.d(TAG, "Saliendo de onResume");
-
-    }
-
-    // Spinner
+    /**
+     * Listener cridat pel Spinner que activa el filtre del ListView. Si la categoriaID es 0 es
+     * selecciona tot.
+     *
+     * @param parent   adaptador.
+     * @param view     vista clicada.
+     * @param position posició de la vista clicada a la llista.
+     * @param id       ide de la vista clicada a la llista.
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        int catId = categories.get(position).id;
-        Log.d(TAG, "onItemSelected: " + categories.get(position).nom);
-
-        if (catId == 0) {
-            // Selecciona tot
-            adapterLlocs.getFilter().filter(null);
+        int categoriaId = mCategories.get(position).id;
+        if (categoriaId == 0) {
+            // Seleccionem tots els llocs
+            mAdapterLlocs.getFilter().filter(null);
         } else {
-            adapterLlocs.getFilter().filter(String.valueOf(catId));
+            // Filtrem els llocs que pertanyen a la categoria.
+            mAdapterLlocs.getFilter().filter(String.valueOf(categoriaId));
         }
     }
 
-
+    /**
+     * Aquest mètode es obligatori implementar-lo encara que no fem res amb ell.
+     *
+     * @param parent
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        // Esto ocurre cuando el elemento seleccionado desaparece del spinner (por ser filtrado por ejemplo)
-        Log.d(TAG, "No se ha seleccionado nada nuevo. Ha ocurrido?");
-
+        // Es cridat quan l'element seleccionat al Spinner desapareix.
     }
 
-    // List View
+    /**
+     * Listener cridat pel ListView al clicar sobre un element de la llista, segons si ja teniem el
+     * mateix lloc seleccionat, si està disponible la vista de detall o de mapa realitzarà diferents
+     * accions sobre l'activitat principal.
+     *
+     * @param parent   adaptador.
+     * @param view     vista clicada.
+     * @param position posició de la vista clicada a la llista.
+     * @param id       ide de la vista clicada a la llista.
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // Establecemos el item como seleccionado
+        // Marquem el lloc com a seleccionat a la vista.
         view.setSelected(true);
-        Log.d(TAG, "Está seleccionado? " + view.isSelected());
 
-        Lloc selected = (Lloc) parent.getItemAtPosition(position);
-        Lloc current = mCallback.getCurrentLloc();
-        Log.d(TAG, "Se ha cliclado el sitio: " + selected.nom);
-        if (current != null) {
-            Log.d(TAG, "El sitio actual es : " + current.nom);
+        // Recuperem els llocs actual i seleccionat per comparar-los
+        Lloc selectedLloc = (Lloc) parent.getItemAtPosition(position);
+        Lloc currentLloc = mCallback.getCurrentLloc();
 
+        if (currentLloc == null || selectedLloc.id != currentLloc.id) {
+            // Si no hi ha cap lloc actual, o el lloc actual i el seleccionat son diferents establim
+            // el lloc com a actual
+            mCallback.setCurrentLloc(selectedLloc);
         } else {
-            Log.d(TAG, "El sitio actual es : null");
-        }
-
-        // Si el sitio ya está en selected muestra el detalle
-        if (current == null || selected.id != current.id) {
-            Log.d(TAG, "Estableciendo como actual: " + selected.nom);
-            // Centra el sitio en la pantalla y muestra su info (en el principal,aquí solo se setea)
-            mCallback.setCurrentLloc(selected);
-        } else {
-            Log.d(TAG, "Se debería mostrar detalle de: " + selected.nom);
-            // TODO: cambiar la vista de mapa a detalle
+            // Si es el mateix mostrem la vista de detall
             mCallback.OnActionDetected(ACTION_DETAIL);
         }
-
-
     }
 
-    public void setSelected(Lloc seleccionarLloc) {
-        Log.d(TAG, "Set selected: " + seleccionarLloc.nom);
-
-
-        // Recorremos la lista de sitios
-        int len = listViewLlocs.getCount();
-        for (int i = 0; i < len; i++) {
-            if (listViewLlocs.getItemAtPosition(i) == seleccionarLloc) {
-
-                // OJO! Si no se hace el request Focus from touch no se establece la selección
-                listViewLlocs.requestFocusFromTouch();
-                listViewLlocs.setSelection(i);
-                //listViewLlocs.setItemChecked(i, true);
-
-                // Es mou la barra fins aquesta posició NO HACE FALTA, no aprecio diferencia entre el comportamiento normal y este. TODO: Comprovar con más elementos en la lista
-                listViewLlocs.smoothScrollToPosition(i);
-
-                listViewLlocs.setSelected(true); //TODO: Comprobar en dispositivo si funciona o no
-
-                Log.d(TAG, "Encontrado: " + ((Lloc) listViewLlocs.getItemAtPosition(i)).nom);
-                Log.d(TAG, "position: " + i);
-                Log.d(TAG, "Posición seleccionada: " + listViewLlocs.getSelectedItemPosition());
-                Log.d(TAG, "Item selecionado: " + ((Lloc) listViewLlocs.getSelectedItem()).nom);
+    /**
+     * Estableix el lloc pasat com arguemnt com a lloc seleccionat, intenta marcarlo com seleccionat
+     * i mou la barra de scroll suaument fins a la seva posició. Aquest mètode es cridat des de la
+     * activitat principal per actualitzar la posició de la llista. Degut al funcionament del focus
+     * i el mode Touch es es normal que no es mostri la seleccio quan toquem altres parts de la
+     * pantalla.
+     *
+     * @param selectedLloc lloc per establir com seleccionat.
+     */
+    public void setSelected(Lloc selectedLloc) {
+        // Recorrem la llista de llocs fins trobar el seleccionat
+        for (int i = 0, len = mListViewLlocs.getCount(); i < len; i++) {
+            if (mListViewLlocs.getItemAtPosition(i) == selectedLloc) {
+                // Es requereix cridar a requestFocusFromTouch() per poder establir la selecció
+                mListViewLlocs.requestFocusFromTouch();
+                mListViewLlocs.setSelection(i);
+                mListViewLlocs.smoothScrollToPosition(i);
+                mListViewLlocs.setSelected(true);
                 return;
             }
         }
-        /*
-
-
-
-        for (int i=0,len=llocs.size(); i<len; i++) {
-            if (llocs.get(i)==seleccionarLloc) {
-                listViewLlocs.setSelection(i);
-                //listViewLlocs.setItemChecked(i, true);
-
-
-                Log.d(TAG, "Lugar en la posición "+i+"?: "+((Lloc) listViewLlocs.getItemAtPosition(i)).nom);
-                Log.d(TAG, "Lugar en la posición "+i+"?: "+((Lloc) listViewLlocs.getItemAtPosition(i)).nom);
-
-                return;
-            }
-        }
-        */
     }
 }
