@@ -125,6 +125,11 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
 
     private void fixZoom(boolean animar) {
         Log.d(TAG, "Entrando en fixZoom");
+
+        // Si no hi ha cap lloc, no cal fer res
+        if (mLlocs.isEmpty()) {
+            return;
+        }
         LatLngBounds.Builder bc = new LatLngBounds.Builder();
 
         for (Lloc lloc : mLlocs) {

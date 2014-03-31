@@ -26,11 +26,18 @@ import ioc.mustsee.fragments.MyMapFragment;
 import ioc.mustsee.fragments.OnFragmentActionListener;
 import ioc.mustsee.fragments.PhotoFragment;
 
-
+/**
+ * Aquesta es la classe principal de la aplicació. Des de aquí es gestionen les accions i es
+ * posibilita la comunicació amb la base de dades i entre els diferents fragments.
+ *
+ * @author Javier García
+ * @version 0.1
+ */
 public class MainActivity extends ActionBarActivity implements OnFragmentActionListener {
     // Directoris
     public static final String PICTURES_DIRECTORY = "galerias/";
     private static final String TAG = "MainActivity";
+
     // Referencia per llençar Fragments
     private static final int MAIN = 0;
     private static final int LOGIN = 1;
@@ -64,7 +71,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
     // En aquest mBundle s'emmagatzeman les dades que es pasen entre fragments
     private Bundle mBundle;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +168,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         // Reemplacem el fragment al contenidor apropiat.
         mTransaction.replace(container, fragment);
     }
-
 
     /**
      * Infla el menú de la ActionBar.
@@ -308,7 +313,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         return true;
     }
 
-
     /**
      * TODO: Això s'ha de obtenir de la base de dades
      * Retorna la llista completa de Llocs.
@@ -340,7 +344,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      * Estableix la llista de llocs filtrada i actualitza els marcadors si hi ha el fragment de
      * mapa carregat.
      *
-     * @param filteredLlocs
+     * @param filteredLlocs llista de llocs filtrats.
      */
     @Override
     public void setFilteredLlocs(List<Lloc> filteredLlocs) {
@@ -473,7 +477,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         Categoria platjes = new Categoria(1, "Playas", "En esta categoría hay playas.");
         Categoria poi = new Categoria(2, "Puntos de interes", "En esta categoría hay puntos de interes.");
         Categoria museus = new Categoria(3, "Museos", "En esta categoría hay museos.");
-        Categoria buida = new Categoria(3, "Vacía", "En esta categoría no hay nada.");
+        Categoria buida = new Categoria(4, "Vacía", "En esta categoría no hay nada.");
 
         mCategories.add(tot);
         mCategories.add(platjes);

@@ -14,26 +14,26 @@ public class Lloc {
     public final String nom;
     public final String descripcio;
     public final int iconResource;
-    public final int categoria;
+    public final int categoriaId;
     private List<Imatge> galeria;
 
-    public Lloc(int id, String nom, int categoria, float latitud, float longitud, String descripcio) {
-        this(id, nom, categoria, latitud, longitud, descripcio, DEFAULT_ICON);
+    public Lloc(int id, String nom, int categoriaId, float latitud, float longitud, String descripcio) {
+        this(id, nom, categoriaId, latitud, longitud, descripcio, DEFAULT_ICON);
     }
 
-    public Lloc(String nom, int categoria, float latitud, float longitud, String descripcio) {
-        this(nom, categoria, latitud, longitud, descripcio, DEFAULT_ICON);
+    public Lloc(String nom, int categoriaId, float latitud, float longitud, String descripcio) {
+        this(nom, categoriaId, latitud, longitud, descripcio, DEFAULT_ICON);
     }
 
-    public Lloc(String nom, int categoria, float latitud, float longitud, String descripcio, int iconResource) {
-        this(idCounter++, nom, categoria, latitud, longitud, descripcio, iconResource);
+    public Lloc(String nom, int categoriaId, float latitud, float longitud, String descripcio, int iconResource) {
+        this(idCounter++, nom, categoriaId, latitud, longitud, descripcio, iconResource);
     }
 
-    public Lloc(int id, String nom, int categoria, float latitud, float longitud, String descripcio, int iconResource) {
+    public Lloc(int id, String nom, int categoriaId, float latitud, float longitud, String descripcio, int iconResource) {
         this.id = id;
         this.posicio = new LatLng(latitud, longitud);
         this.nom = nom;
-        this.categoria = categoria;
+        this.categoriaId = categoriaId;
         this.descripcio = descripcio;
         this.iconResource = iconResource;
     }

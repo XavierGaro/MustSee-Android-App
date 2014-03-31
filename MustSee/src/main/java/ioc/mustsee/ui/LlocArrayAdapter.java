@@ -148,8 +148,8 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
                 for (int i = 0; i < count; i++) {
                     final Lloc item = llocsOriginal.get(i);
                     // final String itemName = item.nom.toString().toLowerCase();
-                    final int itemId = item.categoria;
-                    Log.d(TAG, "id del item: " + item.categoria);
+                    final int itemId = item.categoriaId;
+                    Log.d(TAG, "id del item: " + item.categoriaId);
                     if (itemId == Integer.parseInt(prefix.toString())) {
                         newItems.add(item);
                     }
