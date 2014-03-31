@@ -24,14 +24,13 @@ import ioc.mustsee.fragments.MainFragment;
 import ioc.mustsee.fragments.MyListFragment;
 import ioc.mustsee.fragments.MyMapFragment;
 import ioc.mustsee.fragments.OnFragmentActionListener;
-import ioc.mustsee.fragments.PhotoFragment;
+import ioc.mustsee.fragments.PictureFragment;
 
 /**
  * Aquesta es la classe principal de la aplicació. Des de aquí es gestionen les accions i es
  * posibilita la comunicació amb la base de dades i entre els diferents fragments.
  *
  * @author Javier García
- * @version 0.1
  */
 public class MainActivity extends ActionBarActivity implements OnFragmentActionListener {
     // Directoris
@@ -160,7 +159,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 break;
 
             case PICTURE:
-                fragment = new PhotoFragment();
+                fragment = new PictureFragment();
                 fragment.setArguments(mBundle);
                 break;
         }

@@ -46,7 +46,7 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     }
 
 
-    private void initWidgets() {
+    void initWidgets() {
         Log.d(TAG, "Inicialitzat widtegs de " + TAG);
         imageButtonLog = (ImageButton) mView.findViewById(R.id.imageButtonLog);
         imageButtonLog.setOnClickListener(this);

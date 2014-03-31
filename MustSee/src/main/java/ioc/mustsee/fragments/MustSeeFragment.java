@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class MustSeeFragment extends Fragment {
+public abstract class MustSeeFragment extends Fragment {
     private static final String TAG = "MustSeeFragment";
     OnFragmentActionListener mCallback;
 
@@ -43,4 +43,6 @@ public class MustSeeFragment extends Fragment {
             }
         }
     }
+
+    abstract void initWidgets();
 }

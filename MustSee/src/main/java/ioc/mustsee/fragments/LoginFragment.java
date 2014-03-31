@@ -42,18 +42,18 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
         }
         */
 
-        initWidgets(mView);
+        initWidgets();
 
         return mView;
     }
 
-    private void initWidgets(View v) {
-        Log.d(TAG, "View: " + v);
-        imageButtonLogin = (ImageButton) v.findViewById(R.id.imageButtonLogin);
+    void initWidgets() {
+        Log.d(TAG, "View: " + mView);
+        imageButtonLogin = (ImageButton) mView.findViewById(R.id.imageButtonLogin);
         imageButtonLogin.setOnClickListener(this);
-        imageButtonCancel = (ImageButton) v.findViewById(R.id.imageButtonCancel);
+        imageButtonCancel = (ImageButton) mView.findViewById(R.id.imageButtonCancel);
         imageButtonCancel.setOnClickListener(this);
-        textViewRegister = (TextView) v.findViewById(R.id.textViewRegister);
+        textViewRegister = (TextView) mView.findViewById(R.id.textViewRegister);
         textViewRegister.setOnClickListener(this);
     }
 

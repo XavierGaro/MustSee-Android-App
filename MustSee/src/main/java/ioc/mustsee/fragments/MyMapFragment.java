@@ -48,8 +48,15 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         Log.d(TAG, "Entrando en onCreateView");
         mView = inflater.inflate(R.layout.fragment_map, container, false);
         Log.d(TAG, "Saliendo de onCreateView");
+        initWidgets();
         return mView;
     }
+
+    @Override
+    void initWidgets() {
+        // TODO: Aqui s'inicialitzaran els botons del mapa
+    }
+
 
     @Override
     public void onResume() {

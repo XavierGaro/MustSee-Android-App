@@ -1,9 +1,7 @@
 package ioc.mustsee.fragments;
 
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,78 +16,68 @@ import ioc.mustsee.data.Imatge;
 import ioc.mustsee.ui.GridViewAdapter;
 import ioc.mustsee.ui.ImageItem;
 
+/**
+ * Fragment que mostra en una graella totes les imatges pertanyents al lloc seleccionat actualment.
+ *
+ * @author Javier García
+ */
 public class GalleryFragment extends MustSeeFragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "GalleryFragment";
 
-    private GridView gridView;
-    private GridViewAdapter customGridAdapter;
-
+    private GridView mGridView;
+    private GridViewAdapter mCustomGridAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Log.d(TAG, "inflando layout galeria");
+        // Si no existeix la vista la inflem
+        if (mView == null) mView = inflater.inflate(R.layout.fragment_gallery, null);
 
-
-        mView = inflater.inflate(R.layout.fragment_gallery, null);
-/*
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_gallery, container, false);
-        }
-*/
-
-        initWidgets(mView);
+        initWidgets();
         return mView;
     }
 
-    private void initWidgets(View v) {
-        Log.d(TAG, "Inicialitzat widtegs de " + TAG);
-
-        gridView = (GridView) v.findViewById(R.id.gridView);
-        customGridAdapter = new GridViewAdapter(getActivity(), R.layout.grid_row_gallery, getData());
-        gridView.setAdapter(customGridAdapter);
-
-        gridView.setOnItemClickListener(this);
-
-        /*
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(getActivity(), "" + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-*/
-        Log.d(TAG, "Hay listener asociado a la galeria?" + gridView.getOnItemClickListener());
+    /**
+     * Inicialitzem la graella, li asignem l'adaptador i l'associem amb el listener.
+     */
+    @Override
+    void initWidgets() {
+        mGridView = (GridView) mView.findViewById(R.id.gridView);
+        mCustomGridAdapter = new GridViewAdapter(getActivity(), R.layout.grid_row_gallery, getData());
+        mGridView.setAdapter(mCustomGridAdapter);
+        mGridView.setOnItemClickListener(this);
     }
 
-    // TODO no deben usarse imageItem, solo Imatges, modificar esto y el adaptador
-    private ArrayList getData() {
-        // Obtiene la galeria de imagenes del curren lloc
-        Log.d(TAG, "Gallery: Intentando recuperar lloc actual:" + mCallback.getCurrentLloc());
-        Log.d(TAG, "Gallery: Imatges." + mCallback.getCurrentLloc().getImages());
-        List<Imatge> imatges = mCallback.getCurrentLloc().getImages();
+    /**
+     * Listener pels clicks a la graella. Quan rep un click ho comunica a la acció principal enviant
+     * en un bundle la informació referent a la posició de la vista clicada.
+     *
+     * @param parent   vista del adaptador.
+     * @param view     vista clicada.
+     * @param position posició de la vista a la graella.
+     * @param id       index de la vista a la graella.
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("PICTURE", position);
+        mCallback.OnActionDetected(OnFragmentActionListener.ACTION_PHOTO, bundle);
+    }
 
+    /**
+     * Retorna un ArrayList amb les imatges que formaran la graella.
+     *
+     * @return ArrayList amb les imatges que forman la graella.
+     * TODO: Substituir ImateItem per Imatge aqui i al adaptador.
+     */
+    private ArrayList getData() {
+        List<Imatge> imatges = mCallback.getCurrentLloc().getImages();
         final ArrayList imageItems = new ArrayList();
 
-        int i = 0;
         for (Imatge imatge : imatges) {
             Bitmap bitmap = imatge.carregarImatge(getActivity());
             imageItems.add(new ImageItem(bitmap, imatge.tittle));
         }
-
-
         return imageItems;
-
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.d(TAG, "Se ha hecho click en el item position:" + position);
-        // Mostrar imagen
-        Bundle bundle = new Bundle();
-        // TODO: Cambiar la manera en la que se manejan las ids, no hay garantia de que el indice corresponda correctamente con la photo
-        bundle.putInt("PHOTO", position);
-        mCallback.OnActionDetected(OnFragmentActionListener.ACTION_PHOTO, bundle);
-
     }
 }

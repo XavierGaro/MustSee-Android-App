@@ -44,7 +44,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         return mView;
     }
 
-    private void initWidgets() {
+    void initWidgets() {
         Log.d(TAG, "Iniciando Widgets");
         // Afegim les categories al spinner
         categories = mCallback.getCategories();

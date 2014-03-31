@@ -47,7 +47,8 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     /**
      * Inicialitza els widgets del fragment i els asigna els listener corresponents.
      */
-    private void initWidgets() {
+    @Override
+    void initWidgets() {
         mTextViewName = (TextView) mView.findViewById(R.id.textViewName);
         mTextViewCategory = (TextView) mView.findViewById(R.id.textViewCategory);
         mTextViewCategory.setOnClickListener(this);

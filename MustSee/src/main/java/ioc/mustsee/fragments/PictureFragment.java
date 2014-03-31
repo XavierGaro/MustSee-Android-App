@@ -9,9 +9,8 @@ import android.widget.ImageView;
 
 import ioc.mustsee.R;
 
-public class PhotoFragment extends MustSeeFragment {
-    private static final String TAG = "GalleryFragment";
-    View mView;
+public class PictureFragment extends MustSeeFragment {
+    private static final String TAG = "PictureFragment";
     private ImageView picture;
 
 
@@ -31,19 +30,19 @@ public class PhotoFragment extends MustSeeFragment {
         }
         */
 
-        initWidgets(mView);
+        initWidgets();
 
         return mView;
     }
 
-    private void initWidgets(View v) {
+    void initWidgets() {
         Log.d(TAG, "Inicialitzat widtegs de " + TAG);
 
         Bundle bundle = getArguments();
-        Log.d(TAG, "Se han pasado los argumentos: " + bundle.getInt("PHOTO"));
+        Log.d(TAG, "Se han pasado los argumentos: " + bundle.getInt("PICTURE"));
 
-        picture = (ImageView) v.findViewById(R.id.imageViewPicture);
-        picture.setImageBitmap(mCallback.getCurrentLloc().getImages().get(bundle.getInt("PHOTO")).carregarImatge(getActivity()));
+        picture = (ImageView) mView.findViewById(R.id.imageViewPicture);
+        picture.setImageBitmap(mCallback.getCurrentLloc().getImages().get(bundle.getInt("PICTURE")).carregarImatge(getActivity()));
 
     }
 
