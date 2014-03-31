@@ -59,4 +59,11 @@ public class Lloc {
         }
     }
 
+    public String getShortDescripcio() {
+        if (descripcio.length() > 30) {
+            return descripcio.substring(0, 30) + "...";
+        } else {
+            return descripcio;
+        }
+    }
 }

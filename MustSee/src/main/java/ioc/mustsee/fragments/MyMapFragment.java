@@ -1,15 +1,12 @@
 package ioc.mustsee.fragments;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,7 +16,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,21 +26,32 @@ import ioc.mustsee.data.Lloc;
 
 import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_DETAIL;
 
-
+/**
+ * A aquest fragment es on es gestiona el mapa, tant en la vista a pantalla completa com parcial.
+ *
+ * @autor Javier García
+ */
 public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = "MyMapFragment";
 
-    private static final int VELOCITAT_CAMARA_FOCUS = 500;
-    HashMap<Marker, Lloc> mMarkersToLloc = new HashMap<Marker, Lloc>();
+    private static final int VELOCITAT_CAMARA = 500;
+
+    // TODO: aquest valor serà 1 per pantalla completa o ajustat a la proporicó visible del mapa.
+    private float screen_factor = 0.75f;
+
+    // Objectes del mapa
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
-    private List<Lloc> mLlocs;
 
+
+    // Informació dels llocs i marcadors
+    private HashMap<Marker, Lloc> mMarkersToLloc = new HashMap<Marker, Lloc>();
+    private List<Lloc> mLlocs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Si la vista no existeix la inflem i inicalitzem els widgets
+        // Si la vista no existeix la inflem i inicialitzem els widgets
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_map, null);
             initWidgets();
@@ -52,91 +59,83 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         return mView;
     }
 
+    /**
+     * TODO: Aquí s'inicialitzaran els botons del mapa
+     */
     @Override
     void initWidgets() {
-        // TODO: Aqui s'inicialitzaran els botons del mapa
+        // S'ha de implementar obligatòriament
     }
 
-
+    /**
+     * Si al restaurar el fragment no existeix el mapa l'inicialitzem. Al contrari que amb altres
+     * widgets, el mapa es un fragment niuat i no es pot inicialitzar en el mètode onCreateView().
+     */
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "Entrando en onResume()");
-
-        if (mMap == null) {
-            initMap();
-        }
-        Log.d(TAG, "Saliendo de onResume()");
+        if (mMap == null) initMap();
     }
 
-
+    /**
+     * Inicialitza el mapa, carrega la llista de llocs completa, els afegeix com a marcadors i fa
+     * focus amb la càmera sobre ells.
+     */
     private void initMap() {
-        Log.d(TAG, "Entrando en initMap: " + mMap);
-
-        /*
-        android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        SupportMapFragment mMapFragment = (SupportMapFragment) fragmentManager
-                .findFragmentById(R.id.mMapFragment);
-        */
-
         mMap = mMapFragment.getMap();
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
         mMap.setMyLocationEnabled(true);
-        //mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
         mLlocs = mCallback.getLlocs();
-        afegirMarcadors(mLlocs);
+        addMarkers(mLlocs);
         fixZoom(true);
-
-        Log.d(TAG, "Saliendo de en initMap: " + mMap);
     }
 
-    private List<Marker> afegirMarcadors(List<Lloc> llocs) {
-        Log.d(TAG, "Entrando en afegirMarcadors");
-        List<Marker> marcadors = new ArrayList<Marker>();
-        Marker marcador;
+    /**
+     * Afegeix la llista de llocs pasada per argument al mapa de marcadors.
+     *
+     * @param llocs llista de llocs a afegir com marcadors.
+     */
+    private void addMarkers(List<Lloc> llocs) {
         for (Lloc lloc : llocs) {
-            // Si el lloc ja te marcador, continuem
-            if (mMarkersToLloc.containsValue(lloc)) {
-                continue;
-            }
-            marcador = afegirMarcador(lloc);
-            marcadors.add(marcador);
-            mMarkersToLloc.put(marcador, lloc);
-            Log.d(TAG, "Afegit marcador: " + mMarkersToLloc);
+            // Si ja hi ha un marcador al mapa per aquest lloc continuem.
+            if (mMarkersToLloc.containsValue(lloc)) continue;
+            mMarkersToLloc.put(addMarker(lloc), lloc);
         }
-        Log.d(TAG, "Saliendo de afegirMarcadors");
-        return marcadors;
     }
 
-    private Marker afegirMarcador(Lloc lloc) {
-        Log.d(TAG, "Entrando en afegirMarcador: " + lloc.nom);
-        // Retallem la descripció
-        String shortDescripcio = lloc.descripcio;
-        if (shortDescripcio.length() > 30) {
-            shortDescripcio = shortDescripcio.substring(0, 30) + "...";
-        }
-
+    /**
+     * Afegeix el lloc passat com argument al mapa de marcadors.
+     *
+     * @param lloc
+     * @return marcador creat.
+     */
+    private Marker addMarker(Lloc lloc) {
+        // Afegim les dades del marcador.
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(lloc.posicio)
                 .title(lloc.nom)
-                .snippet(shortDescripcio);
+                .snippet(lloc.getShortDescripcio());
+
+        // Si te un icon associat l'afegim al marcador.
         if (lloc.iconResource != Lloc.DEFAULT_ICON) {
             markerOptions.icon(BitmapDescriptorFactory.fromResource(lloc.iconResource));
         }
 
-        Log.d(TAG, "Saliendo de afegirMarcador: " + lloc.nom);
+        // Retornem el marcador creat
         return mMap.addMarker(markerOptions);
     }
 
-    private void fixZoom(boolean animar) {
-        Log.d(TAG, "Entrando en fixZoom");
-
+    /**
+     * Centra la càmera amb o sense animació sobre un requadre de mapa ajustat a les coordenades dels llocs a la llista.
+     *
+     * @param animate true si volem animar el mapa o false en cas contrari.
+     */
+    private void fixZoom(boolean animate) {
         // Si no hi ha cap lloc, no cal fer res
-        if (mLlocs.isEmpty()) {
-            return;
-        }
+        if (mLlocs.isEmpty()) return;
+
         LatLngBounds.Builder bc = new LatLngBounds.Builder();
 
         for (Lloc lloc : mLlocs) {
@@ -144,169 +143,147 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         }
 
         int height = this.getResources().getDisplayMetrics().heightPixels;
-        int width2 = this.getResources().getDisplayMetrics().widthPixels;
-        // TODO: Si es pantalla completa la ocupa entera, si es parcial ocupa 3/4
-        int width = width2 * 3 / 4;
+        int width = (int) (this.getResources().getDisplayMetrics().widthPixels * screen_factor);
 
-        if (animar) {
+        if (animate) {
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), width, height, 100), 2000, null);
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), width, height, 100));
         }
-        Log.d(TAG, "Saliendo de fixZoom");
-
     }
 
+    /**
+     * Estableix el focus al lloc passat com argument. El que que la imatge es centri en la posició
+     * del lloc i si existeix un marcador mostra la seva informació. Aquest moviment es sempre animat.
+     *
+     * @param lloc lloc en el que centrar la càmera.
+     */
     public void setFocus(Lloc lloc) {
-        Log.d(TAG, "Entrando en setFocus:" + lloc.nom);
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(lloc.posicio), VELOCITAT_CAMARA_FOCUS, null);
-        Marker marker = getMarcador(lloc);
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(lloc.posicio), VELOCITAT_CAMARA, null);
+        Marker marker = getMarker(lloc);
         if (marker != null) marker.showInfoWindow();
-
-        Toast.makeText(getActivity(), "Has cliclado en el marcador de: " + mMarkersToLloc.get(marker).nom, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Saliendo de setFocus:" + lloc.nom);
     }
 
-
-    private Marker getMarcador(Lloc lloc) {
-        Log.d(TAG, "Entrando en getMarcador: " + lloc.nom);
+    /**
+     * Retorna el marcador corresponent al lloc passat com argument.
+     *
+     * @param lloc lloc del que volem obtenir el marcador.
+     * @return marcador corresponent al lloc o null si no s'ha trobat cap.
+     */
+    private Marker getMarker(Lloc lloc) {
         for (Map.Entry<Marker, Lloc> entry : mMarkersToLloc.entrySet()) {
             if (entry.getValue() == lloc) {
-                Log.d(TAG, "Saliendo de getMarcador.");
                 return entry.getKey();
             }
         }
-        Log.d(TAG, "Saliendo de getMarcador.");
         return null;
     }
 
-
+    /**
+     * Listener per l'event de clicar a sobre d'un marcador.
+     *
+     * @param marker marcador sobre el que s'ha fet click.
+     * @return true si s'ha consumit l'event o false en cas contrari.
+     */
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.d(TAG, "Entrando en onMarkerClick");
-
-        // Comprobamos si ya està seleccionado
+        // Comprovem si ya estava seleccionat previament
         if (mMarkersToLloc.get(marker) == mCallback.getCurrentLloc()) {
-            // Es el mismo, abrimos detalle
+            // Cridem a la acció de detall i consumim el event.
             mCallback.OnActionDetected(ACTION_DETAIL);
-            Log.d(TAG, "Saliendo de onMarkerClick.");
-            return true; // Consumimos el click, no se ejecuta el comportamiento normal.
+            return true;
         } else {
-            // Llamamos a main activity para que lo procese, despues pasarà a setFocus o mostrar detalle.
+            // Establim aquest lloc com l'actual i no consumim el click.
             mCallback.setCurrentLloc(mMarkersToLloc.get(marker));
-            // Devolvemos false, asi que se  ejecuta el efecto normal de clicar, que es mostrar el detalle y centrar (no consumimos el evento).
-            Log.d(TAG, "Saliendo de onMarkerClick.");
             return false;
         }
     }
 
-
-    public void updateMarkers(List<Lloc> llocsFiltrats) {
-        Log.d(TAG, "Entrando en updateMarkers");
-        // Añadimos los nuevos
-        mLlocs = llocsFiltrats;
-        removeMarkersNotInList(llocsFiltrats);
-        afegirMarcadors(mLlocs);
-        fixZoom(true);
-        Log.d(TAG, "Saliendo de updateMarkers.");
+    /**
+     * Listener per l'event de clicar a sobre d'una finestra d'informació. En aquest cas el lloc
+     * sempre està seleccionat anteriorment.
+     *
+     * @param marker marcador al que pertany la finestra sobre els que s'ha fet click.
+     */
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        mCallback.OnActionDetected(ACTION_DETAIL);
     }
 
-    private void removeMarkersNotInList(List<Lloc> llocsFiltrats) {
-        Log.d(TAG, "Entrando en removeMarkersNotInList");
+    /**
+     * Actualitza la llista de llocs a la llista passada com argument. Eliminant els marcadors que
+     * no es trobin a la llista, afegint la resta i fent zoom sobre el conjunt.
+     *
+     * @param filteredLlocs llista de llocs per reemplaçar la llista actual.
+     */
+    public void updateMarkers(List<Lloc> filteredLlocs) {
+        mLlocs = filteredLlocs;
+        removeMarkersNotInList(filteredLlocs);
+        addMarkers(mLlocs);
+        fixZoom(true);
+    }
+
+    /**
+     * Itera sobre el mapa de marcadors i elimina totes les entrades que no es trobin la la llista
+     * passada com argument
+     *
+     * @param filteredLlocs llista de llocs per conservar al mapa de marcadors.
+     */
+    private void removeMarkersNotInList(List<Lloc> filteredLlocs) {
+        Map.Entry<Marker, Lloc> entry;
         Marker marker;
         Lloc lloc;
 
-
-        // Iterator
-        Iterator<Map.Entry<Marker, Lloc>> it = mMarkersToLloc.entrySet().iterator();
-        Map.Entry<Marker, Lloc> entry;
-        while (it.hasNext()) {
+        for (Iterator<Map.Entry<Marker, Lloc>> it = mMarkersToLloc.entrySet().iterator(); it.hasNext(); ) {
             entry = it.next();
             marker = entry.getKey();
             lloc = entry.getValue();
 
-            if (llocsFiltrats.contains(lloc)) {
-                // El lloc continua a la llista
-            } else {
-                // Cal eliminar-lo
+            if (!filteredLlocs.contains(lloc)) {
+                // Ho eliminem del mapa, ocultem la finestra de informació i eliminem el marcador.
                 it.remove();
-                marker.hideInfoWindow(); // Per si de cas
+                marker.hideInfoWindow();
                 marker.remove();
             }
-
-
         }
-        Log.d(TAG, "Saliendo de removeMarkersNotInList");
     }
 
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-        Log.d(TAG, "Entrando en onInfoWindoclick: " + marker);
-        mCallback.OnActionDetected(ACTION_DETAIL);
-    }
-
-
+    /**
+     * Al crear-se la activitat comprovem si ja existeix un fragment niuat amb el mapa i si no es així
+     * generem una nova instància.
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG, "Dentro de onActivityCreated");
         super.onActivityCreated(savedInstanceState);
-        //android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        //SupportMapFragment mMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mMapFragment);
 
+        // Obtenim un FragmentManager per fragments niuats
         FragmentManager fragmentManager = getChildFragmentManager();
+
+        // Cerquem el fragment de mapa
         mMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mapFragment);
+
+        // Si no existeix instanciem un de nou.
         if (mMapFragment == null) {
-            Log.d(TAG, "No hay fragmento, nueva instancia");
             mMapFragment = SupportMapFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.mapFragment, mMapFragment).commit();
         }
     }
 
-
+    /**
+     * Al eliminar aquest fragment ens assegurem que s'elimina també el fragment niuat.
+     */
     @Override
     public void onDestroyView() {
-        Log.d(TAG, "Entrando en onDestroyView");
-
-        // Esto es llamado cuando se hace BackStack, eliminamos el fragmento
-
         super.onDestroyView();
-
-
         Fragment fragment = (getFragmentManager().findFragmentById(R.id.mapFragment));
 
+        // Si s'ha trobat el fragment l'eliminem
         if (fragment != null) {
-            Log.d(TAG, "El fragmento NO es null");
-            try {
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.remove(fragment);
-                ft.commit();
-                Log.d(TAG, "Fragmento destruido");
-            } catch (Exception e) {
-                // TODO esto no se puede dejar así
-                Log.e(TAG, "Error al destruir el fragmento");
-            }
-        } else {
-            Log.d(TAG, "El fragmento es null");
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.remove(fragment);
+            ft.commit();
         }
-
-
-        // Si no eliminamos la vista, al hacer atras de detalle a mapa falla.
-
-        if (mView != null) {
-            ViewGroup parentViewGroup = (ViewGroup) mView.getParent();
-            Log.d(TAG, "parentViewGroup es null?: " + parentViewGroup);
-            if (parentViewGroup != null) {
-                Log.d(TAG, "Numero de childs antes de eliminar: " + parentViewGroup.getChildCount());
-                parentViewGroup.removeAllViews();
-                Log.d(TAG, "Numero de childs despues de eliminar: " + parentViewGroup.getChildCount());
-            }
-        }
-
-        Log.d(TAG, "Saliendo de onDestroyView.");
-        // Update en activity main la visibilidad de los fragmentos
-
-
-        return;
     }
 }
