@@ -55,7 +55,6 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
         mTextViewRegister.setOnClickListener(this);
     }
 
-
     /**
      * Listeners per respondre als events de click sobre els botons i el text per enregistrar-se.
      * TODO: Aquestes accions no han de afegir-se al BackStack
@@ -93,7 +92,6 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
             return false;
         }
     }
-
 
     /**
      * Aquest métode comprova si les dades introduidas coincideixen amb les de la base de dades i
