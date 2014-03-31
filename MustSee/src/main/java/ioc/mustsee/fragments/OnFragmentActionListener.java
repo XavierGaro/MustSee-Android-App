@@ -17,7 +17,7 @@ public interface OnFragmentActionListener {
     public static final int ACTION_BACK = 5;
     public static final int ACTION_DETAIL = 6;
     public static final int ACTION_GALLERY = 7;
-    public static final int ACTION_PHOTO = 8;
+    public static final int ACTION_PICTURE = 8;
 
     void OnActionDetected(int action, Bundle bundle);
 

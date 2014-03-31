@@ -1,6 +1,5 @@
 package ioc.mustsee.fragments;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +7,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ioc.mustsee.R;
-import ioc.mustsee.data.Imatge;
-import ioc.mustsee.ui.GridViewAdapter;
-import ioc.mustsee.ui.ImageItem;
+import ioc.mustsee.ui.GridViewGalleryAdapter;
 
 /**
  * Fragment que mostra en una graella totes les imatges pertanyents al lloc seleccionat actualment.
@@ -25,7 +19,7 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
     private static final String TAG = "GalleryFragment";
 
     private GridView mGridView;
-    private GridViewAdapter mCustomGridAdapter;
+    private GridViewGalleryAdapter mCustomGridAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +38,8 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
     @Override
     void initWidgets() {
         mGridView = (GridView) mView.findViewById(R.id.gridView);
-        mCustomGridAdapter = new GridViewAdapter(getActivity(), R.layout.grid_row_gallery, getData());
+        mCustomGridAdapter = new GridViewGalleryAdapter(getActivity(), R.layout.grid_row_gallery,
+                mCallback.getCurrentLloc().getImages());
         mGridView.setAdapter(mCustomGridAdapter);
         mGridView.setOnItemClickListener(this);
     }
@@ -62,23 +57,7 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Bundle bundle = new Bundle();
         bundle.putInt("PICTURE", position);
-        mCallback.OnActionDetected(OnFragmentActionListener.ACTION_PHOTO, bundle);
+        mCallback.OnActionDetected(OnFragmentActionListener.ACTION_PICTURE, bundle);
     }
 
-    /**
-     * Retorna un ArrayList amb les imatges que formaran la graella.
-     *
-     * @return ArrayList amb les imatges que forman la graella.
-     * TODO: Substituir ImateItem per Imatge aqui i al adaptador.
-     */
-    private ArrayList getData() {
-        List<Imatge> imatges = mCallback.getCurrentLloc().getImages();
-        final ArrayList imageItems = new ArrayList();
-
-        for (Imatge imatge : imatges) {
-            Bitmap bitmap = imatge.carregarImatge(getActivity());
-            imageItems.add(new ImageItem(bitmap, imatge.tittle));
-        }
-        return imageItems;
-    }
 }

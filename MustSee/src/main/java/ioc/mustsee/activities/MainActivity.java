@@ -256,7 +256,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 addActionHistory(GALLERY);
                 break;
 
-            case OnFragmentActionListener.ACTION_PHOTO:
+            case OnFragmentActionListener.ACTION_PICTURE:
                 loadFragment(PICTURE);
                 addActionHistory(PICTURE);
                 break;
