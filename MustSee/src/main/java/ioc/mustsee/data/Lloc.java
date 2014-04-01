@@ -53,6 +53,17 @@ public class Lloc {
     }
 
     /**
+     * Afegeix una llista d'imatges al lloc.
+     * @param imatges llista d'imatges per afegir.
+     */
+    public void addImatges(List<Imatge> imatges) {
+        if (galeria == null) {
+            galeria = new ArrayList<Imatge>();
+        }
+        galeria.addAll(imatges);
+    }
+
+    /**
      * Retorna la llista completa de imatges associada amb el lloc.
      *
      * @return llista d'imatges.
@@ -68,7 +79,7 @@ public class Lloc {
      * @return primera imatge de la llista o null si no hi ha cap.
      */
     public Imatge getImatgePrincipal() {
-        if (galeria == null) {
+        if (galeria == null || galeria.isEmpty()) {
             return null;
         } else {
             return galeria.get(0);

@@ -13,6 +13,7 @@ import java.util.List;
 
 import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
+import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 
 /**
@@ -27,7 +28,8 @@ public class DBMustSee {
     public static final String BD_NOM = "DBMustSee";
     public static final String BD_TAULA_LLOCS = "llocs";
     public static final String BD_TAULA_CATEGORIES = "categories";
-    public static final int VERSIO = 9;
+    public static final String BD_TAULA_IMATGES = "imatges";
+    public static final int VERSIO = 1;
 
     // Camps de la base de dades
     public static final String CLAU_ID = "_id";
@@ -37,6 +39,8 @@ public class DBMustSee {
     public static final String CLAU_LONGITUD = "longitud";
     public static final String CLAU_CATEGORIA = "categoria";
     public static final String CLAU_ICON_RESOURCE = "icon";
+    public static final String CLAU_FILE = "fitxer";
+    public static final String CLAU_ID_LLOC = "_id_lloc";
 
     // Consulta per crear les taules
     public static final String BD_CREATE_LLOCS = "CREATE TABLE " + BD_TAULA_LLOCS + "("
@@ -49,10 +53,15 @@ public class DBMustSee {
             + CLAU_ID + " INTEGER PRIMARY KEY, " + CLAU_NOM + " TEXT NOT NULL, " + CLAU_DESCRIPCIO
             + " TEXT NOT NULL)";
 
+    public static final String BD_CREATE_IMATGES = "CREATE TABLE " + BD_TAULA_IMATGES + "("
+            + CLAU_ID + " INTEGER PRIMARY KEY, " + CLAU_NOM + " TEXT NOT NULL, " + CLAU_FILE
+            + " TEXT NOT NULL, " + CLAU_ID_LLOC + " INTEGER)";
+
     // Array amb tots els camps per facilitar la creació de consultes
     private String[] mColumnsLlocs = new String[]{CLAU_ID, CLAU_NOM, CLAU_DESCRIPCIO, CLAU_LATITUD,
             CLAU_LONGITUD, CLAU_CATEGORIA, CLAU_ICON_RESOURCE};
     private String[] mColumnsCategories = new String[]{CLAU_ID, CLAU_NOM, CLAU_DESCRIPCIO};
+    private String[] mColumnsImatges = new String[]{CLAU_ID, CLAU_NOM, CLAU_FILE, CLAU_ID_LLOC};
 
     private DataBaseHelper mDataBaseHelper;
     private SQLiteDatabase mDB;
@@ -131,6 +140,10 @@ public class DBMustSee {
                     .categoria(cursor.getInt(5))
                     .icon(cursor.getInt(6))
                     .build();
+
+            // Afegim la llista de imatges
+            lloc.addImatges(getImatgesFromLloc(lloc));
+
         } catch (Exception e) {
             // Si hi ha un error al obtenir les dades del cursor enregistrem l'error al log
             Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
@@ -189,6 +202,47 @@ public class DBMustSee {
         return categoria;
     }
 
+
+    public DBMustSee insertImatge(Imatge imatge) {
+        // Preparem els valors per inserir
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CLAU_ID, imatge.id);
+        initialValues.put(CLAU_NOM, imatge.titol);
+        initialValues.put(CLAU_FILE, imatge.nomFitxer);
+        initialValues.put(CLAU_ID_LLOC, imatge.llocId);
+
+        // Inserim el registre
+        mDB.insert(BD_TAULA_IMATGES, null, initialValues);
+        return this;
+    }
+
+    public List<Imatge> getImatgesFromLloc(Lloc lloc) {
+        List<Imatge> imatges = new ArrayList<Imatge>();
+        Cursor cursor = mDB.query(true, BD_TAULA_IMATGES, mColumnsImatges, CLAU_ID_LLOC + " = "
+                + lloc.id, null, null, null, null, null);
+
+        // Recorrem el cursor i els afegim a la llista
+        if (cursor.moveToFirst()) {
+            do {
+                imatges.add(cursorToImatge(cursor));
+            } while (cursor.moveToNext());
+        }
+        Log.d(TAG, "Devueltas " + imatges.size() + " imatges");
+        return imatges;
+    }
+
+    private Imatge cursorToImatge(Cursor cursor) {
+        Imatge imatge = null;
+
+        try {
+            imatge = new Imatge(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3));
+        } catch (Exception e) {
+            // Si hi ha un error al obtenir les dades del cursor enregistrem l'error al log
+            Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
+        }
+        return imatge;
+    }
+
     private static class DataBaseHelper extends SQLiteOpenHelper {
         Context mContext;
 
@@ -199,7 +253,7 @@ public class DBMustSee {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.d(TAG, "Crenaod la DB");
+            Log.d(TAG, "Crenado la DB");
             try {
                 // Creem les taules
                 db.execSQL(BD_CREATE_LLOCS);
@@ -290,12 +344,13 @@ public class DBMustSee {
                 }
         };
 
+        int counter = 0;
         for (Object[] obj : objs) {
             mLlocs.add(new Lloc.LlocBuilder((String) obj[0], (Float) obj[2], (Float) obj[3])
                     .categoria((Integer) obj[1])
                     .descripcio((String) obj[4])
+                    .id(counter++)
                     .build());
-
         }
 
         // Recorrem la llista de llocs i els afegim a la base de dades
@@ -312,5 +367,48 @@ public class DBMustSee {
         }
     }
 
+    public void initImatges() {
+        open();
+        mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_IMATGES);
+        mDB.execSQL(BD_CREATE_IMATGES);
+        close();
+
+        List<Imatge> imatges = new ArrayList<Imatge>();
+
+        imatges.add(new Imatge("Playa de Punta Prima", "punta_prima_01.jpg", 0));
+        imatges.add(new Imatge("Playa de Punta Prima", "punta_prima_02.jpg", 0));
+        imatges.add(new Imatge("Test 1", "test.jpg", 0));
+        imatges.add(new Imatge("Test 2", "test.jpg", 0));
+        imatges.add(new Imatge("Test 3", "test.jpg", 0));
+        imatges.add(new Imatge("Test 4", "test.jpg", 0));
+        imatges.add(new Imatge("Test 5", "test.jpg", 0));
+        imatges.add(new Imatge("Test 6", "test.jpg", 0));
+        imatges.add(new Imatge("Test 7", "test.jpg", 0));
+        imatges.add(new Imatge("Test 8", "test.jpg", 0));
+
+        //imatges.add(new Imatge("Cala Mosca", "cala_mosca_01.jpg",1)); // Aquest lloc no tindrà imatge associada
+        imatges.add(new Imatge("Playa Mil Palmeras", "mil_palmeras_01.jpg", 2));
+        imatges.add(new Imatge("Playa Mil Palmeras", "mil_palmeras_02.jpg", 2));
+
+        imatges.add(new Imatge("Teatro Circo", "teatro_circo_01.jpg", 3));
+        imatges.add(new Imatge("La Lonja", "la_lonja_02.jpg", 4));
+
+        imatges.add(new Imatge("Museo Arqueológico Comarcal de Orihuela", "museo_arqueologico_orihuela_01.jpg", 5));
+        imatges.add(new Imatge("Casa Museo Miguel Hernandez", "casa_museo_miguel_hernandez_01.jpg", 6));
+        imatges.add(new Imatge("Museo de la Reconquista", "museo_de_la_reconquista_01.jpg", 7));
+
+        // Recorrem la llista de llocs i els afegim a la base de dades
+        try {
+            open();
+            for (Imatge imatge : imatges) {
+                insertImatge(imatge);
+            }
+        } catch (SQLException e) {
+            // Si trobem cap error ho mostrem al log
+            Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
+        } finally {
+            close();
+        }
+    }
 
 }

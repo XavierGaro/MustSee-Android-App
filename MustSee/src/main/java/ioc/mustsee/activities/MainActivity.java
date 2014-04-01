@@ -17,7 +17,6 @@ import java.util.List;
 
 import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
-import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 import ioc.mustsee.database.DBMustSee;
 import ioc.mustsee.fragments.DetailFragment;
@@ -90,9 +89,12 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         initWidgets();
 
         // TODO: Això es només per les proves. Carreguem les dades
+
+
+        initImatges();
         initCategories();
         initLlocs();
-        initImatges();
+
 
         // Cridem a la acció principal per carregar el primer fragment.
         OnActionDetected(ACTION_MAIN);
@@ -426,6 +428,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
     /**
      * Carrega la llista completa de llocs de la base de dades.
+     * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
+     * la llista buida.
      */
     private void initLlocs() {
         //db.initLlocs(); // TODO: Eliminar, esto rehace la tabla cada vez
@@ -442,7 +446,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * TODO: Esborrar despres de les proves. Aquesta informació s'extreu de la base de dades
+     * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
+     * la llista buida.
      * Categories de proves
      */
     private void initCategories() {
@@ -461,30 +466,13 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * TODO: Esborrar després de les proves. Aquesta informació s'extreu de la base de dades
+     * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
+     * la llista buida.
      * Imatges de prova
      */
     private void initImatges() {
-        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_01.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_02.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 1", "test.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 2", "test.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 3", "test.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 4", "test.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 5", "test.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 6", "test.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 7", "test.jpg", 0));
-        mLlocs.get(0).addImatge(new Imatge("Test 8", "test.jpg", 0));
+        //db.initImatges(); // TODO: Eliminar, esto elimina las tablas y las rehace
 
-        //mLlocs.get(1).addImatge(new Imatge("Cala Mosca", "cala_mosca_01.jpg",1)); // Aquest lloc no tindrà imatge associada
-        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_01.jpg", 2));
-        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_02.jpg", 2));
 
-        mLlocs.get(3).addImatge(new Imatge("Teatro Circo", "teatro_circo_01.jpg", 3));
-        mLlocs.get(4).addImatge(new Imatge("La Lonja", "la_lonja_02.jpg", 4));
-
-        mLlocs.get(5).addImatge(new Imatge("Museo Arqueológico Comarcal de Orihuela", "museo_arqueologico_orihuela_01.jpg", 5));
-        mLlocs.get(6).addImatge(new Imatge("Casa Museo Miguel Hernandez", "casa_museo_miguel_hernandez_01.jpg", 6));
-        mLlocs.get(7).addImatge(new Imatge("Museo de la Reqconquista", "museo_de_la_reconquista_01.jpg", 7));
     }
 }
