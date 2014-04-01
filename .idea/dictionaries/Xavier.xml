@@ -6,10 +6,12 @@
       <w>d'assets</w>
       <w>d'escriptura</w>
       <w>d'implementar</w>
+      <w>desactiva</w>
       <w>eliminem</w>
       <w>implementi</w>
       <w>inicialitza</w>
       <w>inicialitzar</w>
+      <w>inicialitzat</w>
       <w>inicialitzem</w>
       <w>instanciem</w>
       <w>interfície</w>
@@ -18,11 +20,13 @@
       <w>l'amplada</w>
       <w>l'element</w>
       <w>l'eliminem</w>
+      <w>l'estatus</w>
       <w>l'inicialitzem</w>
       <w>optimització</w>
       <w>recorrem</w>
       <w>refactorizado</w>
       <w>requadre</w>
+      <w>s'activa</w>
       <w>s'adjunta</w>
       <w>s'afegeix</w>
       <w>s'elimina</w>
@@ -30,6 +34,7 @@
       <w>s'especifica</w>
       <w>s'extreu</w>
       <w>s'inicialitzaran</w>
+      <w>s'instancia</w>
       <w>sobreescriu</w>
     </words>
   </dictionary>

@@ -43,7 +43,6 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
 
-
     // Informació dels llocs i marcadors
     private HashMap<Marker, Lloc> mMarkersToLloc = new HashMap<Marker, Lloc>();
     private List<Lloc> mLlocs;

@@ -36,7 +36,7 @@ import ioc.mustsee.fragments.PictureFragment;
 
 /**
  * Aquesta es la classe principal de la aplicació. Des de aquí es gestionen les accions i es
- * posibilita la comunicació amb la base de dades i entre els diferents fragments.
+ * possibilita la comunicació amb la base de dades i entre els diferents fragments.
  *
  * @author Javier García
  */
@@ -491,55 +491,74 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         //db.initImatges(); // TODO: Eliminar, esto elimina las tablas y las rehace
     }
 
-
+    /**
+     * Inicialitza el gestor de localització i el listener que respondrà als canvis de localització.
+     */
     public void initLocation() {
-        // Acquire a reference to the system Location Manager
+        // Obtenim la referència al Location Manager del sistema
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-        // Define a listener that responds to location updates
+        // Definim el listener que respondrà a les actualitzacions
         LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Called when a new location is found by the network location provider.
+                // Cridat quan una nova localització es trobada pel proveïdor
                 updateLloc(location);
             }
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
+                // Cridat quan canvia l'estatus
                 updateLloc();
-                Log.d(TAG, "StatusChanged");
             }
 
             @Override
             public void onProviderEnabled(String provider) {
+                // Cridat quan s'activa el proveïdor
                 updateLloc();
-                Log.d(TAG, "ProviderEnabled");
             }
 
             @Override
             public void onProviderDisabled(String provider) {
-                Log.d(TAG, "ProviderDisabled");
+                // Cridat quan es desactiva el proveïdor
             }
         };
 
-        // Register the listener with the Location Manager to receive location updates
-        // TODO: Buscar la millor opció per LocationManager entre els disponibles (LocationManager.NETWORK_PROVIDER)
+        // Enregistrem el listener per rebre les actualitzacions.
         locationManager.requestLocationUpdates(locationProvider, MIN_REFRESH_TIME, MIN_REFRESH_METERS, locationListener);
     }
 
+    /**
+     * Retorna la ultima posició coneguda pel LocationManager.
+     *
+     * @return ultima posició coneguda o la localització per defecte de Lloc si no hi ha cap.
+     */
     @Override
     public LatLng getLastKnownPosition() {
-        // TODO: Buscar la millor opció per LocationManager entre els disponibles (LocationManager.NETWORK_PROVIDER)
         Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
-        return new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+        return lastKnownLocation == null ? Lloc.NO_LOCATION :
+                new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
     }
 
+    /**
+     * Actualitza la posició del usuari a la classe Lloc amb la localització passada com argument.
+     *
+     * @param location localització que volem establir.
+     */
     public void updateLloc(Location location) {
         Lloc.sPosition = new LatLng(location.getLatitude(), location.getLongitude());
+
+        // Si està visible la llista la actualitzem. TODO: Codi redundant
         if (checkActionHistory(LIST)) mListFragment.updateListView();
     }
 
+    /**
+     * Agualitza la posició del usuari a la classe Lloc per la última localització coneguda.
+     */
     public void updateLloc() {
         Lloc.sPosition = getLastKnownPosition();
+
+        // Si està visible la llista la actualitzem. TODO: Codi redundant
+        if (checkActionHistory(LIST)) mListFragment.updateListView();
     }
 }

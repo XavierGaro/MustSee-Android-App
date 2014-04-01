@@ -35,7 +35,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     private ArrayAdapter<Lloc> mAdapterLlocs;
 
     /**
-     * Aquest comparador ordena els llocs per distancia del més prover al més llunyà.
+     * Aquest comparador ordena els llocs per distancia del més proper al més llunyà.
      */
     private static Comparator<Lloc> sortLlocs = new Comparator<Lloc>() {
         public int compare(Lloc llocA, Lloc llocB) {
@@ -80,7 +80,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         mListViewLlocs.setOnItemClickListener(this);
         mListViewLlocs.setAdapter(mAdapterLlocs);
 
-        // Ordenem els resultats per distancia fent servir un Comparator
+        // Actualitzem la llista
         updateListView();
     }
 
@@ -167,6 +167,10 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Reordena la llista i actualitza les dades, això permet tenir les distancies actualitzades i
+     * ordenades.
+     */
     public void updateListView() {
         mAdapterLlocs.sort(sortLlocs);
         mAdapterLlocs.notifyDataSetChanged();

@@ -18,8 +18,9 @@ import java.util.List;
  */
 public class Lloc {
     public static final int NO_ICON = -1;
+    public static final LatLng NO_LOCATION = new LatLng(0, 0);
 
-    // Aquest es el comptador per defecte.
+    // Aquest es el comptador per defecte
     public static int sIdCounter = 10000;
 
     // Posició del usuari
@@ -60,6 +61,7 @@ public class Lloc {
 
     /**
      * Afegeix una llista d'imatges al lloc.
+     *
      * @param imatges llista d'imatges per afegir.
      */
     public void addImatges(List<Imatge> imatges) {
@@ -106,16 +108,18 @@ public class Lloc {
     }
 
     /**
-     * Retorna la distancia entre aquest lloc i el lloc passat com argument.
+     * Retorna la distancia entre aquest lloc i el lloc passat com argument. Si no s'ha inicialitzat
+     * el lloc retorna -1.
      *
-     * @return distancia en km entre els dos llocs.
+     * @return distancia en km entre els dos llocs o -1 si no s'ha inicialitzat.
      */
     public float getDistance() {
         float[] results = {0f};
+        if (sPosition == NO_LOCATION) {
+            return -1f;
+        }
         Location.distanceBetween(sPosition.latitude, sPosition.longitude, this.posicio.latitude, this.posicio.longitude, results);
-
-        // TODO: Sense implementar ni utilitzar
-        return results[0] / 1000;
+        return results[0] / 1000; // Pasem el resultat a km
     }
 
     /**

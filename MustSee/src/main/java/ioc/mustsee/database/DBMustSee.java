@@ -67,17 +67,30 @@ public class DBMustSee {
     private SQLiteDatabase mDB;
     private Context mContext;
 
-
+    /**
+     * El constructor requereix passar el context de la activitat i s'instancia l'ajudant.
+     *
+     * @param context context de la activitat.
+     */
     public DBMustSee(Context context) {
         this.mContext = context;
         mDataBaseHelper = new DataBaseHelper(context);
     }
 
+    /**
+     * Obre la base de dades per poder realitzar consultes.
+     *
+     * @return aquest mateix objecte.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
     public DBMustSee open() throws SQLException {
         mDB = mDataBaseHelper.getWritableDatabase();
         return this;
     }
 
+    /**
+     * Tanca la base de dades. Si hi ha cap error o mostra al log i continua.
+     */
     public void close() {
         try {
             mDataBaseHelper.close();
@@ -87,6 +100,13 @@ public class DBMustSee {
         }
     }
 
+    /**
+     * Insereix un lloc a la base de dades
+     *
+     * @param lloc lloc a inserir
+     * @return aquest mateix objecte.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
     public DBMustSee insertLloc(Lloc lloc) throws SQLException {
         // Preparem els valors per inserir
         ContentValues initialValues = new ContentValues();
@@ -100,10 +120,16 @@ public class DBMustSee {
 
         // Inserim el registre
         mDB.insert(BD_TAULA_LLOCS, null, initialValues);
-
         return this;
     }
 
+    /**
+     * Retorna el lloc emmagatzemat a la base de dades amb la id passada com argument.
+     *
+     * @param id id del lloc.
+     * @return lloc al que correspon la id o null si no existeix.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
     public Lloc getLloc(int id) throws SQLException {
         Lloc lloc = null;
 
@@ -117,6 +143,13 @@ public class DBMustSee {
         return lloc;
     }
 
+    /**
+     * Retorna una llista amb tots els llocs emamgatzemats a la base de dades amb totes les imatges
+     * corresponents afegides.
+     *
+     * @return llista completa de llocs emmagatzemats a la base de dades o buida si no hi ha cap.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
     public List<Lloc> getLlocs() throws SQLException {
         List<Lloc> llocs = new ArrayList<Lloc>();
         Cursor mCursor = mDB.query(BD_TAULA_LLOCS, mColumnsLlocs, null, null, null, null, null);
@@ -130,6 +163,12 @@ public class DBMustSee {
         return llocs;
     }
 
+    /**
+     * Extreu la informació del cursor passat com argument i crea un lloc amb aquesta informació.
+     *
+     * @param cursor amb la informació del lloc.
+     * @return Lloc creat.
+     */
     private Lloc cursorToLloc(Cursor cursor) {
         Lloc lloc = null;
 
@@ -151,9 +190,15 @@ public class DBMustSee {
         return lloc;
     }
 
+    /**
+     * Insereix la categoria passada com argument a la base de dades.
+     *
+     * @param categoria a inserir
+     * @return aquest mateix objecte.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
     public DBMustSee insertCategoria(Categoria categoria) throws SQLException {
         // Preparem els valors per inserir
-        Log.d(TAG, categoria.id + " " + categoria.nom + " " + categoria.descripcio);
         ContentValues initialValues = new ContentValues();
         initialValues.put(CLAU_ID, categoria.id);
         initialValues.put(CLAU_NOM, categoria.nom);
@@ -164,6 +209,13 @@ public class DBMustSee {
         return this;
     }
 
+    /**
+     * Obté la categoria amb la id passada per argument de la base de dades.
+     *
+     * @param id id de la categoria que volem obtenir.
+     * @return la categoria corresponent a la id passada o null si no s'ha trobat.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
     public Categoria getCategoria(int id) throws SQLException {
         Categoria categoria = null;
 
@@ -177,6 +229,12 @@ public class DBMustSee {
         return categoria;
     }
 
+    /**
+     * Retorna una llista amb totes les categories emmagatzemades a la base de dades.
+     *
+     * @return llista amb totes les categories o buida si no s'ha trobat cap.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
     public List<Categoria> getCategories() throws SQLException {
         List<Categoria> categories = new ArrayList<Categoria>();
         Cursor mCursor = mDB.query(BD_TAULA_CATEGORIES, mColumnsCategories, null, null, null, null, null);
@@ -190,6 +248,12 @@ public class DBMustSee {
         return categories;
     }
 
+    /**
+     * Crea una categoria a partir de les dades del cursor passat com argument.
+     *
+     * @param cursor cursor per extreure la informació.
+     * @return categoria creada a partir del cursor.
+     */
     private Categoria cursorToCategoria(Cursor cursor) {
         Categoria categoria = null;
 
@@ -202,8 +266,14 @@ public class DBMustSee {
         return categoria;
     }
 
-
-    public DBMustSee insertImatge(Imatge imatge) {
+    /**
+     * Insereix la informació d'una imatge a la base de dades
+     *
+     * @param imatge imatge a emmagatzemar.
+     * @return aquest mateix objecte.
+     * @throws SQLException si hi ha cap error amb la base de dades.
+     */
+    public DBMustSee insertImatge(Imatge imatge) throws SQLException {
         // Preparem els valors per inserir
         ContentValues initialValues = new ContentValues();
         initialValues.put(CLAU_ID, imatge.id);
@@ -216,6 +286,12 @@ public class DBMustSee {
         return this;
     }
 
+    /**
+     * Obté la llista de totes les imatges corresponents al lloc passat com argument.
+     *
+     * @param lloc lloc del que volem obtenir la llista d'imatges.
+     * @return llista de imatges corresponent.
+     */
     public List<Imatge> getImatgesFromLloc(Lloc lloc) {
         List<Imatge> imatges = new ArrayList<Imatge>();
         Cursor cursor = mDB.query(true, BD_TAULA_IMATGES, mColumnsImatges, CLAU_ID_LLOC + " = "
@@ -231,6 +307,12 @@ public class DBMustSee {
         return imatges;
     }
 
+    /**
+     * Crea una imatge a partir de la informació del cursor passat com argument.
+     *
+     * @param cursor amb la informació de la imatge.
+     * @return imatge creada a partir del cursor.
+     */
     private Imatge cursorToImatge(Cursor cursor) {
         Imatge imatge = null;
 
@@ -243,6 +325,9 @@ public class DBMustSee {
         return imatge;
     }
 
+    /**
+     * Classe d'ajuda per gestionar la basse de dades
+     */
     private static class DataBaseHelper extends SQLiteOpenHelper {
         Context mContext;
 
@@ -253,7 +338,6 @@ public class DBMustSee {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.d(TAG, "Crenado la DB");
             try {
                 // Creem les taules
                 db.execSQL(BD_CREATE_LLOCS);
@@ -277,6 +361,9 @@ public class DBMustSee {
         }
     }
 
+    /**
+     * TODO: Mètode per realitzar proves, moure al packet de tests
+     */
     public void initCategories() {
         open();
         mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_CATEGORIES);
@@ -285,7 +372,6 @@ public class DBMustSee {
 
         List<Categoria> mCategories = new ArrayList<Categoria>();
 
-        // Categorias de prueba TODO: Esta información se extrae del web service
         Categoria tot = new Categoria(0, "Seleccionar Todo", "Selecciona todas las categorías.");
         Categoria platjes = new Categoria(1, "Playas", "En esta categoría hay playas.");
         Categoria poi = new Categoria(2, "Puntos de interes", "En esta categoría hay puntos de interes.");
@@ -312,7 +398,9 @@ public class DBMustSee {
         }
     }
 
-    /* PER FER TESTS: Inserta una llista de llocs a la base de dades */
+    /**
+     * TODO: Mètode per realitzar proves, moure al packet de tests
+     */
     public void initLlocs() {
         open();
         mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_LLOCS);
@@ -367,6 +455,9 @@ public class DBMustSee {
         }
     }
 
+    /**
+     * TODO: Mètode per realitzar proves, moure al packet de tests
+     */
     public void initImatges() {
         open();
         mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_IMATGES);
@@ -410,5 +501,4 @@ public class DBMustSee {
             close();
         }
     }
-
 }

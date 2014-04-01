@@ -1,24 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context="ioc.mustsee.activities.MainActivity$PlaceholderFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+              tools:context="ioc.mustsee.activities.MainActivity$PlaceholderFragment">
 
-    <!-- Spinner canviat pel meu Spinner personalitzat
-    <Spinner
-        android:id="@+id/spinnerCategoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"/>
-    -->
     <ioc.mustsee.ui.MySpinner
         android:id="@+id/spinnerCategoria"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start" />
-
+        android:gravity="start"/>
 
     <ListView
         android:id="@+id/listViewLlocs"
@@ -26,6 +18,6 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:listSelector="@color/bright_blue"
-        android:textFilterEnabled="true" />
+        android:textFilterEnabled="true"/>
 
 </LinearLayout>

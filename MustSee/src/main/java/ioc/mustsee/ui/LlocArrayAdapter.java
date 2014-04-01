@@ -9,6 +9,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,15 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
     private ItemsFilter mFilter;
     private List<Lloc> mFilteredLlocs;
     private List<Lloc> mOriginalLlocs;
+
+    // Inicialitzem l'objecte per donar format a les distancies
+    private static NumberFormat formatDistance = NumberFormat.getNumberInstance();
+
+    {
+        formatDistance.setMinimumFractionDigits(2);
+        formatDistance.setMaximumFractionDigits(2);
+    }
+
 
     /**
      * El constructor requereix el context de la activitat i la llista de llocs completa.
@@ -68,8 +78,15 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         // Apliquem els valors del Lloc als widgets
         Lloc lloc = mFilteredLlocs.get(position);
         textViewName.setText(lloc.nom);
-        textViewDistance.setText(lloc.getDistance() + " km."); // TODO: aquest valor serà calculat
         textViewDescription.setText(lloc.descripcio);
+
+        // Obtenim la distancia, i si es negativa mostrem interrogants
+        float distance = lloc.getDistance();
+        if (distance < 0) {
+            textViewDistance.setText("?? km.");
+        } else {
+            textViewDistance.setText(formatDistance.format(distance) + " km");
+        }
 
         if (lloc.getImatgePrincipal() != null) {
             imageView.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(mContext));
@@ -198,7 +215,7 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
          * Es cridat desde el fil de la UI per filtrar els resultats del adaptador segons el prefix
          * enviat. No es crida manualment.
          *
-         * @param prefix prefix per filtrar
+         * @param prefix  prefix per filtrar
          * @param results resultat del filtratge
          */
         @SuppressWarnings("unchecked")
