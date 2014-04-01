@@ -425,17 +425,11 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * TODO: Esborrar despres de les proves. Aquesta informació s'extrau de la base de dades
-     * Llocs de prova
+     * Carrega la llista completa de llocs de la base de dades.
      */
     private void initLlocs() {
-        //mLlocs = new ArrayList<Lloc>();
-
-
-        // Obtenim la llista de llocs de la base de dades
         try {
-            mLlocs = db.open()
-                    .getLlocs();
+            mLlocs = db.open().getLlocs();
         } catch (SQLException e) {
             // Si trobem cap error ho mostrem al log y tornem la llista buida
             Log.e(TAG, getResources().getString(R.string.error_db), e);
@@ -450,27 +444,27 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      * Imatges de prova
      */
     private void initImatges() {
-        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_01.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_02.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 1", "test.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 2", "test.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 3", "test.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 4", "test.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 5", "test.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 6", "test.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 7", "test.jpg"));
-        mLlocs.get(0).addImatge(new Imatge("Test 8", "test.jpg"));
+        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_01.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Playa de Punta Prima", "punta_prima_02.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 1", "test.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 2", "test.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 3", "test.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 4", "test.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 5", "test.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 6", "test.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 7", "test.jpg", 0));
+        mLlocs.get(0).addImatge(new Imatge("Test 8", "test.jpg", 0));
 
-        mLlocs.get(1).addImatge(new Imatge("Cala Mosca", "cala_mosca_01.jpg"));
-        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_01.jpg"));
-        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_02.jpg"));
+        //mLlocs.get(1).addImatge(new Imatge("Cala Mosca", "cala_mosca_01.jpg",1));
+        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_01.jpg", 2));
+        mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_02.jpg", 2));
 
-        mLlocs.get(3).addImatge(new Imatge("Teatro Circo", "teatro_circo_01.jpg"));
-        mLlocs.get(4).addImatge(new Imatge("La Lonja", "la_lonja_02.jpg"));
+        mLlocs.get(3).addImatge(new Imatge("Teatro Circo", "teatro_circo_01.jpg", 3));
+        mLlocs.get(4).addImatge(new Imatge("La Lonja", "la_lonja_02.jpg", 4));
 
-        mLlocs.get(5).addImatge(new Imatge("Museo Arqueológico Comarcal de Orihuela", "museo_arqueologico_orihuela_01.jpg"));
-        mLlocs.get(6).addImatge(new Imatge("Casa Museo Miguel Hernandez", "casa_museo_miguel_hernandez_01.jpg"));
-        mLlocs.get(7).addImatge(new Imatge("Museo de la Reqconquista", "museo_de_la_reconquista_01.jpg"));
+        mLlocs.get(5).addImatge(new Imatge("Museo Arqueológico Comarcal de Orihuela", "museo_arqueologico_orihuela_01.jpg", 5));
+        mLlocs.get(6).addImatge(new Imatge("Casa Museo Miguel Hernandez", "casa_museo_miguel_hernandez_01.jpg", 6));
+        mLlocs.get(7).addImatge(new Imatge("Museo de la Reqconquista", "museo_de_la_reconquista_01.jpg", 7));
     }
 
     /**

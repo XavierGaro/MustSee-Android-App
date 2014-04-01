@@ -93,6 +93,13 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         mTextViewName.setText(lloc.nom);
         mTextViewDescription.setText(lloc.descripcio);
         mTextViewCategory.setText(mCategoria.nom);
-        mImageViewPicture.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(getActivity()));
+        if (lloc.getImatgePrincipal() != null) {
+            // Si hi ha imatge la carreguem
+            mImageViewPicture.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(getActivity()));
+        } else {
+            // Si no hi ha imatge eliminem el listener
+            mImageViewPicture.setOnClickListener(null);
+        }
+
     }
 }

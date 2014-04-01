@@ -70,7 +70,11 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         textViewName.setText(lloc.nom);
         textViewDistance.setText("??" + " km."); // TODO: aquest valor serà calculat
         textViewDescription.setText(lloc.descripcio);
-        imageView.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(mContext));
+
+        if (lloc.getImatgePrincipal() != null) {
+            imageView.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(mContext));
+        }
+
 
         return viewRow;
     }

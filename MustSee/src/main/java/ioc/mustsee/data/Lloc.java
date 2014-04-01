@@ -63,6 +63,7 @@ public class Lloc {
 
     /**
      * Si hi ha cap imatge associada a aquest lloc torna la primera de la llista.
+     * TODO: En cas de no haver imatge hauria de tornar una imatge per defecte.
      *
      * @return primera imatge de la llista o null si no hi ha cap.
      */

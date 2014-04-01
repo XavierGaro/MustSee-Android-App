@@ -16,11 +16,14 @@ import ioc.mustsee.activities.MainActivity;
  * @author Javier García
  */
 public class Imatge {
+    public static final String DEFAULT_PICTURE = "test.jpg";
+
     public static int sIdCounter = 10000; // TODO: contador por defecto
 
     public final int id;
     public final String titol;
     public final String nomFitxer;
+    public final int llocId;
 
     /**
      * Constructor sense id, es fa servir una id per defecte que sempre es trobarà per sobre de 10000.
@@ -28,8 +31,8 @@ public class Imatge {
      * @param titol     títol de la imatge.
      * @param nomFitxer nom del fitxer on es troba la imatge.
      */
-    public Imatge(String titol, String nomFitxer) {
-        this(sIdCounter++, titol, nomFitxer);
+    public Imatge(String titol, String nomFitxer, int llocId) {
+        this(sIdCounter++, titol, nomFitxer, llocId);
     }
 
     /**
@@ -39,10 +42,11 @@ public class Imatge {
      * @param titol     títol de la imatge.
      * @param nomFitxer nom del fitxer on es troba la imatge.
      */
-    public Imatge(int id, String titol, String nomFitxer) {
+    public Imatge(int id, String titol, String nomFitxer, int llocId) {
         this.id = id;
         this.titol = titol;
         this.nomFitxer = nomFitxer;
+        this.llocId = llocId;
     }
 
     /**
@@ -70,7 +74,8 @@ public class Imatge {
         try {
             in = context.getAssets().open(fileName);
         } catch (IOException e) {
-            e.printStackTrace();
+            // Si hi ha un error al carregar la imatge es mostra la imatge per defecte
+            return getBitmapFromAssets(context, DEFAULT_PICTURE);
         }
 
         return BitmapFactory.decodeStream(in);
