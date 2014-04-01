@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ioc.mustsee.R;
+import ioc.mustsee.data.Categoria;
 import ioc.mustsee.data.Lloc;
 
 /**
@@ -25,7 +26,8 @@ public class DBMustSee {
     // Base de dades y taules
     public static final String BD_NOM = "DBMustSee";
     public static final String BD_TAULA_LLOCS = "llocs";
-    public static final int VERSIO = 5;
+    public static final String BD_TAULA_CATEGORIES = "categories";
+    public static final int VERSIO = 9;
 
     // Camps de la base de dades
     public static final String CLAU_ID = "_id";
@@ -36,38 +38,43 @@ public class DBMustSee {
     public static final String CLAU_CATEGORIA = "categoria";
     public static final String CLAU_ICON_RESOURCE = "icon";
 
-    // Consulta per crear la taula
+    // Consulta per crear les taules
     public static final String BD_CREATE_LLOCS = "CREATE TABLE " + BD_TAULA_LLOCS + "("
             + CLAU_ID + " INTEGER PRIMARY KEY, " + CLAU_NOM + " TEXT NOT NULL, " + CLAU_DESCRIPCIO
             + " TEXT NOT NULL, " + CLAU_LATITUD + " REAL NOT NULL, " + CLAU_LONGITUD
             + " REAL NOT NULL, " + CLAU_CATEGORIA + " INT NOT NULL, " + CLAU_ICON_RESOURCE
             + " INT NOT NULL)";
 
-    // Array amb tots els camps per facilitar la creació de consultes
-    private String[] columns = new String[]{CLAU_ID, CLAU_NOM, CLAU_DESCRIPCIO, CLAU_LATITUD,
-            CLAU_LONGITUD, CLAU_CATEGORIA, CLAU_ICON_RESOURCE};
+    public static final String BD_CREATE_CATEGORIES = "CREATE TABLE " + BD_TAULA_CATEGORIES + "("
+            + CLAU_ID + " INTEGER PRIMARY KEY, " + CLAU_NOM + " TEXT NOT NULL, " + CLAU_DESCRIPCIO
+            + " TEXT NOT NULL)";
 
-    private AjudaBD ajuda;
-    private SQLiteDatabase bd;
-    private Context context;
+    // Array amb tots els camps per facilitar la creació de consultes
+    private String[] mColumnsLlocs = new String[]{CLAU_ID, CLAU_NOM, CLAU_DESCRIPCIO, CLAU_LATITUD,
+            CLAU_LONGITUD, CLAU_CATEGORIA, CLAU_ICON_RESOURCE};
+    private String[] mColumnsCategories = new String[]{CLAU_ID, CLAU_NOM, CLAU_DESCRIPCIO};
+
+    private DataBaseHelper mDataBaseHelper;
+    private SQLiteDatabase mDB;
+    private Context mContext;
 
 
     public DBMustSee(Context context) {
-        this.context = context;
-        ajuda = new AjudaBD(context);
+        this.mContext = context;
+        mDataBaseHelper = new DataBaseHelper(context);
     }
 
     public DBMustSee open() throws SQLException {
-        bd = ajuda.getWritableDatabase();
+        mDB = mDataBaseHelper.getWritableDatabase();
         return this;
     }
 
     public void close() {
         try {
-            ajuda.close();
+            mDataBaseHelper.close();
         } catch (SQLException e) {
             // Si hi ha un error al tancar la base de dades només el mostrem al log.
-            Log.e(TAG, context.getResources().getString(R.string.error_db), e);
+            Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
         }
     }
 
@@ -83,7 +90,7 @@ public class DBMustSee {
         initialValues.put(CLAU_ICON_RESOURCE, lloc.iconResource);
 
         // Inserim el registre
-        bd.insert(BD_TAULA_LLOCS, null, initialValues);
+        mDB.insert(BD_TAULA_LLOCS, null, initialValues);
 
         return this;
     }
@@ -91,20 +98,19 @@ public class DBMustSee {
     public Lloc getLloc(int id) throws SQLException {
         Lloc lloc = null;
 
-        Cursor cursor = bd.query(true, BD_TAULA_LLOCS, columns, CLAU_ID + " = " + id, null, null,
-                null, null, null);
+        Cursor cursor = mDB.query(true, BD_TAULA_LLOCS, mColumnsLlocs, CLAU_ID + " = " + id, null,
+                null, null, null, null);
 
         if (cursor != null) {
             cursor.moveToFirst();
             lloc = cursorToLloc(cursor);
         }
-
         return lloc;
     }
 
     public List<Lloc> getLlocs() throws SQLException {
         List<Lloc> llocs = new ArrayList<Lloc>();
-        Cursor mCursor = bd.query(BD_TAULA_LLOCS, columns, null, null, null, null, null);
+        Cursor mCursor = mDB.query(BD_TAULA_LLOCS, mColumnsLlocs, null, null, null, null, null);
 
         // Recorrem el cursor i els afegim a la llista
         if (mCursor.moveToFirst()) {
@@ -127,25 +133,78 @@ public class DBMustSee {
                     .build();
         } catch (Exception e) {
             // Si hi ha un error al obtenir les dades del cursor enregistrem l'error al log
-            Log.e(TAG, context.getResources().getString(R.string.error_db), e);
+            Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
         }
-
         return lloc;
     }
 
-    private static class AjudaBD extends SQLiteOpenHelper {
+    public DBMustSee insertCategoria(Categoria categoria) throws SQLException {
+        // Preparem els valors per inserir
+        Log.d(TAG, categoria.id + " " + categoria.nom + " " + categoria.descripcio);
+        ContentValues initialValues = new ContentValues();
+        initialValues.put(CLAU_ID, categoria.id);
+        initialValues.put(CLAU_NOM, categoria.nom);
+        initialValues.put(CLAU_DESCRIPCIO, categoria.descripcio);
+
+        // Inserim el registre
+        mDB.insert(BD_TAULA_CATEGORIES, null, initialValues);
+        return this;
+    }
+
+    public Categoria getCategoria(int id) throws SQLException {
+        Categoria categoria = null;
+
+        Cursor cursor = mDB.query(true, BD_TAULA_CATEGORIES, mColumnsCategories, CLAU_ID + " = "
+                + id, null, null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            categoria = cursorToCategoria(cursor);
+        }
+        return categoria;
+    }
+
+    public List<Categoria> getCategories() throws SQLException {
+        List<Categoria> categories = new ArrayList<Categoria>();
+        Cursor mCursor = mDB.query(BD_TAULA_CATEGORIES, mColumnsCategories, null, null, null, null, null);
+
+        // Recorrem el cursor i els afegim a la llista
+        if (mCursor.moveToFirst()) {
+            do {
+                categories.add(cursorToCategoria(mCursor));
+            } while (mCursor.moveToNext());
+        }
+        return categories;
+    }
+
+    private Categoria cursorToCategoria(Cursor cursor) {
+        Categoria categoria = null;
+
+        try {
+            categoria = new Categoria(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+        } catch (Exception e) {
+            // Si hi ha un error al obtenir les dades del cursor enregistrem l'error al log
+            Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
+        }
+        return categoria;
+    }
+
+    private static class DataBaseHelper extends SQLiteOpenHelper {
         Context mContext;
 
-        AjudaBD(Context context) {
+        DataBaseHelper(Context context) {
             super(context, BD_NOM, null, VERSIO);
             this.mContext = context;
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            Log.d(TAG, "Crenaod la DB");
             try {
                 // Creem les taules
                 db.execSQL(BD_CREATE_LLOCS);
+                db.execSQL(BD_CREATE_CATEGORIES);
+
             } catch (SQLException e) {
                 Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
             }
@@ -163,11 +222,51 @@ public class DBMustSee {
             onCreate(db);
         }
     }
-}
-    /* PER FER TESTS: Inserta una llista de llocs a la base de dades
-    public void testCreateLlocs() {
+
+    public void initCategories() {
+        open();
+        mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_CATEGORIES);
+        mDB.execSQL(BD_CREATE_CATEGORIES);
+        close();
+
+        List<Categoria> mCategories = new ArrayList<Categoria>();
+
+        // Categorias de prueba TODO: Esta información se extrae del web service
+        Categoria tot = new Categoria(0, "Seleccionar Todo", "Selecciona todas las categorías.");
+        Categoria platjes = new Categoria(1, "Playas", "En esta categoría hay playas.");
+        Categoria poi = new Categoria(2, "Puntos de interes", "En esta categoría hay puntos de interes.");
+        Categoria museus = new Categoria(3, "Museos", "En esta categoría hay museos.");
+        Categoria buida = new Categoria(4, "Vacía", "En esta categoría no hay nada.");
+
+        mCategories.add(tot);
+        mCategories.add(platjes);
+        mCategories.add(poi);
+        mCategories.add(museus);
+        mCategories.add(buida);
+
+        // Recorrem la llista de llocs i els afegim a la base de dades
+        try {
+            open();
+            for (Categoria categoria : mCategories) {
+                insertCategoria(categoria);
+            }
+        } catch (SQLException e) {
+            // Si trobem cap error ho mostrem al log
+            Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
+        } finally {
+            close();
+        }
+    }
+
+    /* PER FER TESTS: Inserta una llista de llocs a la base de dades */
+    public void initLlocs() {
+        open();
+        mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_LLOCS);
+        mDB.execSQL(BD_CREATE_LLOCS);
+        close();
+
         List<Lloc> mLlocs = new ArrayList<Lloc>();
-    // Crea lloc a partir de array Obj[]
+        // Crea lloc a partir de array Obj[]
         Object[][] objs = {
                 {"Playa de Punta Prima", 1, 37.94017f, -0.711672f, "Esta es la playa de Punta Prima. Distintivo Q de calidad turística. Bandera azul."},
                 {"Cala Mosca", 1, 37.932554f, -0.718925f, "Esta es la playa de Cala Mosca."},
@@ -207,8 +306,11 @@ public class DBMustSee {
             }
         } catch (SQLException e) {
             // Si trobem cap error ho mostrem al log
-            Log.e(TAG, context.getResources().getString(R.string.error_db), e);
+            Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
         } finally {
             close();
         }
-    }*/
+    }
+
+
+}

@@ -428,6 +428,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      * Carrega la llista completa de llocs de la base de dades.
      */
     private void initLlocs() {
+        //db.initLlocs(); // TODO: Eliminar, esto rehace la tabla cada vez
+
         try {
             mLlocs = db.open().getLlocs();
         } catch (SQLException e) {
@@ -437,6 +439,25 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         } finally {
             db.close();
         }
+    }
+
+    /**
+     * TODO: Esborrar despres de les proves. Aquesta informació s'extreu de la base de dades
+     * Categories de proves
+     */
+    private void initCategories() {
+        //db.initCategories(); // TODO: Eliminar, esto rehace la tabla cada vez
+
+        try {
+            mCategories = db.open().getCategories();
+        } catch (SQLException e) {
+            // Si trobem cap error ho mostrem al log y tornem la llista buida
+            Log.e(TAG, getResources().getString(R.string.error_db), e);
+            mCategories = new ArrayList<Categoria>();
+        } finally {
+            db.close();
+        }
+
     }
 
     /**
@@ -455,7 +476,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         mLlocs.get(0).addImatge(new Imatge("Test 7", "test.jpg", 0));
         mLlocs.get(0).addImatge(new Imatge("Test 8", "test.jpg", 0));
 
-        //mLlocs.get(1).addImatge(new Imatge("Cala Mosca", "cala_mosca_01.jpg",1));
+        //mLlocs.get(1).addImatge(new Imatge("Cala Mosca", "cala_mosca_01.jpg",1)); // Aquest lloc no tindrà imatge associada
         mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_01.jpg", 2));
         mLlocs.get(2).addImatge(new Imatge("Playa Mil Palmeras", "mil_palmeras_02.jpg", 2));
 
@@ -465,26 +486,5 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         mLlocs.get(5).addImatge(new Imatge("Museo Arqueológico Comarcal de Orihuela", "museo_arqueologico_orihuela_01.jpg", 5));
         mLlocs.get(6).addImatge(new Imatge("Casa Museo Miguel Hernandez", "casa_museo_miguel_hernandez_01.jpg", 6));
         mLlocs.get(7).addImatge(new Imatge("Museo de la Reqconquista", "museo_de_la_reconquista_01.jpg", 7));
-    }
-
-    /**
-     * TODO: Esborrar despres de les proves. Aquesta informació s'extrau de la base de dades
-     * Categories de proves
-     */
-    private void initCategories() {
-        mCategories = new ArrayList<Categoria>();
-
-        // Categorias de prueba TODO: Esta información se extrae del web service
-        Categoria tot = new Categoria(0, "Seleccionar Todo", "Selecciona todas las categorías.");
-        Categoria platjes = new Categoria(1, "Playas", "En esta categoría hay playas.");
-        Categoria poi = new Categoria(2, "Puntos de interes", "En esta categoría hay puntos de interes.");
-        Categoria museus = new Categoria(3, "Museos", "En esta categoría hay museos.");
-        Categoria buida = new Categoria(4, "Vacía", "En esta categoría no hay nada.");
-
-        mCategories.add(tot);
-        mCategories.add(platjes);
-        mCategories.add(poi);
-        mCategories.add(museus);
-        mCategories.add(buida);
     }
 }
