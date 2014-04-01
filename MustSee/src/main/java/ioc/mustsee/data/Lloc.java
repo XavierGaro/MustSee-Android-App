@@ -1,5 +1,7 @@
 package ioc.mustsee.data;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ public class Lloc {
     // Aquest es el comptador per defecte.
     public static int sIdCounter = 10000;
 
+    // Posició del usuari
+    public static LatLng sPosition;
+
     // Atributs immutables de la classe
     public final int id;
     public final LatLng posicio;
@@ -30,6 +35,7 @@ public class Lloc {
 
     // Atributs mutables
     private List<Imatge> galeria;
+    private float distancia;
 
     private Lloc(LlocBuilder builder) {
         this.id = (builder.id == -1 ? sIdCounter++ : builder.id);
@@ -102,12 +108,14 @@ public class Lloc {
     /**
      * Retorna la distancia entre aquest lloc i el lloc passat com argument.
      *
-     * @param lloc lloc per mesurar la distancia
      * @return distancia en km entre els dos llocs.
      */
-    public float getDistance(Lloc lloc) {
+    public float getDistance() {
+        float[] results = {0f};
+        Location.distanceBetween(sPosition.latitude, sPosition.longitude, this.posicio.latitude, this.posicio.longitude, results);
+
         // TODO: Sense implementar ni utilitzar
-        return 0f;
+        return results[0] / 1000;
     }
 
     /**

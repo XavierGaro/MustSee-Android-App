@@ -68,7 +68,7 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         // Apliquem els valors del Lloc als widgets
         Lloc lloc = mFilteredLlocs.get(position);
         textViewName.setText(lloc.nom);
-        textViewDistance.setText("??" + " km."); // TODO: aquest valor serà calculat
+        textViewDistance.setText(lloc.getDistance() + " km."); // TODO: aquest valor serà calculat
         textViewDescription.setText(lloc.descripcio);
 
         if (lloc.getImatgePrincipal() != null) {

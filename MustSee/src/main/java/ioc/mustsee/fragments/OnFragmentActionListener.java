@@ -3,6 +3,8 @@ package ioc.mustsee.fragments;
 
 import android.os.Bundle;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.List;
 
 import ioc.mustsee.data.Categoria;
@@ -89,4 +91,6 @@ public interface OnFragmentActionListener {
      * @return llista de llocs filtrada.
      */
     List<Lloc> getFilteredLlocs();
+
+    LatLng getLastKnownPosition();
 }

@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Comparator;
 import java.util.List;
 
 import ioc.mustsee.R;
@@ -32,6 +33,21 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     private ListView mListViewLlocs;
     private List<Categoria> mCategories;
     private ArrayAdapter<Lloc> mAdapterLlocs;
+
+    /**
+     * Aquest comparador ordena els llocs per distancia del més prover al més llunyà.
+     */
+    private static Comparator<Lloc> sortLlocs = new Comparator<Lloc>() {
+        public int compare(Lloc llocA, Lloc llocB) {
+            if (llocA == llocB) {
+                return 0;
+            } else if (llocA.getDistance() > llocB.getDistance()) {
+                return 11;
+            } else {
+                return -1;
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +79,9 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
         mListViewLlocs = (ListView) mView.findViewById(R.id.listViewLlocs);
         mListViewLlocs.setOnItemClickListener(this);
         mListViewLlocs.setAdapter(mAdapterLlocs);
+
+        // Ordenem els resultats per distancia fent servir un Comparator
+        updateListView();
     }
 
     /**
@@ -146,5 +165,10 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
                 return;
             }
         }
+    }
+
+    public void updateListView() {
+        mAdapterLlocs.sort(sortLlocs);
+        mAdapterLlocs.notifyDataSetChanged();
     }
 }

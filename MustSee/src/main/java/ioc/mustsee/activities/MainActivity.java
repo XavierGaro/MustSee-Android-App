@@ -1,6 +1,10 @@
 package ioc.mustsee.activities;
 
+import android.content.Context;
 import android.database.SQLException;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -39,6 +45,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
     // Directoris
     public static final String PICTURES_DIRECTORY = "galerias/";
+
+    // Location Manager
+    public static final float MIN_REFRESH_METERS = 100f;
+    public static final long MIN_REFRESH_TIME = 1000; // Refresca la informació del GPS cada 1s
 
     // Referencia per llençar Fragments
     private static final int MAIN = 0;
@@ -77,6 +87,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     // En aquest mBundle s'emmagatzeman les dades que es passen entre fragments
     private Bundle mBundle;
 
+    // Localització del usuari
+    LocationManager locationManager;
+    String locationProvider = LocationManager.GPS_PROVIDER;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,16 +102,21 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         // Inicialitzem els widgets
         initWidgets();
 
+
         // TODO: Això es només per les proves. Carreguem les dades
-
-
         initImatges();
         initCategories();
         initLlocs();
+        initLocation();
 
+
+        // Inicialitzel la localització
+        updateLloc();
 
         // Cridem a la acció principal per carregar el primer fragment.
         OnActionDetected(ACTION_MAIN);
+
+
     }
 
     /**
@@ -225,7 +244,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     public void OnActionDetected(int action) {
         // TODO: Per el moment sempre es guarden totes les accions al BackStack
         boolean addToBackStack = true;
-
 
         // Iniciem la transacció per realitzar la acció.
         mTransaction = getSupportFragmentManager().beginTransaction();
@@ -462,17 +480,66 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         } finally {
             db.close();
         }
-
     }
 
     /**
-     * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
-     * la llista buida.
+     * TODO: la informació de les imatges s'assigna automàticament a cada lloc al recuperar-lo de
+     * la base de dades
      * Imatges de prova
      */
     private void initImatges() {
         //db.initImatges(); // TODO: Eliminar, esto elimina las tablas y las rehace
+    }
 
 
+    public void initLocation() {
+        // Acquire a reference to the system Location Manager
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        // Define a listener that responds to location updates
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                updateLloc(location);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+                updateLloc();
+                Log.d(TAG, "StatusChanged");
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+                updateLloc();
+                Log.d(TAG, "ProviderEnabled");
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                Log.d(TAG, "ProviderDisabled");
+            }
+        };
+
+        // Register the listener with the Location Manager to receive location updates
+        // TODO: Buscar la millor opció per LocationManager entre els disponibles (LocationManager.NETWORK_PROVIDER)
+        locationManager.requestLocationUpdates(locationProvider, MIN_REFRESH_TIME, MIN_REFRESH_METERS, locationListener);
+    }
+
+    @Override
+    public LatLng getLastKnownPosition() {
+        // TODO: Buscar la millor opció per LocationManager entre els disponibles (LocationManager.NETWORK_PROVIDER)
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        return new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+    }
+
+    public void updateLloc(Location location) {
+        Lloc.sPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        if (checkActionHistory(LIST)) mListFragment.updateListView();
+    }
+
+    public void updateLloc() {
+        Lloc.sPosition = getLastKnownPosition();
     }
 }
