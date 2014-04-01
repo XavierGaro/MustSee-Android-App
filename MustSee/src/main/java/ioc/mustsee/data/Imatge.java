@@ -1,7 +1,6 @@
 package ioc.mustsee.data;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -10,53 +9,71 @@ import java.io.InputStream;
 
 import ioc.mustsee.activities.MainActivity;
 
+/**
+ * Aquesta classe emmagatzema la informació d'una imatge. Tots els seus atributs son immutables i
+ * poden ser llegits directament.
+ *
+ * @author Javier García
+ */
 public class Imatge {
-    public static int idCounter = 10000; // TODO: contador por defecto
+    public static int sIdCounter = 10000; // TODO: contador por defecto
 
     public final int id;
-    public final String tittle;
-    public final String fileName;
+    public final String titol;
+    public final String nomFitxer;
 
-    public Imatge(String tittle, String fileName) {
-        this(idCounter++, tittle, fileName);
+    /**
+     * Constructor sense id, es fa servir una id per defecte que sempre es trobarà per sobre de 10000.
+     *
+     * @param titol     títol de la imatge.
+     * @param nomFitxer nom del fitxer on es troba la imatge.
+     */
+    public Imatge(String titol, String nomFitxer) {
+        this(sIdCounter++, titol, nomFitxer);
     }
 
-    public Imatge(int id, String tittle, String fileName) {
+    /**
+     * Constructor complet de la imatge.
+     *
+     * @param id        identificador de la imatge.
+     * @param titol     títol de la imatge.
+     * @param nomFitxer nom del fitxer on es troba la imatge.
+     */
+    public Imatge(int id, String titol, String nomFitxer) {
         this.id = id;
-        this.tittle = tittle;
-        this.fileName = fileName;
+        this.titol = titol;
+        this.nomFitxer = nomFitxer;
     }
 
-    // TODO hace falta un contexto
-    private static Bitmap getBitmapFromAssets(Context context, String fileName) {
-        AssetManager assetManager = context.getAssets();
+    /**
+     * Carrega la imatge corresponent a aquesta instancia i la retorna com a Bitmap.
+     * TODO: Això no es farà des de aquí, hi haurà una classe especial per gestionar els fitxers.
+     *
+     * @param context context de la aplicació principal
+     * @return bitmap de la imatge.
+     */
+    public Bitmap carregarImatge(Context context) {
+        return getBitmapFromAssets(context, MainActivity.PICTURES_DIRECTORY + this.nomFitxer);
+    }
 
-        InputStream istr = null;
+    /**
+     * Mètode temporal per carregar imatges des de el directori d'assets i convertir-la en un
+     * bitmap.
+     * TODO: Això no es farà des de aquí, hi haurà una classe especial per gestionar els fitxers.
+     *
+     * @param context  context de la aplicació principal.
+     * @param fileName nom del fitxer on es troba la imatge.
+     * @return bitmap de la imatge.
+     */
+    private static Bitmap getBitmapFromAssets(Context context, String fileName) {
+        InputStream in = null;
         try {
-            istr = assetManager.open(fileName);
+            in = context.getAssets().open(fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Bitmap bitmap = BitmapFactory.decodeStream(istr);
-
-        return bitmap;
-    }
-
-    // TODO: Buscar otra manera para pasar el contexto
-    public Bitmap carregarImatge(Context context) {
-
-
-        return getBitmapFromAssets(context, MainActivity.PICTURES_DIRECTORY + this.fileName);
-
-           /*
-        //TODO: Carregar la imagen principal del lloc. Este código es el mismo que en LlocArrayAdapter.
-        String filename = lloc.thumnail;
-        File file = new File(context.getFilesDir()
-                + MainActivity.THUMBNAILS_DIRECTORY, filename);
-        Bitmap image = BitmapFactory.decodeFile(file.getAbsolutePath());
-        return image;
-        */
+        return BitmapFactory.decodeStream(in);
     }
 
 }

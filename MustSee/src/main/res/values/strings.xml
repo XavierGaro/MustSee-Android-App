@@ -23,4 +23,9 @@
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>
 
+    <!-- Error and Warning Messages -->
+    <string name="error_db">Database error</string>
+    <string name="update_from">Updating database from version</string>
+    <string name="update_to">to version</string>
+
 </resources>

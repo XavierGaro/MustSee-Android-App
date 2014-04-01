@@ -29,11 +29,10 @@ public class PictureFragment extends MustSeeFragment {
      * Inicialitzem la imatge amb la id que s'ha passat com amb el bundle al crear el fragment.
      */
     void initWidgets() {
-        ImageView imageViewPicture;
-
         Bundle bundle = getArguments();
         int imatgeId = bundle.getInt("PICTURE");
 
+        ImageView imageViewPicture;
         imageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
         imageViewPicture.setImageBitmap(mCallback
                         .getCurrentLloc()

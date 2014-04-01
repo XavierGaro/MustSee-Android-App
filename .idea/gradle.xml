@@ -7,8 +7,8 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="D:\Users\Xavier\Downloads\MustSee" />
-            <option value="D:\Users\Xavier\Downloads\MustSee\MustSee" />
+            <option value="D:\Users\Xavier\AndroidStudioProjects\MustSee" />
+            <option value="D:\Users\Xavier\AndroidStudioProjects\MustSee\MustSee" />
           </set>
         </option>
       </GradleProjectSettings>

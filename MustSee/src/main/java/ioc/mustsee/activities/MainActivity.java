@@ -1,9 +1,11 @@
 package ioc.mustsee.activities;
 
+import android.database.SQLException;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,7 @@ import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
+import ioc.mustsee.database.DBMustSee;
 import ioc.mustsee.fragments.DetailFragment;
 import ioc.mustsee.fragments.GalleryFragment;
 import ioc.mustsee.fragments.LoginFragment;
@@ -60,6 +63,9 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private LinkedList<Integer[]> mActionHistory = new LinkedList<Integer[]>();
     private boolean mFullScreen = false;
 
+    // Base de dades
+    private DBMustSee db = new DBMustSee(this);
+
     // Dades
     private List<Lloc> mLlocs;
     private List<Categoria> mCategories;
@@ -69,7 +75,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private Categoria mCurrentCategoria;
     private List<Lloc> mFilteredLlocs;
 
-    // En aquest mBundle s'emmagatzeman les dades que es pasen entre fragments
+    // En aquest mBundle s'emmagatzeman les dades que es passen entre fragments
     private Bundle mBundle;
 
     @Override
@@ -423,22 +429,24 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      * Llocs de prova
      */
     private void initLlocs() {
-        mLlocs = new ArrayList<Lloc>();
+        //mLlocs = new ArrayList<Lloc>();
 
-        mLlocs.add(new Lloc("Playa de Punta Prima", 1, 37.94017f, -0.711672f, "Esta es la playa de Punta Prima. Distintivo Q de calidad turística. Bandera azul."));
-        mLlocs.add(new Lloc("Cala Mosca", 1, 37.932554f, -0.718925f, "Esta es la playa de Cala Mosca."));
-        mLlocs.add(new Lloc("Playa Mil Palmeras", 1, 37.885557f, -0.752352f, "Esta es la playa Mil Palmeras. Distintivo Q de calidad turística."));
 
-        mLlocs.add(new Lloc("Teatro Circo", 2, 38.085333f, -0.943217f, "En su origen fue una construcción de las llamadas \"semipermanentes\" dedicada en principio a espectáculos circenses, acrobáticos, boxeo, etc."));
-        mLlocs.add(new Lloc("La Lonja", 2, 38.082335f, -0.947454f, "Debido a la construcción de una nueva lonja en el Polígono Industrial Puente Alto, la antigua edificación quedo en desuso, y en la actualidad se ha reformado para destinarla al actual Conservatorio de Música y Auditorio. Inagurado el 24 de octubre de 2008, como \"Conservatorio Pedro Terol\"."));
-
-        mLlocs.add(new Lloc("Museo Arqueológico Comarcal de Orihuela", 3, 38.086431f, -0.950500f, "Ubicado en parte de las antiguas dependencias del Hospital San Juan de Dios (Hospital Municipal), restauradas en 1997. Ocupa la antigua iglesia de estilo barroco de planta en cruz latina."));
-        mLlocs.add(new Lloc("Casa Museo Miguel Hernandez", 3, 38.089488f, -0.942205f, "Situada en la Calle de Arriba, próxima al Colegio de Santo Domingo, en el “Rincón Hernandiano”. Sus dependencias son las típicas de una casa con explotación ganadera de principios de siglo pasado, cuenta además con un pequeño huerto situado junto a la sierra."));
-        mLlocs.add(new Lloc("Museo de la Reconquista", 3, 38.08714f, -0.950126f, "El Museo de la Reconquista fue creado en 1.985, por la Asociación de Fiestas de Moros y Cristianos \"Santas Justa y Rufina\", con sede en los bajos del Palacio de Rubalcava, con el objeto de conservar y mostrar al público trajes festeros de las distintas comparsas, carteles de la fiesta, fotografías, armamento, instrumentos musicales y demás objetos relacionados con la fiesta."));
+        // Obtenim la llista de llocs de la base de dades
+        try {
+            mLlocs = db.open()
+                    .getLlocs();
+        } catch (SQLException e) {
+            // Si trobem cap error ho mostrem al log y tornem la llista buida
+            Log.e(TAG, getResources().getString(R.string.error_db), e);
+            mLlocs = new ArrayList<Lloc>();
+        } finally {
+            db.close();
+        }
     }
 
     /**
-     * TODO: Esborrar despres de les proves. Aquesta informació s'extrau de la base de dades
+     * TODO: Esborrar després de les proves. Aquesta informació s'extreu de la base de dades
      * Imatges de prova
      */
     private void initImatges() {

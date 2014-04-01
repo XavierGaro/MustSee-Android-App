@@ -75,7 +75,7 @@ public class GridViewGalleryAdapter extends ArrayAdapter {
 
         // Carreguem les dades de la imatge en la casella.
         Imatge item = mImatges.get(position);
-        holder.title.setText(item.tittle);
+        holder.title.setText(item.titol);
         holder.picture.setImageBitmap(item.carregarImatge(mContext));
         return square;
     }

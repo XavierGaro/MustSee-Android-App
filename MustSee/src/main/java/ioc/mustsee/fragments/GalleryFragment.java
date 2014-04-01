@@ -34,9 +34,9 @@ public class GalleryFragment extends MustSeeFragment implements AdapterView.OnIt
      */
     @Override
     void initWidgets() {
-        GridView gridView = (GridView) mView.findViewById(R.id.gridView);
         GridViewGalleryAdapter customGridAdapter = new GridViewGalleryAdapter(getActivity(),
                 R.layout.grid_row_gallery, mCallback.getCurrentLloc().getImages());
+        GridView gridView = (GridView) mView.findViewById(R.id.gridView);
         gridView.setAdapter(customGridAdapter);
         gridView.setOnItemClickListener(this);
     }

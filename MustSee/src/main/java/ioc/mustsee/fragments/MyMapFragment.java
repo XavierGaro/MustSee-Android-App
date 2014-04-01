@@ -119,7 +119,7 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
                 .snippet(lloc.getShortDescripcio());
 
         // Si te un icon associat l'afegim al marcador.
-        if (lloc.iconResource != Lloc.DEFAULT_ICON) {
+        if (lloc.iconResource != Lloc.NO_ICON) {
             markerOptions.icon(BitmapDescriptorFactory.fromResource(lloc.iconResource));
         }
 
