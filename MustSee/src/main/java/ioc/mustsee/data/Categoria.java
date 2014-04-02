@@ -21,7 +21,7 @@ public class Categoria {
      * @param descripcio descripcio de la categoria.
      */
     public Categoria(String nom, String descripcio) {
-        this(sIdCounter, nom, descripcio);
+        this(sIdCounter++, nom, descripcio);
     }
 
     /**

@@ -56,7 +56,7 @@ public class Imatge {
      * @param context context de la aplicació principal
      * @return bitmap de la imatge.
      */
-    public Bitmap carregarImatge(Context context) {
+    public Bitmap loadImatge(Context context) {
         return getBitmapFromAssets(context, MainActivity.PICTURES_DIRECTORY + this.nomFitxer);
     }
 

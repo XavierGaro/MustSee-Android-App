@@ -74,9 +74,12 @@ public class Lloc {
     /**
      * Retorna la llista completa de imatges associada amb el lloc.
      *
-     * @return llista d'imatges.
+     * @return llista d'imatges o buida si no hi ha cap.
      */
     public List<Imatge> getImages() {
+        if (galeria == null) {
+            galeria = new ArrayList<Imatge>();
+        }
         return galeria;
     }
 

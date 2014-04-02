@@ -38,7 +38,7 @@ public class PictureFragment extends MustSeeFragment {
                         .getCurrentLloc()
                         .getImages()
                         .get(imatgeId)
-                        .carregarImatge(getActivity())
+                        .loadImatge(getActivity())
         );
     }
 }

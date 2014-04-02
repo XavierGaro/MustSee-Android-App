@@ -89,7 +89,7 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         }
 
         if (lloc.getImatgePrincipal() != null) {
-            imageView.setImageBitmap(lloc.getImatgePrincipal().carregarImatge(mContext));
+            imageView.setImageBitmap(lloc.getImatgePrincipal().loadImatge(mContext));
         }
 
 
