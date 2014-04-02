@@ -14,6 +14,11 @@ public class LlocTest extends TestCase {
         super.setUp();
     }
 
+    /**
+     * Test P07-And
+     *
+     * @throws Exception
+     */
     public void testBuilder_minimLatLng() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", new LatLng(1, 2)).build();
         assertEquals(Lloc.sIdCounter - 1, lloc.id);
@@ -25,6 +30,10 @@ public class LlocTest extends TestCase {
         assertEquals(0, lloc.categoriaId);
     }
 
+    /**
+     * Test P08-And
+     * @throws Exception
+     */
     public void testBuilder_minimLatitudILongitud() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         assertEquals(Lloc.sIdCounter - 1, lloc.id);
@@ -36,6 +45,10 @@ public class LlocTest extends TestCase {
         assertEquals(0, lloc.categoriaId);
     }
 
+    /**
+     * Test P09-And
+     * @throws Exception
+     */
     public void testBuilder_complet() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f)
                 .id(42)
@@ -53,19 +66,32 @@ public class LlocTest extends TestCase {
         assertEquals(100, lloc.categoriaId);
     }
 
+    /**
+     * Test P10-And
+     * @throws Exception
+     */
     public void testConstructor_senseIdSequencial() throws Exception {
         Lloc lloc1 = new Lloc.LlocBuilder("test1", 1f, 2f).build();
         Lloc lloc2 = new Lloc.LlocBuilder("test2", 2f, 1f).build();
         assertNotSame(lloc1.id, lloc2.id);
     }
 
-    public void testGetShortDescricio_curta() throws Exception {
+    /**
+     * Test P11-And
+     *
+     * @throws Exception
+     */
+    public void testGetShortDescripcio_curta() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f)
                 .id(42)
                 .descripcio("descripció curta").build();
         assertEquals("descripció curta", lloc.getShortDescripcio());
     }
 
+    /**
+     * Test P12-And
+     * @throws Exception
+     */
     public void testGetShortDescricio_llarga() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f)
                 .id(42)
@@ -73,7 +99,10 @@ public class LlocTest extends TestCase {
         assertEquals("1234 1234 1234 1234 1234 12...", lloc.getShortDescripcio());
     }
 
-
+    /**
+     * Test P13-And
+     * @throws Exception
+     */
     public void testAddImatge_noNula() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         Imatge imatge = new Imatge("titol", "picture.jpg", lloc.id);
@@ -82,17 +111,29 @@ public class LlocTest extends TestCase {
         assertEquals(imatge, lloc.getImatgePrincipal());
     }
 
+    /**
+     * Test P14-And
+     * @throws Exception
+     */
     public void testAddImatge_nula() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         lloc.addImatge(null);
         assertNull(lloc.getImatgePrincipal());
     }
 
+    /**
+     * Test P15-And
+     * @throws Exception
+     */
     public void testGetImatgePrincipal_senseAfegirImatge() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         assertNull(lloc.getImatgePrincipal());
     }
 
+    /**
+     * Test P16-And
+     * @throws Exception
+     */
     public void testGetImatgePrincipal_afegintUnaImatge() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         Imatge imatge = new Imatge("titol", "picture.jpg", lloc.id);
@@ -100,6 +141,10 @@ public class LlocTest extends TestCase {
         assertEquals(imatge, lloc.getImatgePrincipal());
     }
 
+    /**
+     * Test P17-And
+     * @throws Exception
+     */
     public void testGetImatgePrincipal_afegintMesDeUnaImatge() {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         Imatge imatge1 = new Imatge("titol1", "picture1.jpg", lloc.id);
@@ -111,11 +156,19 @@ public class LlocTest extends TestCase {
         assertEquals(imatge1, lloc.getImatgePrincipal());
     }
 
+    /**
+     * Test P18-And
+     * @throws Exception
+     */
     public void testGetImatges_senseImatges() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         assertTrue(lloc.getImages().isEmpty());
     }
 
+    /**
+     * Test P19-And
+     * @throws Exception
+     */
     public void testGetImatges_ambUnaImatge() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         Imatge imatge = new Imatge("titol", "picture.jpg", lloc.id);
@@ -123,6 +176,10 @@ public class LlocTest extends TestCase {
         assertEquals(1, lloc.getImages().size());
     }
 
+    /**
+     * Test P20-And
+     * @throws Exception
+     */
     public void testGetImatges_ambMesDeUnaImatge() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         Imatge imatge1 = new Imatge("titol1", "picture1.jpg", lloc.id);
@@ -134,6 +191,10 @@ public class LlocTest extends TestCase {
         assertEquals(3, lloc.getImages().size());
     }
 
+    /**
+     * Test P21-And
+     * @throws Exception
+     */
     public void testGetImatges_esConservaElOrdre() throws Exception {
         Lloc lloc = new Lloc.LlocBuilder("test", 1f, 2f).build();
         Imatge imatge1 = new Imatge("titol1", "picture1.jpg", lloc.id);
@@ -146,5 +207,4 @@ public class LlocTest extends TestCase {
         assertEquals(imatge2, lloc.getImages().get(1));
         assertEquals(imatge3, lloc.getImages().get(2));
     }
-
 }

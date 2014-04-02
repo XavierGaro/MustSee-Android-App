@@ -11,6 +11,11 @@ public class ImatgeTest extends TestCase {
         super.setUp();
     }
 
+    /**
+     * Test P04-And
+     *
+     * @throws Exception
+     */
     public void testConstructor_complet() throws Exception {
         Imatge imatge = new Imatge(42, "titol", "picture.jpg", 1);
         assertEquals(42, imatge.id);
@@ -19,6 +24,11 @@ public class ImatgeTest extends TestCase {
         assertEquals(1, imatge.llocId);
     }
 
+    /**
+     * Test P05-And
+     *
+     * @throws Exception
+     */
     public void testConstructor_senseId() throws Exception {
         Imatge imatge = new Imatge("titol", "picture.jpg", 1);
         assertEquals(Imatge.sIdCounter - 1, imatge.id);
@@ -27,6 +37,11 @@ public class ImatgeTest extends TestCase {
         assertEquals(1, imatge.llocId);
     }
 
+    /**
+     * Test P06-And
+     *
+     * @throws Exception
+     */
     public void testConstructor_senseIdSequencial() throws Exception {
         Imatge imatge1 = new Imatge("titol1", "picture1.jpg", 1);
         Imatge imatge2 = new Imatge("titol2", "picture2.jpg", 2);
