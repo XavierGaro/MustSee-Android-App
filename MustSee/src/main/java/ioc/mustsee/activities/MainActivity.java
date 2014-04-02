@@ -548,7 +548,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     public void updateLloc(Location location) {
         Lloc.sPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
-        // Si està visible la llista la actualitzem. TODO: Codi redundant
+        // Si està visible la llista la actualitzem.
         if (checkActionHistory(LIST)) mListFragment.updateListView();
     }
 
@@ -557,8 +557,5 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      */
     public void updateLloc() {
         Lloc.sPosition = getLastKnownPosition();
-
-        // Si està visible la llista la actualitzem. TODO: Codi redundant
-        if (checkActionHistory(LIST)) mListFragment.updateListView();
     }
 }
