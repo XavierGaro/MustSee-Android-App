@@ -1,9 +1,7 @@
 package ioc.mustsee.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -261,28 +259,12 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         FragmentManager fragmentManager = getChildFragmentManager();
 
         // Cerquem el fragment de mapa
-        mMapFragment = (SupportMapFragment) fragmentManager.findFragmentById(R.id.mapFragment);
+        mMapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.mapFragment);
 
         // Si no existeix instanciem un de nou.
         if (mMapFragment == null) {
             mMapFragment = SupportMapFragment.newInstance();
             fragmentManager.beginTransaction().replace(R.id.mapFragment, mMapFragment).commit();
-        }
-    }
-
-    /**
-     * Al eliminar aquest fragment ens assegurem que s'elimina també el fragment niuat.
-     */
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Fragment fragment = (getFragmentManager().findFragmentById(R.id.mapFragment));
-
-        // Si s'ha trobat el fragment l'eliminem
-        if (fragment != null) {
-            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.remove(fragment);
-            ft.commit();
         }
     }
 }

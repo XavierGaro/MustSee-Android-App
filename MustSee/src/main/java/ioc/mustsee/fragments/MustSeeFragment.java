@@ -57,12 +57,14 @@ public abstract class MustSeeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         if (mView != null) {
             ViewGroup parentViewGroup = (ViewGroup) mView.getParent();
             if (parentViewGroup != null) {
                 parentViewGroup.removeAllViews();
             }
         }
+
     }
 
     /**

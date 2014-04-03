@@ -102,21 +102,17 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         // Inicialitzem els widgets
         initWidgets();
 
-
         // TODO: Això es només per les proves. Carreguem les dades
         initImatges();
         initCategories();
         initLlocs();
         initLocation();
 
-
         // Inicialitzel la localització
         updateLloc();
 
         // Cridem a la acció principal per carregar el primer fragment.
         OnActionDetected(ACTION_MAIN);
-
-
     }
 
     /**
@@ -159,11 +155,13 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 break;
 
             case FULL_MAP:
+                eliminarMapa();
                 fragment = new MyMapFragment();
                 mMapFragment = (MyMapFragment) fragment;
                 break;
 
             case HALF_MAP:
+                eliminarMapa();
                 fragment = new MyMapFragment();
                 mFullScreen = false;
                 container = R.id.containerTwo;
@@ -194,6 +192,19 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
         // Reemplacem el fragment al contenidor apropiat.
         mTransaction.replace(container, fragment);
+    }
+
+    /**
+     * Ens assegurem que s'ha eliminat el fragment del mapa abans de tornar a obrir-lo.
+     */
+    private void eliminarMapa() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.mapFragment);
+        // Si s'ha trobat el fragment l'eliminem
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.remove(fragment);
+            ft.commit();
+        }
     }
 
     /**
@@ -298,6 +309,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      *
      * @param actions llista de enters amb les accions.
      */
+
     private void addActionHistory(Integer... actions) {
         mActionHistory.add(actions);
     }
