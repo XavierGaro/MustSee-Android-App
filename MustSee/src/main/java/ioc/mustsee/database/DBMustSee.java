@@ -67,6 +67,8 @@ public class DBMustSee {
     private SQLiteDatabase mDB;
     private Context mContext;
 
+    private static boolean initializeDB;
+
     /**
      * El constructor requereix passar el context de la activitat i s'instancia l'ajudant.
      *
@@ -74,7 +76,7 @@ public class DBMustSee {
      */
     public DBMustSee(Context context) {
         this.mContext = context;
-        mDataBaseHelper = new DataBaseHelper(context);
+        mDataBaseHelper = new DataBaseHelper(context, this);
     }
 
     /**
@@ -85,6 +87,11 @@ public class DBMustSee {
      */
     public DBMustSee open() throws SQLException {
         mDB = mDataBaseHelper.getWritableDatabase();
+        if (initializeDB) {
+            initImatges();
+            initCategories();
+            initLlocs();
+        }
         return this;
     }
 
@@ -330,18 +337,23 @@ public class DBMustSee {
      */
     private static class DataBaseHelper extends SQLiteOpenHelper {
         Context mContext;
+        DBMustSee database; // Això es necessari per poder reiniciar les dades de prova
 
-        DataBaseHelper(Context context) {
+        DataBaseHelper(Context context, DBMustSee database) {
             super(context, BD_NOM, null, VERSIO);
             this.mContext = context;
+            this.database = database;
         }
 
         @Override
         public void onCreate(SQLiteDatabase db) {
             try {
-                // Creem les taules
-                db.execSQL(BD_CREATE_LLOCS);
-                db.execSQL(BD_CREATE_CATEGORIES);
+                // Creem les taules i afegim les dades de prova després de crear la base e dades
+                //db.execSQL(BD_CREATE_LLOCS);
+                //db.execSQL(BD_CREATE_CATEGORIES);
+                //db.execSQL(BD_CREATE_IMATGES);
+
+                initializeDB = true;
 
             } catch (SQLException e) {
                 Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
@@ -352,7 +364,6 @@ public class DBMustSee {
         public void onUpgrade(SQLiteDatabase db, int versioAntiga,
                               int versioNova) {
             Log.w(TAG, R.string.update_from + " " + versioAntiga + " " + R.string.update_to + ".");
-
             // Eliminem totes les taules
             db.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_LLOCS);
 
@@ -365,10 +376,8 @@ public class DBMustSee {
      * TODO: Mètode per realitzar proves, moure al packet de tests
      */
     public void initCategories() {
-        open();
         mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_CATEGORIES);
         mDB.execSQL(BD_CREATE_CATEGORIES);
-        close();
 
         List<Categoria> mCategories = new ArrayList<Categoria>();
 
@@ -386,15 +395,12 @@ public class DBMustSee {
 
         // Recorrem la llista de llocs i els afegim a la base de dades
         try {
-            open();
             for (Categoria categoria : mCategories) {
                 insertCategoria(categoria);
             }
         } catch (SQLException e) {
             // Si trobem cap error ho mostrem al log
             Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
-        } finally {
-            close();
         }
     }
 
@@ -402,10 +408,8 @@ public class DBMustSee {
      * TODO: Mètode per realitzar proves, moure al packet de tests
      */
     public void initLlocs() {
-        open();
         mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_LLOCS);
         mDB.execSQL(BD_CREATE_LLOCS);
-        close();
 
         List<Lloc> mLlocs = new ArrayList<Lloc>();
         // Crea lloc a partir de array Obj[]
@@ -443,15 +447,12 @@ public class DBMustSee {
 
         // Recorrem la llista de llocs i els afegim a la base de dades
         try {
-            open();
             for (Lloc lloc : mLlocs) {
                 insertLloc(lloc);
             }
         } catch (SQLException e) {
             // Si trobem cap error ho mostrem al log
             Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
-        } finally {
-            close();
         }
     }
 
@@ -459,10 +460,8 @@ public class DBMustSee {
      * TODO: Mètode per realitzar proves, moure al packet de tests
      */
     public void initImatges() {
-        open();
         mDB.execSQL("DROP TABLE IF EXISTS " + BD_TAULA_IMATGES);
         mDB.execSQL(BD_CREATE_IMATGES);
-        close();
 
         List<Imatge> imatges = new ArrayList<Imatge>();
 
@@ -490,15 +489,12 @@ public class DBMustSee {
 
         // Recorrem la llista de llocs i els afegim a la base de dades
         try {
-            open();
             for (Imatge imatge : imatges) {
                 insertImatge(imatge);
             }
         } catch (SQLException e) {
             // Si trobem cap error ho mostrem al log
             Log.e(TAG, mContext.getResources().getString(R.string.error_db), e);
-        } finally {
-            close();
         }
     }
 }
