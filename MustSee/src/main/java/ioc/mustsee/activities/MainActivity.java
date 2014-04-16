@@ -88,7 +88,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private Bundle mBundle;
 
     // Localització del usuari
-    LocationManager locationManager;
+    LocationManager mLocationManager;
     String locationProvider = LocationManager.GPS_PROVIDER;
 
     @Override
@@ -508,7 +508,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      */
     public void initLocation() {
         // Obtenim la referència al Location Manager del sistema
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         // Definim el listener que respondrà a les actualitzacions
         LocationListener locationListener = new LocationListener() {
@@ -537,7 +537,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         };
 
         // Enregistrem el listener per rebre les actualitzacions.
-        locationManager.requestLocationUpdates(locationProvider, MIN_REFRESH_TIME, MIN_REFRESH_METERS, locationListener);
+        mLocationManager.requestLocationUpdates(locationProvider, MIN_REFRESH_TIME, MIN_REFRESH_METERS, locationListener);
     }
 
     /**
@@ -547,7 +547,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      */
     @Override
     public LatLng getLastKnownPosition() {
-        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+        Location lastKnownLocation = mLocationManager.getLastKnownLocation(locationProvider);
         return lastKnownLocation == null ? Lloc.NO_LOCATION :
                 new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
     }
