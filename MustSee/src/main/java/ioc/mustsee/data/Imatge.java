@@ -3,7 +3,11 @@ package ioc.mustsee.data;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -57,7 +61,18 @@ public class Imatge {
      * @return bitmap de la imatge.
      */
     public Bitmap loadImatge(Context context) {
-        return getBitmapFromAssets(context, MainActivity.PICTURES_DIRECTORY + this.nomFitxer);
+        Bitmap image;
+
+        try {
+            String filename = Uri.parse(nomFitxer).getLastPathSegment();
+            File file = new File(Environment.getExternalStorageDirectory() + MainActivity.PICTURES_DIRECTORY, filename);
+            image = BitmapFactory.decodeFile(file.getAbsolutePath());
+        } catch (Exception e) {
+            // Si hi ha un error al carregar la imatge es mostra la imatge per defecte
+            Log.e("Imatge", "Error al carregar la imatge: " + e);
+            image = getBitmapFromAssets(context, DEFAULT_PICTURE);
+        }
+        return image;
     }
 
     /**
@@ -81,4 +96,36 @@ public class Imatge {
         return BitmapFactory.decodeStream(in);
     }
 
+    /**
+     * Uses Bitmapfactory to shrink the given image to the expected size.
+     *
+     * @param file   Path to the image.
+     * @param width  expected width of the image.
+     * @param height expected height of the image.
+     * @return a Bitmap with the new size.
+     */
+    public static Bitmap ShrinkBitmap(String nomFitxer, int width, int height) {
+        String filename = Uri.parse(nomFitxer).getLastPathSegment();
+        String file = Environment.getExternalStorageDirectory() + MainActivity.PICTURES_DIRECTORY + "/" + filename;
+        Log.d("ShrinkBitmap", "Trying to shrink " + file + " to " + width + "x" + height);
+        BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
+        bmpFactoryOptions.inJustDecodeBounds = true;
+        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+        Log.d("ShrinkBitmap", "Original size: " + bmpFactoryOptions.outWidth + "x" + bmpFactoryOptions.outHeight);
+
+        int heightRatio = (int) Math.ceil(bmpFactoryOptions.outHeight / (float) height);
+        int widthRatio = (int) Math.ceil(bmpFactoryOptions.outWidth / (float) width);
+        if (heightRatio > 1 || widthRatio > 1) {
+            if (heightRatio > widthRatio) {
+                bmpFactoryOptions.inSampleSize = heightRatio;
+                Log.d("ShrinkBitmap", "Shrink ratio: " + heightRatio);
+            } else {
+                bmpFactoryOptions.inSampleSize = widthRatio;
+                Log.d("ShrinkBitmap", "Shrink ratio: " + widthRatio);
+            }
+        }
+        bmpFactoryOptions.inJustDecodeBounds = false;
+        bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+        return bitmap;
+    }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
+import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 import ioc.mustsee.database.DBMustSee;
 import ioc.mustsee.fragments.DetailFragment;
@@ -32,6 +34,8 @@ import ioc.mustsee.fragments.MyListFragment;
 import ioc.mustsee.fragments.MyMapFragment;
 import ioc.mustsee.fragments.OnFragmentActionListener;
 import ioc.mustsee.fragments.PictureFragment;
+import ioc.mustsee.parser.DownloadImageAsyncTask;
+import ioc.mustsee.parser.DownloadManager;
 import ioc.mustsee.parser.OnTaskCompleted;
 import ioc.mustsee.parser.ParserMustSee;
 
@@ -41,11 +45,11 @@ import ioc.mustsee.parser.ParserMustSee;
  *
  * @author Javier García
  */
-public class MainActivity extends ActionBarActivity implements OnFragmentActionListener {
+public class MainActivity extends ActionBarActivity implements OnFragmentActionListener, DownloadManager {
     private static final String TAG = "MainActivity";
 
     // Directoris
-    public static final String PICTURES_DIRECTORY = "galerias/";
+    public static final String PICTURES_DIRECTORY = "/pictures";
 
     // Location Manager
     public static final float MIN_REFRESH_METERS = 100f;
@@ -92,6 +96,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     LocationManager mLocationManager;
     String locationProvider = LocationManager.GPS_PROVIDER;
 
+    // Gestor de descarregas
+    private int descarregues;
+    private ProgressDialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,11 +111,11 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         // Inicialitzem els widgets
         initWidgets();
 
-        // TODO: Això es només per les proves. Carreguem les dades
-        initImatges();
+        // Carreguem les dades
         initCategories();
         initLlocs();
         initLocation();
+
 
         // Inicialitzel la localització
         updateLloc();
@@ -466,17 +474,30 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         //db.initLlocs(); // TODO: Eliminar, això refà la taula cada vegada
 
         // Mostrem el dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.dialog_wait));
-        dialog.show();
-
+        //final ProgressDialog dialog = new ProgressDialog(this);
+        //dialog.setMessage(getResources().getString(R.string.dialog_wait));
+        //dialog.show();
+        descarregaEnCurs(true);
 
         new ParserMustSee().getLlocs(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
                 // Ocultem el dialog
-                dialog.dismiss();
+                //dialog.dismiss();
                 mLlocs = result;
+                descarregaEnCurs(false);
+
+                // Comprovem si hi han imatges per descarregar
+                List<String> urlImatges = new ArrayList<String>();
+
+                for (Lloc lloc : mLlocs) {
+                    for (Imatge imatge : lloc.getImages()) {
+                        urlImatges.add(imatge.nomFitxer);
+                    }
+                }
+
+                new DownloadImageAsyncTask(MainActivity.this, PICTURES_DIRECTORY).execute(urlImatges.toArray(new String[urlImatges.size()]));
+
             }
         });
     }
@@ -506,16 +527,19 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         mCategories.add(new Categoria(0, "Mostrar tot", null));
 
         // Mostrem el dialog
-        final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.setMessage(getResources().getString(R.string.dialog_wait));
-        dialog.show();
+        //final ProgressDialog dialog = new ProgressDialog(this);
+        //dialog.setMessage(getResources().getString(R.string.dialog_wait));
+        //dialog.show();
+
+        descarregaEnCurs(true);
 
         new ParserMustSee().getCategories(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
                 // Ocultem el dialog
-                dialog.dismiss();
+                //dialog.dismiss();
                 mCategories.addAll(result);
+                descarregaEnCurs(false);
             }
         });
     }
@@ -532,14 +556,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         }
     }
 */
-    /**
-     * TODO: la informació de les imatges s'assigna automàticament a cada lloc al recuperar-lo de
-     * la base de dades
-     * Imatges de prova
-     */
-    private void initImatges() {
-        //db.initImatges(); // TODO: Eliminar, això elimina les taules i les refà
-    }
 
     /**
      * Inicialitza el gestor de localització i el listener que respondrà als canvis de localització.
@@ -608,4 +624,44 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     public void updateLloc() {
         Lloc.sPosition = getLastKnownPosition();
     }
+
+    /**
+     * Aquest métode es crida al començar i finalitzar la descarrega de dades i
+     * imatges. Mentre hi ha descarregues en curs es mostra la barra de progres
+     * i es desactiva el botó de refresh.
+     *
+     * @param descarrega si es true indica que inicia la descarrega en cas contrari
+     *                   s'indica que finalitza la descarrega.
+     */
+    @Override
+    public synchronized void descarregaEnCurs(boolean descarrega) {
+        // Actualitzem el comptador
+        if (descarrega) {
+            descarregues++;
+            Log.d(TAG, "Descarregues en curs: " + descarregues);
+        } else {
+            descarregues--;
+            Log.d(TAG, "Descarregues en curs: " + descarregues);
+        }
+
+        if (descarregues > 0) {
+            // Hi han descarregues pendents
+            if (dialog == null) {
+                dialog = new ProgressDialog(this);
+            }
+
+            if (!dialog.isShowing()) {
+                dialog.setMessage(getResources().getString(R.string.dialog_wait));
+                dialog.show();
+            }
+
+        } else {
+            // No queden més descarregues pendents
+
+            // Ocultem la barra de progrés
+            if (dialog.isShowing()) dialog.hide();
+        }
+    }
+
+
 }

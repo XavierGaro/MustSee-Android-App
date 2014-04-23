@@ -25,6 +25,9 @@ import ioc.mustsee.data.Imatge;
 public class GridViewGalleryAdapter extends ArrayAdapter {
     private static final String TAG = "GridViewGalleryAdapter";
 
+    private static final int MAX_SIZE = 350; // Grandària de la imatge
+
+
     private Context mContext;
     private int mLayoutResourceId;
     private List<Imatge> mImatges = new ArrayList<Imatge>();
@@ -76,7 +79,10 @@ public class GridViewGalleryAdapter extends ArrayAdapter {
         // Carreguem les dades de la imatge en la casella.
         Imatge item = mImatges.get(position);
         holder.title.setText(item.titol);
-        holder.picture.setImageBitmap(item.loadImatge(mContext));
+        //holder.picture.setImageBitmap(item.loadImatge(mContext));
+        holder.picture.setImageBitmap(
+                Imatge.ShrinkBitmap(item.nomFitxer, MAX_SIZE, MAX_SIZE)
+        );
         return square;
     }
 

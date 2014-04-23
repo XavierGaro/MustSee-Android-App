@@ -3,7 +3,6 @@ package ioc.mustsee.parser;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -42,7 +41,6 @@ public class ParserMustSee {
         @Override
         protected List<T> doInBackground(String... urls) {
             try {
-                BufferedReader reader = null;
                 MustSeeXMLParser parser = new MustSeeXMLParser(mRoot);
                 InputStream in = downloadUrl(urls[0]);
                 return parser.parse(in);

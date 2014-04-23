@@ -12,6 +12,7 @@ import java.util.List;
 
 import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
+import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 
 /**
@@ -21,6 +22,8 @@ import ioc.mustsee.data.Lloc;
  */
 public class DetailFragment extends MustSeeFragment implements View.OnClickListener {
     private static final String TAG = "DetailFragment";
+
+    private static final int MAX_SIZE = 700; // Grandària de la imatge
 
     // UI
     TextView mTextViewName;
@@ -95,7 +98,10 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         mTextViewCategory.setText(mCategoria.nom);
         if (lloc.getImatgePrincipal() != null) {
             // Si hi ha imatge la carreguem
-            mImageViewPicture.setImageBitmap(lloc.getImatgePrincipal().loadImatge(getActivity()));
+            //mImageViewPicture.setImageBitmap(lloc.getImatgePrincipal().loadImatge(getActivity()));
+            mImageViewPicture.setImageBitmap(
+                    Imatge.ShrinkBitmap(lloc.getImatgePrincipal().nomFitxer, MAX_SIZE, MAX_SIZE)
+            );
         } else {
             // Si no hi ha imatge eliminem el listener
             mImageViewPicture.setOnClickListener(null);

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ioc.mustsee.R;
+import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 import ioc.mustsee.fragments.OnFragmentActionListener;
 
@@ -25,7 +26,9 @@ import ioc.mustsee.fragments.OnFragmentActionListener;
  * @see ioc.mustsee.data.Lloc
  */
 public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
-    private static final String TAG = "MobileArrayAdapter";
+    private static final String TAG = "LlocArrayAdapter";
+
+    private static final int MAX_SIZE = 700; // Grandària de la imatge
 
     private final Object mLock = new Object();
     private final Context mContext;
@@ -89,7 +92,10 @@ public class LlocArrayAdapter extends ArrayAdapter<Lloc> {
         }
 
         if (lloc.getImatgePrincipal() != null) {
-            imageView.setImageBitmap(lloc.getImatgePrincipal().loadImatge(mContext));
+            //imageView.setImageBitmap(lloc.getImatgePrincipal().loadImatge(mContext));
+            imageView.setImageBitmap(
+                    Imatge.ShrinkBitmap(lloc.getImatgePrincipal().nomFitxer, MAX_SIZE, MAX_SIZE)
+            );
         }
 
 
