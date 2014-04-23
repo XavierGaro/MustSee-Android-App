@@ -82,6 +82,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
 
         // Actualitzem la llista
         updateListView();
+
     }
 
     /**
@@ -96,9 +97,13 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int categoriaId = mCategories.get(position).id;
-        if (categoriaId == 0) {
+        if (mAdapterLlocs == null) {
+            return;
+
+        } else if (categoriaId == 0) {
             // Seleccionem tots els llocs
             mAdapterLlocs.getFilter().filter(null);
+
         } else {
             // Filtrem els llocs que pertanyen a la categoria.
             mAdapterLlocs.getFilter().filter(String.valueOf(categoriaId));

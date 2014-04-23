@@ -28,4 +28,7 @@
     <string name="update_from">Updating database from version</string>
     <string name="update_to">to version</string>
 
+    <!-- Dialogs -->
+    <string name="dialog_wait">Please wait...</string>
+
 </resources>

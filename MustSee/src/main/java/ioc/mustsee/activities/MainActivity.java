@@ -1,7 +1,7 @@
 package ioc.mustsee.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.database.SQLException;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +32,8 @@ import ioc.mustsee.fragments.MyListFragment;
 import ioc.mustsee.fragments.MyMapFragment;
 import ioc.mustsee.fragments.OnFragmentActionListener;
 import ioc.mustsee.fragments.PictureFragment;
+import ioc.mustsee.parser.OnTaskCompleted;
+import ioc.mustsee.parser.ParserMustSee;
 
 /**
  * Aquesta es la classe principal de la aplicació. Des de aquí es gestionen les accions i es
@@ -462,26 +463,63 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      * la llista buida.
      */
     private void initLlocs() {
-        //db.initLlocs(); // TODO: Eliminar, esto rehace la tabla cada vez
+        //db.initLlocs(); // TODO: Eliminar, això refà la taula cada vegada
 
-        try {
-            mLlocs = db.open().getLlocs();
-        } catch (SQLException e) {
-            // Si trobem cap error ho mostrem al log y tornem la llista buida
-            Log.e(TAG, getResources().getString(R.string.error_db), e);
-            mLlocs = new ArrayList<Lloc>();
-        } finally {
-            db.close();
-        }
+        // Mostrem el dialog
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.dialog_wait));
+        dialog.show();
+
+
+        new ParserMustSee().getLlocs(new OnTaskCompleted() {
+            @Override
+            public void onTaskCompleted(List result) {
+                // Ocultem el dialog
+                dialog.dismiss();
+                mLlocs = result;
+            }
+        });
     }
 
-    /**
-     * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
-     * la llista buida.
-     * Categories de proves
-     */
+    /*
+
+    try {
+        mLlocs = db.open().getLlocs();
+    } catch (SQLException e) {
+        // Si trobem cap error ho mostrem al log y tornem la llista buida
+        Log.e(TAG, getResources().getString(R.string.error_db), e);
+        mLlocs = new ArrayList<Lloc>();
+    } finally {
+        db.close();
+    }
+}
+
+/**
+ * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
+ * la llista buida.
+ * Categories de proves
+ */
     private void initCategories() {
-        //db.initCategories(); // TODO: Eliminar, esto rehace la tabla cada vez
+        //db.initCategories(); // TODO: Eliminar, això refà la taula cada vegada
+
+        mCategories = new ArrayList<Categoria>();
+        mCategories.add(new Categoria(0, "Mostrar tot", null));
+
+        // Mostrem el dialog
+        final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setMessage(getResources().getString(R.string.dialog_wait));
+        dialog.show();
+
+        new ParserMustSee().getCategories(new OnTaskCompleted() {
+            @Override
+            public void onTaskCompleted(List result) {
+                // Ocultem el dialog
+                dialog.dismiss();
+                mCategories.addAll(result);
+            }
+        });
+    }
+/*
 
         try {
             mCategories = db.open().getCategories();
@@ -493,14 +531,14 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
             db.close();
         }
     }
-
+*/
     /**
      * TODO: la informació de les imatges s'assigna automàticament a cada lloc al recuperar-lo de
      * la base de dades
      * Imatges de prova
      */
     private void initImatges() {
-        //db.initImatges(); // TODO: Eliminar, esto elimina las tablas y las rehace
+        //db.initImatges(); // TODO: Eliminar, això elimina les taules i les refà
     }
 
     /**
