@@ -123,7 +123,6 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, Void> {
                 tancar(out);
             }
         }
-        gestor.descarregaEnCurs(false);
         return null;
     }
 

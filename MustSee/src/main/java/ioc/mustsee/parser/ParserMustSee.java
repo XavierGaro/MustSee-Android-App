@@ -30,7 +30,6 @@ public class ParserMustSee {
         private final static String TAG = "DownloadXmlTask";
 
         private OnTaskCompleted mCallback;
-        private List<T> result;
         private String mRoot;
 
         public DownloadXmlTask(OnTaskCompleted callback, String root) {

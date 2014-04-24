@@ -1,5 +1,6 @@
 package ioc.mustsee.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Location;
@@ -647,19 +648,26 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         if (descarregues > 0) {
             // Hi han descarregues pendents
             if (dialog == null) {
-                dialog = new ProgressDialog(this);
+                dialog = new ProgressDialog(this, AlertDialog.THEME_HOLO_DARK);
+                dialog.setCancelable(false);
+                Log.d(TAG, "Creem Dialog");
             }
 
             if (!dialog.isShowing()) {
                 dialog.setMessage(getResources().getString(R.string.dialog_wait));
                 dialog.show();
+                Log.d(TAG, "Mostrem Dialog");
+            } else {
+                Log.d(TAG, "Ja s'està mostrant");
             }
 
         } else {
             // No queden més descarregues pendents
 
             // Ocultem la barra de progrés
-            if (dialog.isShowing()) dialog.hide();
+            if (dialog.isShowing()) dialog.dismiss();
+            dialog = null;
+            Log.d(TAG, "Ocultem Dialog");
         }
     }
 

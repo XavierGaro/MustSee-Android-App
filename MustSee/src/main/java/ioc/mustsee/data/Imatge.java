@@ -99,7 +99,7 @@ public class Imatge {
     /**
      * Uses Bitmapfactory to shrink the given image to the expected size.
      *
-     * @param file   Path to the image.
+     * @param nomFitxer   Path to the image.
      * @param width  expected width of the image.
      * @param height expected height of the image.
      * @return a Bitmap with the new size.
