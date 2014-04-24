@@ -35,8 +35,8 @@ public class Lloc {
     public final int categoriaId;
 
     // Atributs mutables
-    private List<Imatge> galeria;
-    private float distancia;
+    private List<Imatge> imatges;
+    private List<Comentari> comentaris;
 
     private Lloc(LlocBuilder builder) {
         this.id = (builder.id == -1 ? sIdCounter++ : builder.id);
@@ -47,16 +47,37 @@ public class Lloc {
         this.iconResource = builder.iconResource;
     }
 
+    public void addComentari(Comentari comentari) {
+        if (comentaris == null) {
+            comentaris = new ArrayList<Comentari>();
+        }
+        comentaris.add(comentari);
+    }
+
+    public void addComentaris(List<Comentari> comentaris) {
+        if (this.comentaris == null) {
+            this.comentaris = new ArrayList<Comentari>();
+        }
+        this.comentaris.addAll(comentaris);
+    }
+
+    public List<Comentari> getComentaris() {
+        if (comentaris == null) {
+            comentaris = new ArrayList<Comentari>();
+        }
+        return comentaris;
+    }
+
     /**
      * Afegeix una imatge al lloc.
      *
      * @param imatge imatge per afegir.
      */
     public void addImatge(Imatge imatge) {
-        if (galeria == null) {
-            galeria = new ArrayList<Imatge>();
+        if (imatges == null) {
+            imatges = new ArrayList<Imatge>();
         }
-        galeria.add(imatge);
+        imatges.add(imatge);
     }
 
     /**
@@ -65,10 +86,10 @@ public class Lloc {
      * @param imatges llista d'imatges per afegir.
      */
     public void addImatges(List<Imatge> imatges) {
-        if (galeria == null) {
-            galeria = new ArrayList<Imatge>();
+        if (this.imatges == null) {
+            this.imatges = new ArrayList<Imatge>();
         }
-        galeria.addAll(imatges);
+        this.imatges.addAll(imatges);
     }
 
     /**
@@ -77,10 +98,10 @@ public class Lloc {
      * @return llista d'imatges o buida si no hi ha cap.
      */
     public List<Imatge> getImages() {
-        if (galeria == null) {
-            galeria = new ArrayList<Imatge>();
+        if (imatges == null) {
+            imatges = new ArrayList<Imatge>();
         }
-        return galeria;
+        return imatges;
     }
 
     /**
@@ -90,10 +111,10 @@ public class Lloc {
      * @return primera imatge de la llista o null si no hi ha cap.
      */
     public Imatge getImatgePrincipal() {
-        if (galeria == null || galeria.isEmpty()) {
+        if (imatges == null || imatges.isEmpty()) {
             return null;
         } else {
-            return galeria.get(0);
+            return imatges.get(0);
         }
     }
 

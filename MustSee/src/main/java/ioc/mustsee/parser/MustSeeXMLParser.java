@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ioc.mustsee.data.Categoria;
+import ioc.mustsee.data.Comentari;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 
@@ -93,6 +94,7 @@ public class MustSeeXMLParser {
         String nom = null, descripcio = null;
         float latitud = -1f, longitud = -1f;
         List<Imatge> imatges = new ArrayList<Imatge>();
+        List<Comentari> comentaris = new ArrayList<Comentari>();
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -113,6 +115,8 @@ public class MustSeeXMLParser {
                 categoria = readInt(parser, "categoriaid");
             } else if (name.equals("imatges")) {
                 imatges = readImatges(parser);
+            } else if (name.equals("comentaris")) {
+                comentaris = readComentaris(parser);
             } else {
                 skip(parser);
             }
@@ -125,6 +129,7 @@ public class MustSeeXMLParser {
                 .build();
 
         lloc.addImatges(imatges);
+        lloc.addComentaris(comentaris);
 
         return lloc;
     }
@@ -193,6 +198,57 @@ public class MustSeeXMLParser {
             }
         }
         return new Imatge(id, titol, url, llocId);
+    }
+
+    private List<Comentari> readComentaris(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<Comentari> entries = new ArrayList<Comentari>();
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, "comentaris"); // Elemento raíz
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            // Starts by looking for the entry tag
+            if (name.equals("comentari")) { // Elemento que buscamos
+                entries.add(readComentari(parser));
+                Log.d(TAG, "Comentari Afegit");
+            } else {
+                skip(parser);
+            }
+        }
+
+        for (Comentari comentari : entries) {
+            Log.d(TAG, comentari.text + " por " + comentari.nomUsuari);
+        }
+
+        return entries;
+    }
+
+    private Comentari readComentari(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, "comentari");
+        int id = -1, usuariId = -1, llocId = -1;
+        String text = null, nomUsuari = null;
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+            if (name.equals("id")) {
+                id = readInt(parser, "id");
+            } else if (name.equals("usuariid")) {
+                usuariId = readInt(parser, "usuariid");
+            } else if (name.equals("llocid")) {
+                llocId = readInt(parser, "llocid");
+            } else if (name.equals("text")) {
+                text = readString(parser, "text");
+            } else if (name.equals("nomusuari")) {
+                nomUsuari = readString(parser, "nomusuari");
+            } else {
+                skip(parser);
+            }
+        }
+        return new Comentari(id, text, usuariId, nomUsuari, llocId);
     }
 
 

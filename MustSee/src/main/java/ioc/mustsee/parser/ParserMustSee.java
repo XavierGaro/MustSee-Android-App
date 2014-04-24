@@ -88,6 +88,10 @@ public class ParserMustSee {
         }
     }
 
+    // TODO la tasca per comprovar el pass hauria de ser GET, el mètode hauria de ser variable. Es
+    // podria passar un mapa amb els atributs a enviar i el métode per enviar. Canviar el nom de la
+    // classe. En aquest cas fusionar la funcionalitat de les dos AsyncTask i comprovar si hi han
+    // paràmetres per enviar
     private class PostXmlTask<T> extends AsyncTask<String, Void, List<T>> {
         private final static String TAG = "DownloadXmlTask";
 
@@ -193,6 +197,4 @@ public class ParserMustSee {
             return result.toString();
         }
     }
-
-
 }
