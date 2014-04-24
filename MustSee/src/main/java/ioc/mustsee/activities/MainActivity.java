@@ -648,7 +648,12 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         if (descarregues > 0) {
             // Hi han descarregues pendents
             if (dialog == null) {
-                dialog = new ProgressDialog(this, AlertDialog.THEME_HOLO_DARK);
+                if (android.os.Build.VERSION.SDK_INT > 10) {
+                    dialog = new ProgressDialog(this, AlertDialog.THEME_HOLO_DARK);
+                } else {
+                    dialog = new ProgressDialog(this);
+                }
+
                 dialog.setCancelable(false);
                 Log.d(TAG, "Creem Dialog");
             }

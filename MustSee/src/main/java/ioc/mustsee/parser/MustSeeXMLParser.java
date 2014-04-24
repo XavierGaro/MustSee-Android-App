@@ -58,11 +58,33 @@ public class MustSeeXMLParser {
             } else if (name.equals("imatges")) {
                 entries.add(readImatge(parser));
                 Log.d(TAG, "Imatge afegida");
+            } else if (name.equals("auth")) {
+                entries.add(readAuth(parser));
+                Log.d(TAG, "Comprovant auth");
             } else {
                 skip(parser);
             }
         }
         return entries;
+    }
+
+    private boolean readAuth(XmlPullParser parser) throws XmlPullParserException, IOException {
+        parser.require(XmlPullParser.START_TAG, NAMESPACE, "auth");
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
+
+            // Si es troba alguna etiqueta d'error, no s'ha autenticat correctament
+            if (name.equals("error")) {
+                return false;
+            } else {
+                skip(parser);
+            }
+        }
+
+        return true;
     }
 
     private Lloc readLloc(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -106,7 +128,6 @@ public class MustSeeXMLParser {
 
         return lloc;
     }
-
 
     private Categoria readCategoria(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NAMESPACE, "categoria");

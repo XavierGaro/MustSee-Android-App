@@ -2,14 +2,22 @@ package ioc.mustsee.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 import ioc.mustsee.R;
 import ioc.mustsee.data.Usuari;
+import ioc.mustsee.parser.DownloadManager;
+import ioc.mustsee.parser.OnTaskCompleted;
+import ioc.mustsee.parser.ParserMustSee;
 
 import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_MAIN;
 import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_REGISTER;
@@ -21,16 +29,22 @@ import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_REGISTER;
  *
  * @author Javier García
  */
-public class LoginFragment extends MustSeeFragment implements View.OnClickListener {
+public class LoginFragment extends MustSeeFragment implements View.OnClickListener, OnTaskCompleted {
     private static final String TAG = "LoginFragment";
 
     // UI
     ImageButton mImageButtonLogin;
     ImageButton mImageButtonCancel;
     TextView mTextViewRegister;
+    EditText mEditTextCorreu;
+    EditText mEditTextPassword;
+
 
     // Dades
     Usuari mUsusari = null;
+
+    // Descarrega
+    DownloadManager gestor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +58,7 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     }
 
     /**
-     * Inicialitzem els butons, els quadres de text, i els seus respectius listeners.
+     * Inicialitzem els botons, els quadres de text, i els seus respectius listeners.
      */
     void initWidgets() {
         mImageButtonLogin = (ImageButton) mView.findViewById(R.id.imageButtonLogin);
@@ -55,6 +69,9 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
 
         mTextViewRegister = (TextView) mView.findViewById(R.id.textViewRegister);
         mTextViewRegister.setOnClickListener(this);
+
+        mEditTextCorreu = (EditText) mView.findViewById(R.id.editTextUserName);
+        mEditTextPassword = (EditText) mView.findViewById(R.id.editTextPassword);
     }
 
     /**
@@ -66,10 +83,14 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v == mImageButtonLogin) {
+            autenticar();
+
+            /*
             if (autenticar()) {
                 // Si s'ha autenticat correctament tornem al fragment principal.
                 mCallback.OnActionDetected(ACTION_MAIN);
             }
+            */
         } else if (v == mImageButtonCancel) {
             // Tornem al fragment principal
             mCallback.OnActionDetected(ACTION_MAIN);
@@ -80,33 +101,27 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     }
 
     /**
-     * Comprovar si les dades introduides son correctes, i si ho son guarda l'usuari i retorna cert,
+     * Comprovar si les dades introduïdes son correctes, i si ho son guarda l'usuari i retorna cert,
      * en cas contrari retorna false i mostra un avis.
      *
      * @return true si s'autentica amb èxit o false en cas contrari.
      */
-    private boolean autenticar() {
-        if (comprovarUsuari()) {
-            guardarUsuari();
-            return true;
-        } else {
-            // TODO: Implementar el missatge d'error
-            return false;
+    private void autenticar() {
+        // Aquest metode no retorna cap valor, el resultat s'obté al completar-se la tasca
+        // asincronament
+        if (gestor == null) {
+            gestor = ((DownloadManager) getActivity());
         }
+
+        gestor.descarregaEnCurs(true);
+
+        String correu = mEditTextCorreu.getText().toString();
+        String password = mEditTextPassword.getText().toString();
+
+        new ParserMustSee().getAuth(this, correu, password);
+
     }
 
-    /**
-     * Aquest métode comprova si les dades introduidas coincideixen amb les de la base de dades i
-     * retorna cert si ho son o false en cas contrari. En cas de existir emmagatzemarà les dades del
-     * usuari com atribut de la classe.
-     * TODO: Sense implementar, sempre retorna true per poder testejar.
-     *
-     * @return true si les dades introduides als cuadres de text son correctes o false en cas
-     * contrari.
-     */
-    private boolean comprovarUsuari() {
-        return true;
-    }
 
     /**
      * Guarda les dades del usuari en l'arxiu de preferencies de l'activitat.
@@ -114,8 +129,34 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
      */
     private void guardarUsuari() {
         // TODO: Implementar los datos del mUsusari correctamente
+
+        // TODO: Guardar el correu i el password
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString("NOM_USUARI", "Xavier");
         editor.commit();
+    }
+
+    @Override
+    public void onTaskCompleted(List result) {
+        // Aqui es comprova el resultat, si es correcte es passa a autenticat
+        List<Boolean> resultats = result;
+        Log.d(TAG, "Resultat de autenticar obtingut: " + result.toString());
+        gestor.descarregaEnCurs(false);
+
+        // El resultat ha de ser una llista d'un únic element amb cert si la connexió ha estat correcte o false en cas contrari
+        boolean auth = (Boolean) result.get(0);
+
+        if (auth) {
+            // Si ho es cridem a guardarUsuari
+            guardarUsuari();
+            mCallback.OnActionDetected(ACTION_MAIN);
+            Toast.makeText(getActivity(), "Autenticat correctament", Toast.LENGTH_SHORT).show();
+        } else {
+            // Si no ho es mostrem missatge d'error
+            Toast.makeText(getActivity(), "Error d'autenticació", Toast.LENGTH_SHORT).show();
+        }
+
+
+        //Toast.makeText(getActivity(), result.toString(), Toast.LENGTH_SHORT).show();
     }
 }
