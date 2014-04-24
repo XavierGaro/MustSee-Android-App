@@ -95,7 +95,8 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
      */
     private void esborrarPreferencies() {
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.remove("NOM_USUARI");
+        editor.remove("correu");
+        editor.remove("password");
         editor.commit();
     }
 
@@ -104,7 +105,7 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
      * TODO: Aquesta es una implementació mínima per testejar.
      */
     private void actualitzarEstat() {
-        if (mPreferences.contains("NOM_USUARI")) {
+        if (mPreferences.contains("correu")) {
             // Si existeix un nom d'usuari mostrem el botó de desconnexió
             mImageButtonLog.setBackgroundResource(R.drawable.ic_action_remove);
             mTextViewLog.setText(R.string.logout);

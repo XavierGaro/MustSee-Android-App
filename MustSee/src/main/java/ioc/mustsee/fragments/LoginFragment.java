@@ -41,7 +41,9 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
 
 
     // Dades
-    Usuari mUsusari = null;
+    Usuari mUsusari;
+    String mCorreu;
+    String mPassword;
 
     // Descarrega
     DownloadManager gestor;
@@ -85,12 +87,6 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
         if (v == mImageButtonLogin) {
             autenticar();
 
-            /*
-            if (autenticar()) {
-                // Si s'ha autenticat correctament tornem al fragment principal.
-                mCallback.OnActionDetected(ACTION_MAIN);
-            }
-            */
         } else if (v == mImageButtonCancel) {
             // Tornem al fragment principal
             mCallback.OnActionDetected(ACTION_MAIN);
@@ -107,7 +103,7 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
      * @return true si s'autentica amb èxit o false en cas contrari.
      */
     private void autenticar() {
-        // Aquest metode no retorna cap valor, el resultat s'obté al completar-se la tasca
+        // Aquest mètode no retorna cap valor, el resultat s'obté al completar-se la tasca
         // asincronament
         if (gestor == null) {
             gestor = ((DownloadManager) getActivity());
@@ -115,10 +111,10 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
 
         gestor.descarregaEnCurs(true);
 
-        String correu = mEditTextCorreu.getText().toString();
-        String password = mEditTextPassword.getText().toString();
+        mCorreu = mEditTextCorreu.getText().toString();
+        mPassword = mEditTextPassword.getText().toString();
 
-        new ParserMustSee().getAuth(this, correu, password);
+        new ParserMustSee().getAuth(this, mCorreu, mPassword);
 
     }
 
@@ -128,11 +124,9 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
      * TODO: Sense implementar, guardem un nom de prova.
      */
     private void guardarUsuari() {
-        // TODO: Implementar los datos del mUsusari correctamente
-
-        // TODO: Guardar el correu i el password
         SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString("NOM_USUARI", "Xavier");
+        editor.putString("correu", mCorreu);
+        editor.putString("password", mPassword);
         editor.commit();
     }
 
