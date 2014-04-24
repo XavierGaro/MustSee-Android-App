@@ -30,7 +30,6 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="1"
-            android:text="Large Text"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold"/>
@@ -41,7 +40,6 @@
         android:id="@+id/textViewCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/light_blue"
         android:textStyle="italic"/>
@@ -52,18 +50,34 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewDescriptionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_blue"
+                android:text="@string/description"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <TextView
                 android:id="@+id/textViewDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"/>
 
+            <TextView
+                android:id="@+id/textViewCommentsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_blue"
+                android:text="@string/comments"
+                android:layout_marginTop="@dimen/large_margin"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
             <ListView
-                android:id="@+id/listViewComments"
+                android:id="@+id/listViewCommentaris"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

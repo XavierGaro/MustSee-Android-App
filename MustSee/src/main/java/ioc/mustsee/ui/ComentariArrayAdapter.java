@@ -57,7 +57,7 @@ public class ComentariArrayAdapter extends ArrayAdapter<Comentari> {
         Comentari item = mComentaris.get(position);
         holder.text.setText(item.text);
         holder.nomUsuari.setText(item.nomUsuari);
-        holder.avatar.setImageResource(R.drawable.ic_action_user);
+        holder.avatar.setImageResource(R.drawable.ic_action_person);
         return row;
     }
 

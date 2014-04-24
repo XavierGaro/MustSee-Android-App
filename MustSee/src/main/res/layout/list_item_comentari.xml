@@ -14,7 +14,7 @@
         android:scaleType="centerCrop"/>
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
@@ -24,9 +24,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="Nombre"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/dark_blue"
+            android:textColor="@color/light_blue"
             android:textStyle="bold"/>
 
 
@@ -38,7 +38,7 @@
             android:layout_below="@id/textViewUsuari"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Nombre"
+            android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"/>
     </RelativeLayout>
 

@@ -8,4 +8,5 @@
     <dimen name="big_margin">20dp</dimen>
     <dimen name="small_margin">5dp</dimen>
     <dimen name="minimum">1dp</dimen>
+    <dimen name="large_margin">20dp</dimen>
 </resources>

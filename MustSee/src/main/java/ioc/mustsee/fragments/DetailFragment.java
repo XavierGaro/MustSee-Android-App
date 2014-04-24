@@ -14,6 +14,7 @@ import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
+import ioc.mustsee.ui.ComentariArrayAdapter;
 
 /**
  * Aquest fragment mostra la informació del lloc i el nom de la categoria.
@@ -57,7 +58,11 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         mTextViewDescription = (TextView) mView.findViewById(R.id.textViewDescription);
         mImageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
         mImageViewPicture.setOnClickListener(this);
-        mListViewComments = (ListView) mView.findViewById(R.id.listViewComments);
+
+        ComentariArrayAdapter customAdapter = new ComentariArrayAdapter(getActivity(),
+                R.layout.list_item_comentari, mCallback.getCurrentLloc().getComentaris());
+        mListViewComments = (ListView) mView.findViewById(R.id.listViewCommentaris);
+        mListViewComments.setAdapter(customAdapter);
     }
 
     /**

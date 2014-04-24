@@ -218,7 +218,7 @@ public class MustSeeXMLParser {
         }
 
         for (Comentari comentari : entries) {
-            Log.d(TAG, comentari.text + " por " + comentari.nomUsuari);
+            Log.d(TAG, comentari.text + " per " + comentari.nomUsuari);
         }
 
         return entries;
