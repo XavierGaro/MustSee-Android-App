@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App Tittles -->
+    <string name="app_name">MustSee</string>
+
+    <!-- Labels -->
+    <string name="email">Correu</string>
+    <string name="password">Contrasenya</string>
+    <string name="no_account">No tens comte encara? Enregistrat!</string>
+    <string name="description">Descripcio</string>
+    <string name="comments">Comentaris</string>
+    <string name="comment">Comenta:</string>
+
+    <!-- Hints -->
+    <string name="hint_user_name">Introdueix el teu nom d\'usuari</string>
+    <string name="hint_password">Introduex la teva contrasenya</string>
+    <string name="hint_comment">Escriu un comentari</string>
+
+    <!-- Buttons -->
+    <string name="search">Cercar</string>
+    <string name="explore">Explorar</string>
+    <string name="login">Connectar</string>
+    <string name="logout">Desconnectar</string>
+    <string name="cancel">Cancel·lar</string>
+    <string name="send">Enviar</string>
+
+    <!-- Error and Warning Messages -->
+    <string name="error_db">Error a la base de dades</string>
+    <string name="update_from">Actualitzant la base de dades des de la versió</string>
+    <string name="update_to">a la versió</string>
+    <string name="error_no_text">Error, no hi ha cap text per enviar</string>
+    <string name="post_error">Error al enviar el comentari, si us plau torna a intentar-ho.</string>
+    <string name="auth_error">Error de autenticació</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_wait">Si us plau, espera...</string>
+
+    <!-- Messages -->
+    <string name="comentari_send">Comentari enviat</string>
+    <string name="auth_success">Ara estas autenticat</string>
+    <string name="show_all_llocs">Mostrar tot</string>
+
+
+</resources>

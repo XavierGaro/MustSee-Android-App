@@ -1,4 +1,4 @@
-package ioc.mustsee.parser;
+package ioc.mustsee.downloaders;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

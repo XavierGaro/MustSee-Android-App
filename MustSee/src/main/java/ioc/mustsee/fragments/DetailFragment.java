@@ -21,8 +21,8 @@ import ioc.mustsee.data.Categoria;
 import ioc.mustsee.data.Comentari;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
-import ioc.mustsee.parser.DownloadManager;
-import ioc.mustsee.parser.OnTaskCompleted;
+import ioc.mustsee.downloaders.DownloadManager;
+import ioc.mustsee.downloaders.OnTaskCompleted;
 import ioc.mustsee.parser.ParserMustSee;
 import ioc.mustsee.ui.ComentariArrayAdapter;
 
@@ -181,7 +181,12 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         mGestor.descarregaEnCurs(false);
 
         // El resultat ha de ser una llista d'un únic element amb cert si la connexió ha estat correcte o false en cas contrari
-        boolean success = (Boolean) result.get(0);
+        boolean success ;
+        if (result.size()==1) {
+            success  = (Boolean) result.get(0);
+        } else {
+            success  = false;
+        }
 
         if (success) {
             // TODO: Si ho refresquem la llista de comentaris

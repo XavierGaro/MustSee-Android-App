@@ -12,13 +12,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import ioc.mustsee.data.Categoria;
 import ioc.mustsee.data.Comentari;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 
-public class MustSeeXMLParser {
+public class MustSeeXMLParser<T> {
     private static final String TAG = "MustSeeXMLParser";
     private static final String NAMESPACE = null;
 
@@ -28,7 +29,7 @@ public class MustSeeXMLParser {
         this.mRoot = root;
     }
 
-    public List parse(InputStream in) throws XmlPullParserException, IOException {
+    public List<T> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -40,7 +41,7 @@ public class MustSeeXMLParser {
         }
     }
 
-    private List readRoot(XmlPullParser parser, String node) throws XmlPullParserException, IOException {
+    private List<T> readRoot(XmlPullParser parser, String node) throws XmlPullParserException, IOException {
         List entries = new ArrayList();
 
         parser.require(XmlPullParser.START_TAG, NAMESPACE, node); // Elemento raíz
@@ -50,7 +51,7 @@ public class MustSeeXMLParser {
             }
             String name = parser.getName();
 
-            Log.d(TAG, "Name a parsear: "+name);
+            Log.d(TAG, "Name a parsear: " + name);
             // Starts by looking for the entry tag
             if (name.equals("lloc")) { // Elemento que buscamos
                 entries.add(readLloc(parser));
@@ -61,8 +62,10 @@ public class MustSeeXMLParser {
             } else if (name.equals("imatges")) {
                 entries.add(readImatge(parser));
                 Log.d(TAG, "Imatge afegida");
-            } else if (name.equals("auth")) {
-                entries.add(readAuth(parser));
+            } else if (name.equals("status")) {
+                if (readString(parser, "status").equals("OK")) {
+                    entries.add(true);
+                }
                 Log.d(TAG, "Comprovant auth");
             } else if (name.equals("comentari")) {
                 entries.add(readComentari(parser));
@@ -71,26 +74,7 @@ public class MustSeeXMLParser {
                 skip(parser);
             }
         }
-        return entries;
-    }
-
-    private boolean readAuth(XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, NAMESPACE, "auth");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-
-            // Si es troba alguna etiqueta d'error, no s'ha autenticat correctament
-            if (name.equals("error")) {
-                return false;
-            } else {
-                skip(parser);
-            }
-        }
-
-        return true;
+        return (List<T>) entries;
     }
 
     private Lloc readLloc(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -105,6 +89,7 @@ public class MustSeeXMLParser {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
+
             String name = parser.getName();
             if (name.equals("id")) {
                 id = readInt(parser, "id");
@@ -269,8 +254,6 @@ public class MustSeeXMLParser {
         return i;
     }
 
-    // Process nom (String Node)
-    // Processes title tags in the feed.
     private String readString(XmlPullParser parser, String node) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, NAMESPACE, node);
         String s = readText(parser);
@@ -286,7 +269,6 @@ public class MustSeeXMLParser {
     }
 
 
-    // For the tags title and summary, extracts their text values.
     private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
         String result = "";
         if (parser.next() == XmlPullParser.TEXT) {
@@ -295,7 +277,6 @@ public class MustSeeXMLParser {
         }
         return result;
     }
-
 
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
         if (parser.getEventType() != XmlPullParser.START_TAG) {

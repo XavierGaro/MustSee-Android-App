@@ -1,4 +1,4 @@
-package ioc.mustsee.parser;
+package ioc.mustsee.downloaders;
 
 public interface DownloadManager {
 

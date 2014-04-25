@@ -11,8 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -35,9 +33,9 @@ import ioc.mustsee.fragments.MyListFragment;
 import ioc.mustsee.fragments.MyMapFragment;
 import ioc.mustsee.fragments.OnFragmentActionListener;
 import ioc.mustsee.fragments.PictureFragment;
-import ioc.mustsee.parser.DownloadImageAsyncTask;
-import ioc.mustsee.parser.DownloadManager;
-import ioc.mustsee.parser.OnTaskCompleted;
+import ioc.mustsee.downloaders.DownloadImageAsyncTask;
+import ioc.mustsee.downloaders.DownloadManager;
+import ioc.mustsee.downloaders.OnTaskCompleted;
 import ioc.mustsee.parser.ParserMustSee;
 
 /**
@@ -218,31 +216,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
             ft.remove(fragment);
             ft.commit();
         }
-    }
-
-    /**
-     * Infla el menú de la ActionBar.
-     *
-     * @param menu menu a inflar.
-     * @return true sempre.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    /**
-     * Listener pels items de la ActionBar.
-     *
-     * @param item item seleccionat
-     * @return true si s'ha consumit la selecció o fals en cas contrari.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) return true;
-        return super.onOptionsItemSelected(item);
     }
 
     /**
