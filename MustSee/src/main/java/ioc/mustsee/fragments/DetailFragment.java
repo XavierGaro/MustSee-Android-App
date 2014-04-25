@@ -61,7 +61,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
 
         ComentariArrayAdapter customAdapter = new ComentariArrayAdapter(getActivity(),
                 R.layout.list_item_comentari, mCallback.getCurrentLloc().getComentaris());
-        mListViewComments = (ListView) mView.findViewById(R.id.listViewCommentaris);
+        mListViewComments = (ListView) mView.findViewById(R.id.listViewComentaris);
         mListViewComments.setAdapter(customAdapter);
     }
 

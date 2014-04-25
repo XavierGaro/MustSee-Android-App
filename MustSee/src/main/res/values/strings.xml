@@ -11,10 +11,15 @@
     <string name="user_name">User name</string>
     <string name="password">Password</string>
     <string name="no_account">Don\'t have an account yet? Register!</string>
+    <string name="description">Description</string>
+    <string name="comments">Comments</string>
+    <string name="comment">Comment:</string>
+
 
     <!-- Hints -->
     <string name="hint_user_name">Enter your user name</string>
     <string name="hint_password">Enter your password</string>
+    <string name="hint_comment">Insert your comment</string>
 
     <!-- Buttons -->
     <string name="search">Search</string>
@@ -22,6 +27,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="cancel">Cancel</string>
+    <string name="send">Send</string>
 
     <!-- Error and Warning Messages -->
     <string name="error_db">Database error</string>
@@ -30,7 +36,5 @@
 
     <!-- Dialogs -->
     <string name="dialog_wait">Please wait...</string>
-    <string name="description">Description</string>
-    <string name="comments">Comments</string>
 
 </resources>

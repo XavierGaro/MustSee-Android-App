@@ -46,7 +46,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,9 +78,50 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <ListView
-                android:id="@+id/listViewCommentaris"
+                android:id="@+id/listViewComentaris"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutComentari"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="bottom">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/comment"
+            android:id="@+id/textViewComment"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send"
+            android:id="@+id/buttonSend"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:minLines="1"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:hint="@string/hint_comment"
+            android:id="@+id/editTextComentari"
+            android:layout_toLeftOf="@id/buttonSend"
+            android:layout_toRightOf="@id/textViewComment"
+            android:layout_alignParentBottom="true"/>
+
+
+    </RelativeLayout>
 </LinearLayout>
