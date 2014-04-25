@@ -234,7 +234,7 @@ public class MustSeeXMLParser {
     private Comentari readComentari(XmlPullParser parser) throws XmlPullParserException, IOException {
         parser.require(XmlPullParser.START_TAG, NAMESPACE, "comentari");
         int id = -1, usuariId = -1, llocId = -1;
-        String text = null, nomUsuari = null;
+        String text = null, nomUsuari = null, data = null;
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -251,11 +251,13 @@ public class MustSeeXMLParser {
                 text = readString(parser, "text");
             } else if (name.equals("nomusuari")) {
                 nomUsuari = readString(parser, "nomusuari");
+            } else if (name.equals("data")) {
+                data = readString(parser, "data");
             } else {
                 skip(parser);
             }
         }
-        return new Comentari(id, text, usuariId, nomUsuari, llocId);
+        return new Comentari(id, text, usuariId, nomUsuari, data, llocId);
     }
 
 

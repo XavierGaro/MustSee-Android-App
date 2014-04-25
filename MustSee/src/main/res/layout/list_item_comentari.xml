@@ -24,11 +24,19 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text=""
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/light_blue"
             android:textStyle="bold"/>
 
+        <TextView
+            android:id="@+id/textViewData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/textViewUsuari"
+            android:textColor="@color/dark_blue"
+            android:textStyle="italic"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
             android:id="@+id/textViewText"

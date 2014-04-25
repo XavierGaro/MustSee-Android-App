@@ -42,10 +42,12 @@ public class ComentariArrayAdapter extends ArrayAdapter<Comentari> {
             // Si la casella no existeix la inflem
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             row = inflater.inflate(mLayoutResourceId, parent, false);
+
             // Emmagetzem la informació en el holder
             holder = new ViewHolder();
             holder.text = (TextView) row.findViewById(R.id.textViewText);
             holder.nomUsuari = (TextView) row.findViewById(R.id.textViewUsuari);
+            holder.data = (TextView) row.findViewById(R.id.textViewData);
             holder.avatar = (ImageView) row.findViewById(R.id.imageViewAvatar);
             row.setTag(holder);
         } else {
@@ -57,6 +59,7 @@ public class ComentariArrayAdapter extends ArrayAdapter<Comentari> {
         Comentari item = mComentaris.get(position);
         holder.text.setText(item.text);
         holder.nomUsuari.setText(item.nomUsuari);
+        holder.data.setText(item.data);
         holder.avatar.setImageResource(R.drawable.ic_action_person);
         return row;
     }
@@ -64,7 +67,10 @@ public class ComentariArrayAdapter extends ArrayAdapter<Comentari> {
     static class ViewHolder {
         TextView text;
         TextView nomUsuari;
+        TextView data;
         ImageView avatar;
-
     }
+
+
+
 }

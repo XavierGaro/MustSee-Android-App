@@ -9,17 +9,19 @@ public class Comentari {
     public final int llocId;
     public final int usuariId;
     public final String nomUsuari;
+    public final String data;
 
-    public Comentari(int id, String text, int usuariId, String nomUsuari, int llocId) {
+    public Comentari(int id, String text, int usuariId, String nomUsuari, String data, int llocId) {
         this.id = id;
         this.text = text;
         this.usuariId = usuariId;
         this.llocId = llocId;
         this.nomUsuari = nomUsuari;
+        this.data = data;
     }
 
-    public Comentari(String text, int usuariId, String nomUsuari, int llocId) {
-        this(sIdCounter++, text, usuariId, nomUsuari, llocId);
+    public Comentari(String text, int usuariId, String nomUsuari, String data, int llocId) {
+        this(sIdCounter++, text, usuariId, nomUsuari, data, llocId);
     }
 
 }
