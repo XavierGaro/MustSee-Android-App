@@ -27,7 +27,7 @@ public class ParserMustSee {
     private static final String URL_GET_LLOCS = "http://mustseers.hol.es/api/v1/llocs.xml";
     private static final String URL_GET_CATEGORIES = "http://mustseers.hol.es/api/v1/categories.xml";
     private static final String URL_POST_AUTH = "http://mustseers.hol.es/api/v1/auth.xml";
-    private static final String URL_POST_COMMENT = "http://mustseers.hol.es/api/v1/comentaris/llocs/";
+    private static final String URL_COMMENT_FROM_LLOC = "http://mustseers.hol.es/api/v1/comentaris/llocs/";
 
     public void getLlocs(OnTaskCompleted callback) {
         new DownloadXmlTask<Lloc>(callback, "llocs").execute(URL_GET_LLOCS);
@@ -43,8 +43,13 @@ public class ParserMustSee {
     }
 
     public void postComment(OnTaskCompleted callback, String correu, String password, String text, int llocId) {
-        String url = URL_POST_COMMENT + llocId + ".xml";
+        String url = URL_COMMENT_FROM_LLOC  + llocId + ".xml";
         new PostCommentXmlTask<Boolean>(callback, "auth", correu, password, text).execute(url);
+    }
+
+    public void getComentarisFromLloc(OnTaskCompleted callback, int llocId) {
+        String url = URL_COMMENT_FROM_LLOC  + llocId + ".xml";
+        new DownloadXmlTask<Categoria>(callback, "comentaris").execute(url);
     }
 
 

@@ -61,6 +61,11 @@ public class Lloc {
         this.comentaris.addAll(comentaris);
     }
 
+    // Reemplaça la llista actual de comentaris amb la passada com argument
+    public void setComentaris(List<Comentari> comentaris) {
+        this.comentaris = comentaris;
+    }
+
     public List<Comentari> getComentaris() {
         if (comentaris == null) {
             comentaris = new ArrayList<Comentari>();

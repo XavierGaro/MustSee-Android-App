@@ -49,6 +49,8 @@ public class MustSeeXMLParser {
                 continue;
             }
             String name = parser.getName();
+
+            Log.d(TAG, "Name a parsear: "+name);
             // Starts by looking for the entry tag
             if (name.equals("lloc")) { // Elemento que buscamos
                 entries.add(readLloc(parser));
@@ -62,6 +64,9 @@ public class MustSeeXMLParser {
             } else if (name.equals("auth")) {
                 entries.add(readAuth(parser));
                 Log.d(TAG, "Comprovant auth");
+            } else if (name.equals("comentari")) {
+                entries.add(readComentari(parser));
+                Log.d(TAG, "Comentari llegit");
             } else {
                 skip(parser);
             }
@@ -201,6 +206,8 @@ public class MustSeeXMLParser {
     }
 
     private List<Comentari> readComentaris(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Log.d(TAG, "Llegint comentaris....");
+
         List<Comentari> entries = new ArrayList<Comentari>();
         parser.require(XmlPullParser.START_TAG, NAMESPACE, "comentaris"); // Elemento raíz
         while (parser.next() != XmlPullParser.END_TAG) {

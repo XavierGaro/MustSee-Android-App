@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,14 +17,13 @@ import java.util.List;
 
 import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
+import ioc.mustsee.data.Comentari;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 import ioc.mustsee.parser.DownloadManager;
 import ioc.mustsee.parser.OnTaskCompleted;
 import ioc.mustsee.parser.ParserMustSee;
 import ioc.mustsee.ui.ComentariArrayAdapter;
-
-import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_MAIN;
 
 /**
  * Aquest fragment mostra la informació del lloc i el nom de la categoria.
@@ -43,9 +41,11 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     private ImageView mImageViewPicture;
     private TextView mTextViewDescription;
     private ListView mListViewComments;
+    ComentariArrayAdapter mCustomAdapter;
     private EditText mEditTextComentari;
     private Button mButtonSend;
     private RelativeLayout mRelativeLayoutComentari;
+
 
     // Dades
     private Categoria mCategoria;
@@ -75,10 +75,10 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         mImageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
         mImageViewPicture.setOnClickListener(this);
 
-        ComentariArrayAdapter customAdapter = new ComentariArrayAdapter(getActivity(),
+        mCustomAdapter = new ComentariArrayAdapter(getActivity(),
                 R.layout.list_item_comentari, mCallback.getCurrentLloc().getComentaris());
         mListViewComments = (ListView) mView.findViewById(R.id.listViewComentaris);
-        mListViewComments.setAdapter(customAdapter);
+        mListViewComments.setAdapter(mCustomAdapter);
 
         mEditTextComentari = (EditText) mView.findViewById(R.id.editTextComentari);
         mButtonSend = (Button) mView.findViewById(R.id.buttonSend);
@@ -181,11 +181,41 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
 
         if (success) {
             // TODO: Si ho refresquem la llista de comentaris
+            refreshComments();
             Toast.makeText(getActivity(), R.string.comentari_send, Toast.LENGTH_SHORT).show();
+            // Esborrem el text del EditText
+            mEditTextComentari.setText("");
+
         } else {
             // Si no ho es mostrem missatge d'error
             Toast.makeText(getActivity(), R.string.post_error, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void refreshComments() {
+        mGestor.descarregaEnCurs(true);
+
+        Log.d(TAG, "Refresquem");
+
+        new ParserMustSee().getComentarisFromLloc(new OnTaskCompleted() {
+            @Override
+            public void onTaskCompleted(List result) {
+                Lloc lloc = mCallback.getCurrentLloc();
+                lloc.setComentaris(result);
+                Log.d(TAG, "Tasca completa: " +result.toString());
+
+                // Actualitzar la llista
+                mCustomAdapter.clear();
+                for (Comentari comentari : (List<Comentari>) result) {
+                    mCustomAdapter.add(comentari);
+                    Log.d(TAG, "Afegit un comentari al adapter");
+                }
+                mCustomAdapter.notifyDataSetChanged();
+
+
+                mGestor.descarregaEnCurs(false);
+            }
+        }, mCallback.getCurrentLloc().id);
     }
 }
