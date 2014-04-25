@@ -16,7 +16,7 @@ import ioc.mustsee.R;
 import ioc.mustsee.data.Usuari;
 import ioc.mustsee.downloaders.DownloadManager;
 import ioc.mustsee.downloaders.OnTaskCompleted;
-import ioc.mustsee.parser.ParserMustSee;
+import ioc.mustsee.parser.RetrieveData;
 
 import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_MAIN;
 
@@ -103,7 +103,7 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
         mCorreu = mEditTextCorreu.getText().toString();
         mPassword = mEditTextPassword.getText().toString();
 
-        new ParserMustSee().getAuth(this, mCorreu, mPassword);
+        new RetrieveData().getAuth(this, mCorreu, mPassword);
 
     }
 

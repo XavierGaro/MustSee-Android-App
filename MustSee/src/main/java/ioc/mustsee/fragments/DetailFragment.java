@@ -23,7 +23,7 @@ import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 import ioc.mustsee.downloaders.DownloadManager;
 import ioc.mustsee.downloaders.OnTaskCompleted;
-import ioc.mustsee.parser.ParserMustSee;
+import ioc.mustsee.parser.RetrieveData;
 import ioc.mustsee.ui.ComentariArrayAdapter;
 
 /**
@@ -168,7 +168,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         String password = mPreferences.getString("password", "");
         int llocId = mCallback.getCurrentLloc().id;
 
-        new ParserMustSee().postComment(this, correu, password, text, llocId);
+        new RetrieveData().postComment(this, correu, password, text, llocId);
 
 
     }
@@ -207,7 +207,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
 
         Log.d(TAG, "Refresquem");
 
-        new ParserMustSee().getComentarisFromLloc(new OnTaskCompleted() {
+        new RetrieveData().getComentarisFromLloc(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
                 Lloc lloc = mCallback.getCurrentLloc();

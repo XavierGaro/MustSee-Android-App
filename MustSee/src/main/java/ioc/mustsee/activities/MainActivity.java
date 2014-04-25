@@ -36,7 +36,7 @@ import ioc.mustsee.fragments.PictureFragment;
 import ioc.mustsee.downloaders.DownloadImageAsyncTask;
 import ioc.mustsee.downloaders.DownloadManager;
 import ioc.mustsee.downloaders.OnTaskCompleted;
-import ioc.mustsee.parser.ParserMustSee;
+import ioc.mustsee.parser.RetrieveData;
 
 /**
  * Aquesta es la classe principal de la aplicació. Des de aquí es gestionen les accions i es
@@ -456,7 +456,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         //dialog.show();
         descarregaEnCurs(true);
 
-        new ParserMustSee().getLlocs(new OnTaskCompleted() {
+        new RetrieveData().getLlocs(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
                 // Ocultem el dialog
@@ -510,7 +510,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
 
         descarregaEnCurs(true);
 
-        new ParserMustSee().getCategories(new OnTaskCompleted() {
+        new RetrieveData().getCategories(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
                 // Ocultem el dialog

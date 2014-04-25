@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ioc.mustsee.parser.MustSeeXMLParser;
+import ioc.mustsee.parser.XmlParserMustSee;
 
 public abstract class DownloadXMLAsyncTask<T> extends AsyncTask<String, Void, List<T>> {
     private final static String TAG = "DownloadXMLAsyncTask";
@@ -37,7 +37,7 @@ public abstract class DownloadXMLAsyncTask<T> extends AsyncTask<String, Void, Li
 
     @Override
     protected List<T> doInBackground(String... urls) {
-        MustSeeXMLParser<T> parser = new MustSeeXMLParser<T>(mRoot);
+        XmlParserMustSee<T> parser = new XmlParserMustSee<T>(mRoot);
         try {
             InputStream in;
             in = send(urls[URL]);
