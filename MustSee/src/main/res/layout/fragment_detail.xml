@@ -34,93 +34,91 @@
             android:textSize="30sp"
             android:textStyle="bold"/>
 
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textViewCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/light_blue"
-        android:textStyle="italic"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textViewDescriptionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/dark_blue"
-                android:text="@string/description"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-            <TextView
-                android:id="@+id/textViewDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-            <TextView
-                android:id="@+id/textViewCommentsTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/dark_blue"
-                android:text="@string/comments"
-                android:layout_marginTop="@dimen/large_margin"
-                android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-            <ListView
-                android:id="@+id/listViewComentaris"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutComentari"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="bottom">
 
         <TextView
+            android:id="@+id/textViewCategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/comment"
-            android:id="@+id/textViewComment"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"/>
+            android:textColor="@color/light_blue"
+            android:textStyle="italic"
+            android:layout_below="@id/imageViewPicture"/>
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send"
-            android:id="@+id/buttonSend"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"/>
-
-        <EditText
+        <RelativeLayout
+            android:id="@+id/relativeLayoutComentari"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:maxLines="2"
-            android:minLines="1"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:hint="@string/hint_comment"
-            android:id="@+id/editTextComentari"
-            android:layout_toLeftOf="@id/buttonSend"
-            android:layout_toRightOf="@id/textViewComment"
-            android:layout_alignParentBottom="true"/>
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/comment"
+                android:id="@+id/textViewComment"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"/>
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send"
+                android:id="@+id/buttonSend"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:hint="@string/hint_comment"
+                android:id="@+id/editTextComentari"
+                android:layout_toLeftOf="@id/buttonSend"
+                android:layout_toRightOf="@id/textViewComment"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textViewCategory"
+                android:orientation="vertical"
+                android:layout_above="@id/relativeLayoutComentari">
+
+                <TextView
+                    android:id="@+id/textViewDescriptionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dark_blue"
+                    android:text="@string/description"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+                <TextView
+                    android:id="@+id/textViewDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scrollbars = "vertical"
+                    android:maxLines = "10"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+                <TextView
+                    android:id="@+id/textViewCommentsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/dark_blue"
+                    android:text="@string/comments"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+                <ListView
+                    android:id="@+id/listViewComentaris"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
 
 
     </RelativeLayout>

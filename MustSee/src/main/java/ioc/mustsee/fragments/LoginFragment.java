@@ -46,7 +46,7 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     String mPassword;
 
     // Descarrega
-    DownloadManager gestor;
+    DownloadManager mGestor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,11 +105,11 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
     private void autenticar() {
         // Aquest mètode no retorna cap valor, el resultat s'obté al completar-se la tasca
         // asincronament
-        if (gestor == null) {
-            gestor = ((DownloadManager) getActivity());
+        if (mGestor == null) {
+            mGestor = ((DownloadManager) getActivity());
         }
 
-        gestor.descarregaEnCurs(true);
+        mGestor.descarregaEnCurs(true);
 
         mCorreu = mEditTextCorreu.getText().toString();
         mPassword = mEditTextPassword.getText().toString();
@@ -135,7 +135,7 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
         // Aqui es comprova el resultat, si es correcte es passa a autenticat
         List<Boolean> resultats = result;
         Log.d(TAG, "Resultat de autenticar obtingut: " + result.toString());
-        gestor.descarregaEnCurs(false);
+        mGestor.descarregaEnCurs(false);
 
         // El resultat ha de ser una llista d'un únic element amb cert si la connexió ha estat correcte o false en cas contrari
         boolean auth = (Boolean) result.get(0);

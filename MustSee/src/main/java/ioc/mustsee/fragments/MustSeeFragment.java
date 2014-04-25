@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ioc.mustsee.R;
+
 /**
  * Aquesta es la classe de la que hereten tots els fragments de la aplicació. La activitat que els
  * adjunti ha de implementar la interfície OnFragmentActionListener o llençarà una excepció.
@@ -71,4 +73,12 @@ public abstract class MustSeeFragment extends Fragment {
      * Obliguem a totes els fragments a implementar aquest mètode, on s'inicialitzaran els widgets.
      */
     abstract void initWidgets();
+
+    public boolean isUserAuthenticated(){
+        if (mPreferences.contains("correu") && mPreferences.contains("password")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
