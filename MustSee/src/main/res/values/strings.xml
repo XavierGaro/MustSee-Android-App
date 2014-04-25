@@ -15,7 +15,6 @@
     <string name="comments">Comments</string>
     <string name="comment">Comment:</string>
 
-
     <!-- Hints -->
     <string name="hint_user_name">Enter your user name</string>
     <string name="hint_password">Enter your password</string>
@@ -33,11 +32,17 @@
     <string name="error_db">Database error</string>
     <string name="update_from">Updating database from version</string>
     <string name="update_to">to version</string>
+    <string name="error_no_text">Error, there is no text to send</string>
+    <string name="post_error">Error posting comment, please retry.</string>
+    <string name="auth_error">Authentication error</string>
 
     <!-- Dialogs -->
     <string name="dialog_wait">Please wait...</string>
-    <string name="error_no_text">Error, there is no text to send</string>
+
+    <!-- Messages -->
     <string name="comentari_send">Comment send</string>
-    <string name="post_error">Error posting comment, please retry.</string>
+    <string name="auth_success">You are now authenticated</string>
+    <string name="show_all_llocs">Show all</string>
+
 
 </resources>

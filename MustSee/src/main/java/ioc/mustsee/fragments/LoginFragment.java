@@ -144,10 +144,10 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
             // Si ho es cridem a guardarUsuari
             guardarUsuari();
             mCallback.OnActionDetected(ACTION_MAIN);
-            Toast.makeText(getActivity(), "Autenticat correctament", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.auth_success, Toast.LENGTH_SHORT).show();
         } else {
             // Si no ho es mostrem missatge d'error
-            Toast.makeText(getActivity(), "Error d'autenticació", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.auth_error, Toast.LENGTH_SHORT).show();
         }
 
 

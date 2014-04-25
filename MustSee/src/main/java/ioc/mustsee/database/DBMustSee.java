@@ -18,8 +18,10 @@ import ioc.mustsee.data.Lloc;
 
 /**
  * Classe per gestionar la base de dades.
+ * No es fa servir, la aplicació connecta ara directament amb el Web Service.
  *
  * @author Javier García
+ * @deprecated
  */
 public class DBMustSee {
     public static final String TAG = "DBMustSee";

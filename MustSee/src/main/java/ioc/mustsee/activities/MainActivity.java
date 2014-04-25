@@ -525,7 +525,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         //db.initCategories(); // TODO: Eliminar, això refà la taula cada vegada
 
         mCategories = new ArrayList<Categoria>();
-        mCategories.add(new Categoria(0, "Mostrar tot", null));
+        mCategories.add(new Categoria(0, getResources().getString(R.string.show_all_llocs), null));
 
         // Mostrem el dialog
         //final ProgressDialog dialog = new ProgressDialog(this);
