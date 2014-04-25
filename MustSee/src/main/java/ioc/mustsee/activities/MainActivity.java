@@ -129,6 +129,9 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      * Inicialitza els contenidors on carregarem els fragments.
      */
     private void initWidgets() {
+        // Ocultem la Actionbar perquè no la fem servir
+        getSupportActionBar().hide();
+
         mContainerOne = (FrameLayout) findViewById(R.id.containerOne);
         mContainerTwo = (FrameLayout) findViewById(R.id.containerTwo);
     }
