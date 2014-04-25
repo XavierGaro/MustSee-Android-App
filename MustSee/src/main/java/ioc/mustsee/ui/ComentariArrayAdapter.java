@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import ioc.mustsee.R;
@@ -71,6 +72,16 @@ public class ComentariArrayAdapter extends ArrayAdapter<Comentari> {
         ImageView avatar;
     }
 
+
+    // Ordena els comentaris del més recent al més antic, suposant que les ids més altes son més recents
+    public void sort() {
+        super.sort(new Comparator<Comentari>() {
+            @Override
+            public int compare(Comentari a, Comentari b) {
+                return b.id - a.id;
+            }
+        });
+    }
 
 
 }

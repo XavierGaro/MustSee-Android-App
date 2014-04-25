@@ -77,8 +77,11 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
 
         mCustomAdapter = new ComentariArrayAdapter(getActivity(),
                 R.layout.list_item_comentari, mCallback.getCurrentLloc().getComentaris());
+        mCustomAdapter.sort();
+
         mListViewComments = (ListView) mView.findViewById(R.id.listViewComentaris);
         mListViewComments.setAdapter(mCustomAdapter);
+
 
         mEditTextComentari = (EditText) mView.findViewById(R.id.editTextComentari);
         mButtonSend = (Button) mView.findViewById(R.id.buttonSend);
@@ -151,8 +154,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
             return;
         }
 
-        // TODO, això es de prova
-        Toast.makeText(getActivity(), "Enviant comentari: " + text, Toast.LENGTH_SHORT).show();
+
 
         if (mGestor == null) {
             mGestor = ((DownloadManager) getActivity());
@@ -211,6 +213,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
                     mCustomAdapter.add(comentari);
                     Log.d(TAG, "Afegit un comentari al adapter");
                 }
+                mCustomAdapter.sort();
                 mCustomAdapter.notifyDataSetChanged();
 
 
