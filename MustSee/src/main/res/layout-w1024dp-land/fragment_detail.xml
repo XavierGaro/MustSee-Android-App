@@ -13,19 +13,9 @@
         <ImageView
             android:id="@+id/imageViewPicture"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="200dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"/>
-
-        <TextView
-            android:id="@+id/textViewCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/light_blue"
-            android:textStyle="italic"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/imageViewPicture"/>
 
         <TextView
             android:id="@+id/textViewName"
@@ -40,10 +30,20 @@
             android:textSize="30sp"
             android:textStyle="bold"/>
 
+
+        <TextView
+            android:id="@+id/textViewCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/light_blue"
+            android:textStyle="italic"
+            android:layout_below="@id/imageViewPicture"/>
+
         <RelativeLayout
             android:id="@+id/relativeLayoutComentari"
             android:layout_width="match_parent"
-            android:layout_height="32dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true">
 
             <TextView
@@ -53,8 +53,7 @@
                 android:text="@string/comment"
                 android:id="@+id/textViewComment"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                android:visibility="gone"/>
+                android:layout_alignParentBottom="true"/>
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -91,15 +90,14 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/dark_blue"
                     android:text="@string/description"
-                    android:textStyle="bold"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>/>
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 <TextView
                     android:id="@+id/textViewDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scrollbars = "vertical"
-                    android:maxLines = "3"
+                    android:maxLines = "10"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
 
                 <TextView
@@ -109,8 +107,7 @@
                     android:textColor="@color/dark_blue"
                     android:text="@string/comments"
                     android:layout_marginTop="@dimen/small_margin"
-                    android:textStyle="bold"
-                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 <ListView
                     android:id="@+id/listViewComentaris"

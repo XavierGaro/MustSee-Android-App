@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:weightSum="3">
+    android:weightSum="4">
 
 
     <FrameLayout
         android:id="@+id/containerOne"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="3"
         tools:context="ioc.mustsee.activities.MainActivity"
         tools:ignore="MergeRootFrame" />
 

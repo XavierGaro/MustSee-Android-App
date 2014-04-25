@@ -1,6 +1,7 @@
 package ioc.mustsee.fragments;
 
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +73,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         mTextViewCategory = (TextView) mView.findViewById(R.id.textViewCategory);
         mTextViewCategory.setOnClickListener(this);
         mTextViewDescription = (TextView) mView.findViewById(R.id.textViewDescription);
+        mTextViewDescription .setMovementMethod(new ScrollingMovementMethod());
         mImageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
         mImageViewPicture.setOnClickListener(this);
 

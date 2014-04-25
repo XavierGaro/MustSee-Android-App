@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:padding="@dimen/small_margin">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/small_margin">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -11,27 +11,26 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/textViewDistance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="Distancia"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/light_blue"/>
-
-        <TextView
             android:id="@+id/textViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@id/textViewDistance"
             android:text="Nombre"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/dark_blue"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
+
+        <TextView
+            android:id="@+id/textViewDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/textViewName"
+            android:text="Distancia"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/light_blue" />
 
         <TextView
             android:id="@+id/textViewDescription"
@@ -42,7 +41,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Nombre"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>
 
     <ImageView
@@ -51,8 +50,7 @@
         android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:visibility="gone"/>
+        android:scaleType="centerCrop" />
 
 
 </LinearLayout>

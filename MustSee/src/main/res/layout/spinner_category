@@ -5,7 +5,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/small_margin">
 
-    <!-- Sin implementar
+    <!-- Sense implementar
     <ImageView
         android:id="@+id/left_pic"
         android:layout_width="100px"
@@ -20,16 +20,19 @@
         android:layout_toRightOf="@+id/left_pic"
         android:text="Categoria"
         android:textColor="@color/dark_blue"
-        android:textSize="20sp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"/>
 
+    <!-- No es fa servir-->
     <TextView
         android:id="@+id/textViewDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textViewTitle"
         android:layout_toRightOf="@+id/left_pic"
-        android:text="descripcion"
-        android:textColor="@color/light_blue"/>
+        android:text="descripció"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/light_blue"
+        android:visibility="gone"/>
 
 </RelativeLayout>
