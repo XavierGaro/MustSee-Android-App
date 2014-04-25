@@ -10,6 +10,8 @@ import ioc.mustsee.R;
 
 /**
  * Aquest fragment mostra una imatge que s'obté del lloc actual de la activitat principal.
+ *
+ * @author Xavier García
  */
 public class PictureFragment extends MustSeeFragment {
     private static final String TAG = "PictureFragment";

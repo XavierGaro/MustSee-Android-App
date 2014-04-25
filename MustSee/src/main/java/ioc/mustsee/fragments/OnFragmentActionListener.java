@@ -13,7 +13,7 @@ import ioc.mustsee.data.Lloc;
 /**
  * Aquesta interfície l'ha de implementar l'activitat que adjunta els fragments.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public interface OnFragmentActionListener {
 
@@ -29,7 +29,7 @@ public interface OnFragmentActionListener {
     public static final int ACTION_PICTURE = 8;
 
     /**
-     * Aquest mètode es cridat pels fragments quan necesiten realitzar alguna acció.
+     * Aquest mètode es cridat pels fragments quan necessiten realitzar alguna acció.
      *
      * @param action acció a realitzar, que ha de correspondre amb una de les constants
      * @param bundle dades extres per realitzar la acció.
@@ -46,7 +46,6 @@ public interface OnFragmentActionListener {
 
     /**
      * Estableix el lloc com a lloc actual.
-     * TODO: Això s'ha de implementar com a acció
      *
      * @param lloc lloc per establir com actual.
      */
@@ -61,7 +60,6 @@ public interface OnFragmentActionListener {
 
     /**
      * Retorna la llista completa de llocs.
-     * TODO: Això s'ha de implementar a la base de dades.
      *
      * @return llista completa de llocs.
      */
@@ -70,7 +68,6 @@ public interface OnFragmentActionListener {
 
     /**
      * Retorna la llista completa de categories.
-     * TODO: Això s'ha de implementar a la base de dades.
      *
      * @return llista completa de categories.
      */
@@ -78,19 +75,15 @@ public interface OnFragmentActionListener {
 
     /**
      * Estableix la llista de llocs filtrada.
-     * TODO: Això s'ha de implementar a la base de dades.
      *
      * @param filteredLlocs llista de llocs filtrada.
      */
     void setFilteredLlocs(List<Lloc> filteredLlocs);
 
     /**
-     * Retorna la llista de llocs filtrada.
-     * TODO: Això s'ha de implementar a la base de dades.
+     * Retorna la última posició coneguda
      *
-     * @return llista de llocs filtrada.
+     * @return posició
      */
-    List<Lloc> getFilteredLlocs();
-
     LatLng getLastKnownPosition();
 }

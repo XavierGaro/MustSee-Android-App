@@ -13,7 +13,8 @@ import java.util.List;
  * Classe abstracta per analitzar el contingut de InputStreams amb dades en XML. Aquesta classe
  * conté els mètodes generics que poden ser utilitzats pels parsers concrets.
  *
- * @param <T> tipus de la llista en la que es retornarà el resultat.
+ * @param <T> tipus de la llista en la que es retornarà el resultat
+ * @author Xavier García
  */
 public abstract class XmlParser<T> {
     static final String TAG = "XmlParser";

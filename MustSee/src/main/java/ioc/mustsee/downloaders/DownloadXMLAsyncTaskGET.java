@@ -1,29 +1,32 @@
 package ioc.mustsee.downloaders;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
-public class DownloadXMLAsyncTaskGET<T> extends DownloadXMLAsyncTask<T> {
-    private final static String TAG = "DownloadXMLAsyncTaskGET";
+/**
+ * Classe concreta de DownloadXmlAsyncTask per obtenir objectes analitzant un document XML fent
+ * servir el mètode GET.
+ *
+ * @param <T> tipus de objectes a retornar en la llista
+ * @author Xavier García
+ */
+public class DownloadXmlAsyncTaskGET<T> extends DownloadXmlAsyncTask<T> {
+    private final static String TAG = "DownloadXmlAsyncTaskGET";
 
-    public DownloadXMLAsyncTaskGET(OnTaskCompleted callback, String root, Map<String, String> params) {
+    public DownloadXmlAsyncTaskGET(OnTaskCompleted callback, String root, Map<String, String> params) {
         super(callback, root, params);
     }
 
-    public DownloadXMLAsyncTaskGET(OnTaskCompleted callback, String root) {
+    public DownloadXmlAsyncTaskGET(OnTaskCompleted callback, String root) {
         this(callback, root, new HashMap<String, String>());
     }
 
-
-    InputStream send(String urlString) throws IOException, SocketTimeoutException{
+    @Override
+    InputStream send(String urlString) throws IOException {
         // Si hi han paràmetres ens preparem per enviar-los
         if (!mParams.isEmpty()) {
             urlString = urlString + getQuery();
@@ -31,8 +34,8 @@ public class DownloadXMLAsyncTaskGET<T> extends DownloadXMLAsyncTask<T> {
 
         java.net.URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(10000);
-        conn.setConnectTimeout(15000);
+        conn.setReadTimeout(DownloadXmlAsyncTask.READ_TIMEOUT);
+        conn.setConnectTimeout(DownloadXmlAsyncTask.CONNECT_TIMEOUT);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
         conn.connect();
@@ -41,17 +44,17 @@ public class DownloadXMLAsyncTaskGET<T> extends DownloadXMLAsyncTask<T> {
         if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
             return conn.getInputStream();
         } else {
-            Log.d(TAG, "Resposta incorrecta? " + conn.getResponseCode());
             return null;
         }
     }
 
-    // Construïm la seqüència de paràmetres
+    @Override
     String getQuery() {
         StringBuilder result = new StringBuilder();
         boolean first = true;
 
         result.append("?");
+
         Map<String, String> p = mParams;
         for (Map.Entry<String, String> entry : p.entrySet()) {
             if (first) {

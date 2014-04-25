@@ -7,13 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 
-import ioc.mustsee.R;
-
 /**
  * Aquesta es la classe de la que hereten tots els fragments de la aplicació. La activitat que els
  * adjunti ha de implementar la interfície OnFragmentActionListener o llençarà una excepció.
  *
- * @author Javier García
+ * @author Xavier García
  * @see ioc.mustsee.fragments.OnFragmentActionListener
  */
 public abstract class MustSeeFragment extends Fragment {
@@ -32,7 +30,7 @@ public abstract class MustSeeFragment extends Fragment {
     View mView;
 
     /**
-     * Quan s'adjunta el fragment a una activitat establim l'arxiu de preferencies i comprovem que
+     * Quan s'adjunta el fragment a una activitat establim l'arxiu de preferències i comprovem que
      * la activitat implementi la interfície de callback.
      *
      * @param activity a la que s'adjunta el fragment.
@@ -74,7 +72,7 @@ public abstract class MustSeeFragment extends Fragment {
      */
     abstract void initWidgets();
 
-    public boolean isUserAuthenticated(){
+    public boolean isUserAuthenticated() {
         if (mPreferences.contains("correu") && mPreferences.contains("password")) {
             return true;
         } else {

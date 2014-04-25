@@ -15,24 +15,23 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Aquesta classe s'encarrega de descarregar imatges i emmagatzemarles en el
- * disc en la carpeta indicada al constructor. La llista de imatges a
- * descarregar es passa com un array de Strings amb la URL de cada imatge.
- * Aquesta classe comunicarà al DownloadManager passat com argument al
+ * Aquesta classe s'encarrega de descarregar imatges i emmagatzemar-les en el disc en la carpeta
+ * indicada al constructor. La llista de imatges a descarregar es passa com un array de Strings amb
+ * la URL de cada imatge. Aquesta classe comunicarà al DownloadManager passat com argument al
  * constructor quan inicia i quan finalitza les descarregues.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class DownloadImageAsyncTask extends AsyncTask<String, Void, Void> {
     public static final String TAG = "DownloadImageAsyncTask";
-    public static final int TIMEOUT = 1000;
+
+    public static final int TIMEOUT = 10000;
 
     private File folder;
     private DownloadManager gestor;
 
     /**
-     * Aquest constructor accepta que la carpeta de destí sigui una cadena de
-     * text.
+     * Aquest constructor accepta que la carpeta de destí sigui una cadena de text.
      *
      * @param gestor Activitat que implementi la interfície DownloadManager.
      * @param folder cadena de text amb la carpeta de destí.
@@ -56,8 +55,7 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, Void> {
     }
 
     /**
-     * Comprova si existeix el directori emmagatzemat a folder, i si no existeix
-     * el crea.
+     * Comprova si existeix el directori emmagatzemat a folder, i si no existeix el crea.
      */
     private void comprovarDirectori() {
         if (!folder.exists()) {
@@ -72,7 +70,7 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPreExecute() {
-        gestor.descarregaEnCurs(true);
+        gestor.donwloadInProgress(true);
     }
 
     @Override
@@ -89,35 +87,26 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, Void> {
 
             // Si aquesta imatge ja la tenim en cache, no la descarreguem
             if (new File(folder, filename).exists()) {
-                Log.w(TAG, "el fitxer ja existeix");
                 continue;
-            } else {
-                Log.w(TAG, "el fitxer NO existeix, el descarreguem");
             }
-
 
             // Si hi ha cap error al descarregar una imatge la resta continua
             // descarregant.
             try {
-                // Descarreguem la imatge, si triga massa en connectar passem a
-                // la següent
+                // Descarreguem la imatge, si triga massa en connectar passem a la següent
                 URLConnection con = new URL(url).openConnection();
-                //con.setConnectTimeout(TIMEOUT);
+                con.setConnectTimeout(TIMEOUT);
                 in = con.getInputStream();
                 image = BitmapFactory.decodeStream(in);
 
                 // Guardem la imatge en un fitxer
                 filename = Uri.parse(url).getLastPathSegment();
-                Log.d(TAG, "S'intenta guardar a: " + filename);
                 file = new File(folder, filename);
                 out = new FileOutputStream(file);
-
                 image.compress(Bitmap.CompressFormat.PNG, 100, out);
                 out.flush();
-
-                Log.d(TAG, "S'ha guardat amb exit?" + file.exists());
-
             } catch (IOException e) {
+                // Mostrem l'error pel log
                 Log.e(TAG, "error al guardar el fitxer: " + e.getMessage());
             } finally {
                 tancar(out);
@@ -128,7 +117,7 @@ public class DownloadImageAsyncTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        gestor.descarregaEnCurs(false);
+        gestor.donwloadInProgress(false);
     }
 
     /**

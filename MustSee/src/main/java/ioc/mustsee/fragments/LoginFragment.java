@@ -2,7 +2,6 @@ package ioc.mustsee.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import ioc.mustsee.R;
-import ioc.mustsee.data.Usuari;
 import ioc.mustsee.downloaders.DownloadManager;
 import ioc.mustsee.downloaders.OnTaskCompleted;
 import ioc.mustsee.parser.RetrieveData;
@@ -23,9 +21,8 @@ import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_MAIN;
 /**
  * Fragment per realitzar la autenticació del usuari i que dona pass al fragment per enregistrar-se
  * en cas de no tenir compte.
- * TODO: NO FA RES. Actualment aquest fragment només està incluit per demostrar la navegació.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class LoginFragment extends MustSeeFragment implements View.OnClickListener, OnTaskCompleted {
     private static final String TAG = "LoginFragment";
@@ -38,12 +35,11 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
 
 
     // Dades
-    Usuari mUsusari;
     String mCorreu;
     String mPassword;
 
     // Descarrega
-    DownloadManager mGestor;
+    DownloadManager mDownloadManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,7 +68,6 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
 
     /**
      * Listeners per respondre als events de click sobre els botons i el text per enregistrar-se.
-     * TODO: Aquestes accions no han de afegir-se al BackStack
      *
      * @param v vista on s'ha fer el click.
      */
@@ -93,24 +88,21 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
      */
     private void autenticar() {
         // Aquest mètode no retorna cap valor, el resultat s'obté al completar-se la tasca
-        // asincronament
-        if (mGestor == null) {
-            mGestor = ((DownloadManager) getActivity());
+        // asíncronament.
+        if (mDownloadManager == null) {
+            mDownloadManager = ((DownloadManager) getActivity());
         }
 
-        mGestor.descarregaEnCurs(true);
+        mDownloadManager.donwloadInProgress(true);
 
         mCorreu = mEditTextCorreu.getText().toString();
         mPassword = mEditTextPassword.getText().toString();
 
-        new RetrieveData().getAuth(this, mCorreu, mPassword);
-
+        RetrieveData.getAuth(this, mCorreu, mPassword);
     }
 
-
     /**
-     * Guarda les dades del usuari en l'arxiu de preferencies de l'activitat.
-     * TODO: Sense implementar, guardem un nom de prova.
+     * Guarda les dades del usuari en l'arxiu de preferències de l'activitat.
      */
     private void guardarUsuari() {
         SharedPreferences.Editor editor = mPreferences.edit();
@@ -121,18 +113,16 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
 
     @Override
     public void onTaskCompleted(List result) {
-        // Aqui es comprova el resultat, si es correcte es passa a autenticat
-        Log.d(TAG, "Resultat de autenticar obtingut: " + result.toString());
-        mGestor.descarregaEnCurs(false);
+        // Aquí es comprova el resultat, si es correcte es passa a autenticat
+        mDownloadManager.donwloadInProgress(false);
 
         // El resultat ha de ser una llista d'un únic element amb cert si la connexió ha estat correcte o false en cas contrari
         boolean auth;
-        if (result.size()==1) {
+        if (result.size() == 1) {
             auth = (Boolean) result.get(0);
         } else {
             auth = false;
         }
-
 
         if (auth) {
             // Si ho es cridem a guardarUsuari
@@ -143,8 +133,5 @@ public class LoginFragment extends MustSeeFragment implements View.OnClickListen
             // Si no ho es mostrem missatge d'error
             Toast.makeText(getActivity(), R.string.auth_error, Toast.LENGTH_SHORT).show();
         }
-
-
-        //Toast.makeText(getActivity(), result.toString(), Toast.LENGTH_SHORT).show();
     }
 }

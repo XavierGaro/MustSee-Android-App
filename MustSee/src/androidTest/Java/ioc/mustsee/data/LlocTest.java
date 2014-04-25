@@ -32,6 +32,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P08-And
+     *
      * @throws Exception
      */
     public void testBuilder_minimLatitudILongitud() throws Exception {
@@ -47,6 +48,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P09-And
+     *
      * @throws Exception
      */
     public void testBuilder_complet() throws Exception {
@@ -68,6 +70,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P10-And
+     *
      * @throws Exception
      */
     public void testConstructor_senseIdSequencial() throws Exception {
@@ -90,6 +93,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P12-And
+     *
      * @throws Exception
      */
     public void testGetShortDescricio_llarga() throws Exception {
@@ -101,6 +105,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P13-And
+     *
      * @throws Exception
      */
     public void testAddImatge_noNula() throws Exception {
@@ -113,6 +118,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P14-And
+     *
      * @throws Exception
      */
     public void testAddImatge_nula() throws Exception {
@@ -123,6 +129,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P15-And
+     *
      * @throws Exception
      */
     public void testGetImatgePrincipal_senseAfegirImatge() throws Exception {
@@ -132,6 +139,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P16-And
+     *
      * @throws Exception
      */
     public void testGetImatgePrincipal_afegintUnaImatge() throws Exception {
@@ -143,6 +151,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P17-And
+     *
      * @throws Exception
      */
     public void testGetImatgePrincipal_afegintMesDeUnaImatge() {
@@ -158,6 +167,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P18-And
+     *
      * @throws Exception
      */
     public void testGetImatges_senseImatges() throws Exception {
@@ -167,6 +177,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P19-And
+     *
      * @throws Exception
      */
     public void testGetImatges_ambUnaImatge() throws Exception {
@@ -178,6 +189,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P20-And
+     *
      * @throws Exception
      */
     public void testGetImatges_ambMesDeUnaImatge() throws Exception {
@@ -193,6 +205,7 @@ public class LlocTest extends TestCase {
 
     /**
      * Test P21-And
+     *
      * @throws Exception
      */
     public void testGetImatges_esConservaElOrdre() throws Exception {

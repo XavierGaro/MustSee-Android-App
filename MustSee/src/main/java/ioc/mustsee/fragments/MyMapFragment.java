@@ -27,15 +27,16 @@ import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_DETAIL;
 /**
  * A aquest fragment es on es gestiona el mapa, tant en la vista a pantalla completa com parcial.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private static final String TAG = "MyMapFragment";
 
     private static final int VELOCITAT_CAMARA = 500;
 
-    // TODO: aquest valor serà 1 per pantalla completa o ajustat a la proporicó visible del mapa.
+    // TODO: aquest valor serà 1 per pantalla completa o ajustat a la proporció visible del mapa.
     private float screen_factor = 0.75f;
+
 
     // Objectes del mapa
     private GoogleMap mMap;
@@ -56,9 +57,6 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         return mView;
     }
 
-    /**
-     * TODO: Aquí s'inicialitzaran els botons del mapa
-     */
     @Override
     void initWidgets() {
         // S'ha de implementar obligatòriament
@@ -90,7 +88,7 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
     }
 
     /**
-     * Afegeix la llista de llocs pasada per argument al mapa de marcadors.
+     * Afegeix la llista de llocs passada per argument al mapa de marcadors.
      *
      * @param llocs llista de llocs a afegir com marcadors.
      */
@@ -125,7 +123,8 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
     }
 
     /**
-     * Centra la càmera amb o sense animació sobre un requadre de mapa ajustat a les coordenades dels llocs a la llista.
+     * Centra la càmera amb o sense animació sobre un requadre de mapa ajustat a les coordenades
+     * dels llocs a la llista.
      *
      * @param animate true si volem animar el mapa o false en cas contrari.
      */
@@ -143,7 +142,8 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
         int width = (int) (this.getResources().getDisplayMetrics().widthPixels * screen_factor);
 
         if (animate) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), width, height, 100), 2000, null);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), width, height, 100),
+                    2000, null);
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bc.build(), width, height, 100));
         }
@@ -151,7 +151,8 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
 
     /**
      * Estableix el focus al lloc passat com argument. El que que la imatge es centri en la posició
-     * del lloc i si existeix un marcador mostra la seva informació. Aquest moviment es sempre animat.
+     * del lloc i si existeix un marcador mostra la seva informació. Aquest moviment es sempre
+     * animat.
      *
      * @param lloc lloc en el que centrar la càmera.
      */
@@ -184,7 +185,7 @@ public class MyMapFragment extends MustSeeFragment implements GoogleMap.OnMarker
      */
     @Override
     public boolean onMarkerClick(Marker marker) {
-        // Comprovem si ya estava seleccionat previament
+        // Comprovem si ya estava seleccionat prèviament
         if (mMarkersToLloc.get(marker) == mCallback.getCurrentLloc()) {
             // Cridem a la acció de detall i consumim el event.
             mCallback.OnActionDetected(ACTION_DETAIL);

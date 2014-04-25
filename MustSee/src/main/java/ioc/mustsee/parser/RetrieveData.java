@@ -6,8 +6,8 @@ import java.util.Map;
 import ioc.mustsee.data.Categoria;
 import ioc.mustsee.data.Comentari;
 import ioc.mustsee.data.Lloc;
-import ioc.mustsee.downloaders.DownloadXMLAsyncTaskGET;
-import ioc.mustsee.downloaders.DownloadXMLAsyncTaskPOST;
+import ioc.mustsee.downloaders.DownloadXmlAsyncTaskGET;
+import ioc.mustsee.downloaders.DownloadXmlAsyncTaskPOST;
 import ioc.mustsee.downloaders.OnTaskCompleted;
 
 /**
@@ -30,7 +30,7 @@ public class RetrieveData {
      * @param callback objecte que rebrà la resposta
      */
     public static void getLlocs(OnTaskCompleted callback) {
-        new DownloadXMLAsyncTaskGET<Lloc>(callback, "llocs").execute(URL_LLOCS);
+        new DownloadXmlAsyncTaskGET<Lloc>(callback, "llocs").execute(URL_LLOCS);
     }
 
     /**
@@ -39,7 +39,7 @@ public class RetrieveData {
      * @param callback objecte que rebrà la resposta
      */
     public static void getCategories(OnTaskCompleted callback) {
-        new DownloadXMLAsyncTaskGET<Categoria>(callback, "categories").execute(URL_CATEGORIES);
+        new DownloadXmlAsyncTaskGET<Categoria>(callback, "categories").execute(URL_CATEGORIES);
     }
 
     /**
@@ -53,7 +53,7 @@ public class RetrieveData {
         params.put("correu", correu);
         params.put("password", password);
 
-        new DownloadXMLAsyncTaskGET<Boolean>(callback, "auth", params).execute(URL_AUTH);
+        new DownloadXmlAsyncTaskGET<Boolean>(callback, "auth", params).execute(URL_AUTH);
     }
 
     /**
@@ -74,7 +74,7 @@ public class RetrieveData {
         params.put("password", password);
         params.put("comentari", text);
 
-        new DownloadXMLAsyncTaskPOST<Boolean>(callback, "comentari", params).execute(url);
+        new DownloadXmlAsyncTaskPOST<Boolean>(callback, "comentari", params).execute(url);
     }
 
     /**
@@ -85,6 +85,6 @@ public class RetrieveData {
      */
     public static void getComentarisFromLloc(OnTaskCompleted callback, int llocId) {
         String url = URL_COMMENT_FROM_LLOC + llocId + ".xml";
-        new DownloadXMLAsyncTaskGET<Comentari>(callback, "comentaris").execute(url);
+        new DownloadXmlAsyncTaskGET<Comentari>(callback, "comentaris").execute(url);
     }
 }

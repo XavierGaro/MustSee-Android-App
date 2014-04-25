@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,12 +16,10 @@ import ioc.mustsee.activities.MainActivity;
  * Aquesta classe emmagatzema la informació d'una imatge. Tots els seus atributs son immutables i
  * poden ser llegits directament.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class Imatge {
     public static final String DEFAULT_PICTURE = "test.jpg";
-
-    public static int sIdCounter = 10000; // TODO: contador por defecto
 
     public final int id;
     public final String titol;
@@ -36,7 +33,7 @@ public class Imatge {
      * @param nomFitxer nom del fitxer on es troba la imatge.
      */
     public Imatge(String titol, String nomFitxer, int llocId) {
-        this(sIdCounter++, titol, nomFitxer, llocId);
+        this(-1, titol, nomFitxer, llocId);
     }
 
     /**
@@ -54,8 +51,7 @@ public class Imatge {
     }
 
     /**
-     * Carrega la imatge corresponent a aquesta instancia i la retorna com a Bitmap.
-     * TODO: Això no es farà des de aquí, hi haurà una classe especial per gestionar els fitxers.
+     * Carrega la imatge corresponent a aquesta instància i la retorna com a Bitmap.
      *
      * @param context context de la aplicació principal
      * @return bitmap de la imatge.
@@ -69,16 +65,13 @@ public class Imatge {
             image = BitmapFactory.decodeFile(file.getAbsolutePath());
         } catch (Exception e) {
             // Si hi ha un error al carregar la imatge es mostra la imatge per defecte
-            Log.e("Imatge", "Error al carregar la imatge: " + e);
             image = getBitmapFromAssets(context, DEFAULT_PICTURE);
         }
         return image;
     }
 
     /**
-     * Mètode temporal per carregar imatges des de el directori d'assets i convertir-la en un
-     * bitmap.
-     * TODO: Això no es farà des de aquí, hi haurà una classe especial per gestionar els fitxers.
+     * Mètode per carregar imatges des de el directori d'assets i convertir-la en un bitmap.
      *
      * @param context  context de la aplicació principal.
      * @param fileName nom del fitxer on es troba la imatge.
@@ -97,35 +90,38 @@ public class Imatge {
     }
 
     /**
-     * Uses Bitmapfactory to shrink the given image to the expected size.
+     * Aquest mètode fa servir una BitmapFactory per encongir la imatge abans de afegir-la a la UI.
      *
-     * @param nomFitxer   Path to the image.
-     * @param width  expected width of the image.
-     * @param height expected height of the image.
-     * @return a Bitmap with the new size.
+     * @param nomFitxer nom del fitxer on es troba la imatge
+     * @param width     amplada que volem
+     * @param height    alçada que volem
+     * @return Bitmap amb les mides especificades
      */
     public static Bitmap ShrinkBitmap(String nomFitxer, int width, int height) {
+        // Obtenim la ruta al fitxer
         String filename = Uri.parse(nomFitxer).getLastPathSegment();
         String file = Environment.getExternalStorageDirectory() + MainActivity.PICTURES_DIRECTORY + "/" + filename;
-        Log.d("ShrinkBitmap", "Trying to shrink " + file + " to " + width + "x" + height);
+
+        // Creem les opcions de la factoria
         BitmapFactory.Options bmpFactoryOptions = new BitmapFactory.Options();
         bmpFactoryOptions.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
-        Log.d("ShrinkBitmap", "Original size: " + bmpFactoryOptions.outWidth + "x" + bmpFactoryOptions.outHeight);
 
+        // Ajustem els ratios d'alçada i amplada
         int heightRatio = (int) Math.ceil(bmpFactoryOptions.outHeight / (float) height);
         int widthRatio = (int) Math.ceil(bmpFactoryOptions.outWidth / (float) width);
+
+        // Si algun dels dos es superior a 1 els apliquem
         if (heightRatio > 1 || widthRatio > 1) {
             if (heightRatio > widthRatio) {
                 bmpFactoryOptions.inSampleSize = heightRatio;
-                Log.d("ShrinkBitmap", "Shrink ratio: " + heightRatio);
             } else {
                 bmpFactoryOptions.inSampleSize = widthRatio;
-                Log.d("ShrinkBitmap", "Shrink ratio: " + widthRatio);
             }
         }
         bmpFactoryOptions.inJustDecodeBounds = false;
-        bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
+
+        // Generem el bitmap i el retornem
+        Bitmap bitmap = BitmapFactory.decodeFile(file, bmpFactoryOptions);
         return bitmap;
     }
 }

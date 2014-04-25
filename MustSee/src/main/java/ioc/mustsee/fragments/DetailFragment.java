@@ -29,7 +29,7 @@ import ioc.mustsee.ui.ComentariArrayAdapter;
 /**
  * Aquest fragment mostra la informació del lloc i el nom de la categoria.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class DetailFragment extends MustSeeFragment implements View.OnClickListener, OnTaskCompleted {
     private static final String TAG = "DetailFragment";
@@ -50,7 +50,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
 
     // Dades
     private Categoria mCategoria;
-    private DownloadManager mGestor;
+    private DownloadManager mDownloadManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,7 +65,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
     }
 
     /**
-     * Inicialitza els widgets del fragment i els asigna els listener corresponents.
+     * Inicialitza els widgets del fragment i els assigna els listener corresponents.
      */
     @Override
     void initWidgets() {
@@ -73,7 +73,7 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
         mTextViewCategory = (TextView) mView.findViewById(R.id.textViewCategory);
         mTextViewCategory.setOnClickListener(this);
         mTextViewDescription = (TextView) mView.findViewById(R.id.textViewDescription);
-        mTextViewDescription .setMovementMethod(new ScrollingMovementMethod());
+        mTextViewDescription.setMovementMethod(new ScrollingMovementMethod());
         mImageViewPicture = (ImageView) mView.findViewById(R.id.imageViewPicture);
         mImageViewPicture.setOnClickListener(this);
 
@@ -148,50 +148,52 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
 
     }
 
+    /**
+     * Envia el text del quadre de text com a comentari.
+     */
     private void sendComentari() {
         String text = mEditTextComentari.getText().toString();
-        // Comprovem si hi ha cap text
+
+        // Si no hi ha cap text mostrem l'error
         if (text.length() == 0) {
             Toast.makeText(getActivity(), R.string.error_no_text, Toast.LENGTH_SHORT).show();
             return;
         }
 
-
-
-        if (mGestor == null) {
-            mGestor = ((DownloadManager) getActivity());
+        // Si no hi ha instanciat un gestor de descarregues obtenim un.
+        if (mDownloadManager == null) {
+            mDownloadManager = ((DownloadManager) getActivity());
         }
+        mDownloadManager.donwloadInProgress(true);
 
-        mGestor.descarregaEnCurs(true);
-
+        // Obtenim el correu i el password del arxiu de preferencies
         String correu = mPreferences.getString("correu", "");
         String password = mPreferences.getString("password", "");
         int llocId = mCallback.getCurrentLloc().id;
 
-        new RetrieveData().postComment(this, correu, password, text, llocId);
-
-
+        // Iniciem la acció
+        RetrieveData.postComment(this, correu, password, text, llocId);
     }
+
 
     @Override
     public void onTaskCompleted(List result) {
-        // Aqui es comprova el resultat, si es correcte es passa a autenticat
+        mDownloadManager.donwloadInProgress(false);
 
-        Log.d(TAG, "Resultat de autenticar obtingut: " + result.toString());
-        mGestor.descarregaEnCurs(false);
-
-        // El resultat ha de ser una llista d'un únic element amb cert si la connexió ha estat correcte o false en cas contrari
-        boolean success ;
-        if (result.size()==1) {
-            success  = (Boolean) result.get(0);
+        /* El resultat ha de ser una llista d'un únic element amb cert si la connexió ha estat
+        correcte o false en cas contrari */
+        boolean success;
+        if (result.size() == 1) {
+            success = (Boolean) result.get(0);
         } else {
-            success  = false;
+            success = false;
         }
 
         if (success) {
-            // TODO: Si ho refresquem la llista de comentaris
+            // Ha tingut èxit, refresquem la llista de comentaris i mostrem el missatge
             refreshComments();
             Toast.makeText(getActivity(), R.string.comentari_send, Toast.LENGTH_SHORT).show();
+
             // Esborrem el text del EditText
             mEditTextComentari.setText("");
 
@@ -199,20 +201,20 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
             // Si no ho es mostrem missatge d'error
             Toast.makeText(getActivity(), R.string.post_error, Toast.LENGTH_SHORT).show();
         }
-
     }
 
+    /**
+     * Refresca els comentaris cridant a una tasca asíncrona que els recupera els comentaris del
+     * lloc seleccionat actualment del webservice.
+     */
     private void refreshComments() {
-        mGestor.descarregaEnCurs(true);
+        mDownloadManager.donwloadInProgress(true);
 
-        Log.d(TAG, "Refresquem");
-
-        new RetrieveData().getComentarisFromLloc(new OnTaskCompleted() {
+        RetrieveData.getComentarisFromLloc(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
                 Lloc lloc = mCallback.getCurrentLloc();
                 lloc.setComentaris(result);
-                Log.d(TAG, "Tasca completa: " +result.toString());
 
                 // Actualitzar la llista
                 mCustomAdapter.clear();
@@ -220,11 +222,10 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
                     mCustomAdapter.add(comentari);
                     Log.d(TAG, "Afegit un comentari al adapter");
                 }
+                // La ordenem
                 mCustomAdapter.sort();
                 mCustomAdapter.notifyDataSetChanged();
-
-
-                mGestor.descarregaEnCurs(false);
+                mDownloadManager.donwloadInProgress(false);
             }
         }, mCallback.getCurrentLloc().id);
     }

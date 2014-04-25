@@ -1,5 +1,9 @@
 package ioc.mustsee.downloaders;
 
+/**
+ * Aquesta interfície la implementen objectes que porten el control del nombre de descarregues en
+ * curs.
+ */
 public interface DownloadManager {
 
     /**
@@ -8,5 +12,5 @@ public interface DownloadManager {
      * @param descarrega cert al iniciar la descarrega i false al finalitzar.
      * @see DownloadImageAsyncTask
      */
-    void descarregaEnCurs(boolean descarrega);
+    void donwloadInProgress(boolean descarrega);
 }

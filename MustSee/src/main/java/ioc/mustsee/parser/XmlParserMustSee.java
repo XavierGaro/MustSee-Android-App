@@ -14,6 +14,13 @@ import ioc.mustsee.data.Comentari;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
 
+/**
+ * Aquest es un parser concret per analitzar la informació dels arxius XML obtinguts del web service
+ * de la aplicació MustSee.
+ *
+ * @param <T> tipus dels objectes que formaran la llista a retornar
+ * @author Xavier García
+ */
 public class XmlParserMustSee<T> extends XmlParser<T> {
     private static final String TAG = "XmlParserMustSee";
 

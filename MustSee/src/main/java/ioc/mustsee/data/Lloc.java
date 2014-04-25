@@ -12,16 +12,12 @@ import java.util.List;
  * majoria dels atributs son immutables i poden ser llegits directament. Pels que no ho son es
  * faciliten getters i setters segons sigui apropiat. Es fa servir el patró Builder per la
  * construcció.
- * TODO: Afegir també la llista de comentaris sobre el lloc.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class Lloc {
     public static final int NO_ICON = -1;
     public static final LatLng NO_LOCATION = new LatLng(0, 0);
-
-    // Aquest es el comptador per defecte
-    public static int sIdCounter = 10000;
 
     // Posició del usuari
     public static LatLng sPosition;
@@ -38,8 +34,14 @@ public class Lloc {
     private List<Imatge> imatges;
     private List<Comentari> comentaris;
 
+    /**
+     * El constructor es privat, només es poden instanciar objectes de aquesta classe fent servir el
+     * builder incorporat per configurar-lo.
+     *
+     * @param builder objecte amb la configuració per crear el Lloc.
+     */
     private Lloc(LlocBuilder builder) {
-        this.id = (builder.id == -1 ? sIdCounter++ : builder.id);
+        this.id = (builder.id == -1 ? -1 : builder.id);
         this.nom = builder.nom;
         this.descripcio = builder.descripcio;
         this.posicio = builder.posicio;
@@ -47,6 +49,11 @@ public class Lloc {
         this.iconResource = builder.iconResource;
     }
 
+    /**
+     * Afegeix el comentari.
+     *
+     * @param comentari comentari per afegir
+     */
     public void addComentari(Comentari comentari) {
         if (comentaris == null) {
             comentaris = new ArrayList<Comentari>();
@@ -54,6 +61,11 @@ public class Lloc {
         comentaris.add(comentari);
     }
 
+    /**
+     * Afegeix la llista de comentaris als actuals.
+     *
+     * @param comentaris llista de comentaris per afegir
+     */
     public void addComentaris(List<Comentari> comentaris) {
         if (this.comentaris == null) {
             this.comentaris = new ArrayList<Comentari>();
@@ -61,7 +73,11 @@ public class Lloc {
         this.comentaris.addAll(comentaris);
     }
 
-    // Reemplaça la llista actual de comentaris amb la passada com argument
+    /**
+     * Reemplaça la llista actual de comentaris amb la passada com argument
+     *
+     * @param comentaris llista de comentaris que sustituiran als actuals
+     */
     public void setComentaris(List<Comentari> comentaris) {
         this.comentaris = comentaris;
     }
@@ -111,7 +127,6 @@ public class Lloc {
 
     /**
      * Si hi ha cap imatge associada a aquest lloc torna la primera de la llista.
-     * TODO: En cas de no haver imatge hauria de tornar una imatge per defecte.
      *
      * @return primera imatge de la llista o null si no hi ha cap.
      */
@@ -147,7 +162,8 @@ public class Lloc {
         if (sPosition == NO_LOCATION) {
             return -1f;
         }
-        Location.distanceBetween(sPosition.latitude, sPosition.longitude, this.posicio.latitude, this.posicio.longitude, results);
+        Location.distanceBetween(sPosition.latitude, sPosition.longitude, this.posicio.latitude,
+                this.posicio.longitude, results);
         return results[0] / 1000; // Pasem el resultat a km
     }
 

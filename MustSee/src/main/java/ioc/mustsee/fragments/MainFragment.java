@@ -15,11 +15,11 @@ import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_LOG;
 import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_SEARCH;
 
 /**
- * Aquest es el fragment principal que es carrega al iniciar la aplicació. Al reanudar-se comprova
- * les dades emmagatzemades a preferencies i acutalitza la vista com correspongui. Aquest fragment
+ * Aquest es el fragment principal que es carrega al iniciar la aplicació. Al reprendre's comprova
+ * les dades emmagatzemades a preferències i actualitza la vista com correspongui. Aquest fragment
  * permet accedir als fragments d'actualitzar, i les vistes explorar i cerca.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class MainFragment extends MustSeeFragment implements View.OnClickListener {
     private static final String TAG = "MainFragment";
@@ -51,7 +51,7 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     }
 
     /**
-     * Inicalitza els butons, els quadres de text i els afegeix el listener.
+     * Inicialitza els botons, els quadres de text i els afegeix el listener.
      */
     void initWidgets() {
         mImageButtonLog = (ImageButton) mView.findViewById(R.id.imageButtonLog);
@@ -90,8 +90,7 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     }
 
     /**
-     * Esborra les preferencies del arxiu.
-     * TODO: Aquesta es una implementació mínima per testejar.
+     * Esborra les preferències del fitxer.
      */
     private void esborrarPreferencies() {
         SharedPreferences.Editor editor = mPreferences.edit();
@@ -101,8 +100,7 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
     }
 
     /**
-     * Comprova les dades del archiu de preferencia i actualitza la interficie en conseqüència.
-     * TODO: Aquesta es una implementació mínima per testejar.
+     * Comprova les dades del fitxer de preferència i actualitza la interfície en conseqüència.
      */
     private void actualitzarEstat() {
         if (isUserAuthenticated()) {
@@ -110,6 +108,7 @@ public class MainFragment extends MustSeeFragment implements View.OnClickListene
             mImageButtonLog.setBackgroundResource(R.drawable.ic_action_remove);
             mTextViewLog.setText(R.string.logout);
             mAutenticat = true;
+
         } else {
             // Si no existeix mostrem el botó de connectar
             mImageButtonLog.setBackgroundResource(R.drawable.ic_action_person);

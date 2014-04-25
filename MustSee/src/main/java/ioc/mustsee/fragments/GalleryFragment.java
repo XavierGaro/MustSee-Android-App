@@ -13,7 +13,7 @@ import ioc.mustsee.ui.GridViewGalleryAdapter;
 /**
  * Fragment que mostra en una graella totes les imatges pertanyents al lloc seleccionat actualment.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class GalleryFragment extends MustSeeFragment implements AdapterView.OnItemClickListener {
     private static final String TAG = "GalleryFragment";

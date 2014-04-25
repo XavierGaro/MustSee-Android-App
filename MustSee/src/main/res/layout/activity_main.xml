@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
 
     <FrameLayout
         android:id="@+id/containerOne"
@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         tools:context="ioc.mustsee.activities.MainActivity"
-        tools:ignore="MergeRootFrame" />
+        tools:ignore="MergeRootFrame"/>
 
 </LinearLayout>

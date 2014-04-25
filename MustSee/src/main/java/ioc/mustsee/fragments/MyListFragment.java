@@ -25,7 +25,7 @@ import static ioc.mustsee.fragments.OnFragmentActionListener.ACTION_DETAIL;
  * Aquest fragment mostra un Spinner personalitzat amb les categories i un ListView amb la
  * informació dels llocs que coincideixin amb la categoria seleccionada.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class MyListFragment extends MustSeeFragment implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final String TAG = "MyListFragment";
@@ -98,7 +98,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int categoriaId = mCategories.get(position).id;
         if (mAdapterLlocs == null) {
-            return;
+            // No fem res
 
         } else if (categoriaId == 0) {
             // Seleccionem tots els llocs
@@ -121,7 +121,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     }
 
     /**
-     * Listener cridat pel ListView al clicar sobre un element de la llista, segons si ja teniem el
+     * Listener cridat pel ListView al clicar sobre un element de la llista, segons si ja teníem el
      * mateix lloc seleccionat, si està disponible la vista de detall o de mapa realitzarà diferents
      * accions sobre l'activitat principal.
      *
@@ -150,7 +150,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     }
 
     /**
-     * Estableix el lloc passat com argument com a lloc seleccionat, intenta marcarlo com seleccionat
+     * Estableix el lloc passat com argument com a lloc seleccionat, intenta marcar-lo com seleccionat
      * i mou la barra de scroll suaument fins a la seva posició. Aquest mètode es cridat des de la
      * activitat principal per actualitzar la posició de la llista. Degut al funcionament del focus
      * i el mode Touch es es normal que no es mostri la selecció quan toquem altres parts de la
@@ -173,7 +173,7 @@ public class MyListFragment extends MustSeeFragment implements AdapterView.OnIte
     }
 
     /**
-     * Reordena la llista i actualitza les dades, això permet tenir les distancies actualitzades i
+     * Re-ordena la llista i actualitza les dades, això permet tenir les distancies actualitzades i
      * ordenades.
      */
     public void updateListView() {

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -24,7 +23,9 @@ import ioc.mustsee.R;
 import ioc.mustsee.data.Categoria;
 import ioc.mustsee.data.Imatge;
 import ioc.mustsee.data.Lloc;
-import ioc.mustsee.database.DBMustSee;
+import ioc.mustsee.downloaders.DownloadImageAsyncTask;
+import ioc.mustsee.downloaders.DownloadManager;
+import ioc.mustsee.downloaders.OnTaskCompleted;
 import ioc.mustsee.fragments.DetailFragment;
 import ioc.mustsee.fragments.GalleryFragment;
 import ioc.mustsee.fragments.LoginFragment;
@@ -33,16 +34,13 @@ import ioc.mustsee.fragments.MyListFragment;
 import ioc.mustsee.fragments.MyMapFragment;
 import ioc.mustsee.fragments.OnFragmentActionListener;
 import ioc.mustsee.fragments.PictureFragment;
-import ioc.mustsee.downloaders.DownloadImageAsyncTask;
-import ioc.mustsee.downloaders.DownloadManager;
-import ioc.mustsee.downloaders.OnTaskCompleted;
 import ioc.mustsee.parser.RetrieveData;
 
 /**
  * Aquesta es la classe principal de la aplicació. Des de aquí es gestionen les accions i es
  * possibilita la comunicació amb la base de dades i entre els diferents fragments.
  *
- * @author Javier García
+ * @author Xavier García
  */
 public class MainActivity extends ActionBarActivity implements OnFragmentActionListener, DownloadManager {
     private static final String TAG = "MainActivity";
@@ -76,9 +74,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private LinkedList<Integer[]> mActionHistory = new LinkedList<Integer[]>();
     private boolean mFullScreen = false;
 
-    // Base de dades
-    private DBMustSee db = new DBMustSee(this);
-
     // Dades
     private List<Lloc> mLlocs;
     private List<Categoria> mCategories;
@@ -95,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     LocationManager mLocationManager;
     String locationProvider = LocationManager.GPS_PROVIDER;
 
-    // Gestor de descarregas
+    // Gestor de descarregues
     private int descarregues;
     private ProgressDialog dialog;
 
@@ -104,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Si s'esta restaurant un estat previ no fem res per evitar que es superposin els fragments.
+        // Si s'està restaurant un estat previ no fem res per evitar que es superposin els fragments.
         if (savedInstanceState != null) return;
 
         // Inicialitzem els widgets
@@ -116,7 +111,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         initLocation();
 
 
-        // Inicialitzel la localització
+        // Inicialitzem la localització
         updateLloc();
 
         // Cridem a la acció principal per carregar el primer fragment.
@@ -135,10 +130,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * Estableix quin fragment s'ha de carregar segons si la interficie esta composada per un panell
-     * o per dos. TODO: Afegir el control per i la crida al mètode per quan només hi hagi un panell.
+     * Estableix quin fragment s'ha de carregar segons si la interfície esta composada per un panell
+     * o per dos.
      *
-     * @param reference referencia del tipus de panell que volem carregar.
+     * @param reference referència del tipus de panell que volem carregar.
      */
     private void loadFragment(int reference) {
         loadFragmentDuePane(reference);
@@ -149,7 +144,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
      * mapa i la llista també els emmagatzema per poder cridar-los des de altres punts de la
      * activitat.
      *
-     * @param reference referencia del tipus de panell que volem carregar.
+     * @param reference referència del tipus de panell que volem carregar.
      */
     private void loadFragmentDuePane(int reference) {
         Fragment fragment = null;
@@ -219,11 +214,11 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * Métode cridat pels fragments adjuntats a aquesta activitat per comunicar-se amb ella. Accepta
-     * un bundle amb la informació extra necessaria per portar a terme l'acció.
+     * Mètode cridat pels fragments adjuntats a aquesta activitat per comunicar-se amb ella. Accepta
+     * un bundle amb la informació extra necessària per portar a terme l'acció.
      *
      * @param action acció a portar a terme.
-     * @param bundle dades necesaries per portar a terme la acció.
+     * @param bundle dades necessàries per portar a terme la acció.
      */
     @Override
     public void OnActionDetected(int action, Bundle bundle) {
@@ -232,7 +227,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * Métode cridat pels fragments adjuntats a aquesta activitat per comunicar-se amb ella. En
+     * Mètode cridat pels fragments adjuntats a aquesta activitat per comunicar-se amb ella. En
      * aquest cas no accepta informació extra.
      *
      * @param action acció a portar a terme.
@@ -316,7 +311,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     /**
      * Elimina la última posició del stack d'accions i restaura la visibilitat del segon fragment
      * si troba més d'un fragment.
-     * TODO: Hi ha que adaptar-lo quan només hi hagi un panell.
      *
      * @return true si s'ha pogut restaurar o false si no quedan més accions..
      */
@@ -338,7 +332,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * TODO: Això s'ha de obtenir de la base de dades
      * Retorna la llista completa de Llocs.
      *
      * @return llista completa de llocs.
@@ -346,21 +339,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     @Override
     public List<Lloc> getLlocs() {
         return mLlocs;
-    }
-
-    /**
-     * TODO: Això s'ha de obtenir de la base de dades
-     * Retorna la llista de llocs filtrats, o la llista completa si no s'ha aplicat cap filtre
-     *
-     * @return llista filtrada o llista completa de llocs.
-     */
-    @Override
-    public List<Lloc> getFilteredLlocs() {
-        if (mFilteredLlocs == null) {
-            return mLlocs;
-        } else {
-            return mFilteredLlocs;
-        }
     }
 
     /**
@@ -379,7 +357,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * TODO: Això s'ha de obtenir de la base de dades
      * Retorna la llista completa de categories.
      *
      * @return llista completa de categories.
@@ -400,7 +377,8 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * Estableix el lloc actual, i segons la acció actual actualiza els fragments amb aquesta informació.
+     * Estableix el lloc actual, i segons la acció actual actualitza els fragments amb aquesta
+     * informació.
      *
      * @param lloc lloc per establir com actual.
      */
@@ -416,7 +394,7 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * Finalitza la transacció de fragments i la guarda al BackStack segons el valor pasat com
+     * Finalitza la transacció de fragments i la guarda al BackStack segons el valor passat com
      * argument.
      *
      * @param saveToBackStack true si es vol guardar o false en cas contrari.
@@ -443,28 +421,18 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * Carrega la llista completa de llocs de la base de dades.
-     * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
-     * la llista buida.
+     * Connecta amb el web service i recupera la llista complea de llocs.
      */
     private void initLlocs() {
-        //db.initLlocs(); // TODO: Eliminar, això refà la taula cada vegada
-
-        // Mostrem el dialog
-        //final ProgressDialog dialog = new ProgressDialog(this);
-        //dialog.setMessage(getResources().getString(R.string.dialog_wait));
-        //dialog.show();
-        descarregaEnCurs(true);
+        donwloadInProgress(true);
 
         new RetrieveData().getLlocs(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
-                // Ocultem el dialog
-                //dialog.dismiss();
                 mLlocs = result;
-                descarregaEnCurs(false);
+                donwloadInProgress(false);
 
-                // Comprovem si hi han imatges per descarregar
+                // Recorrem tots els llocs i comprovem si hi ha cap imatge per descarregar
                 List<String> urlImatges = new ArrayList<String>();
 
                 for (Lloc lloc : mLlocs) {
@@ -473,42 +441,21 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                     }
                 }
 
+                // Llencem una nova tasca per descarregar les imatges que siguin necessaries
                 new DownloadImageAsyncTask(MainActivity.this, PICTURES_DIRECTORY).execute(urlImatges.toArray(new String[urlImatges.size()]));
 
             }
         });
     }
 
-    /*
-
-    try {
-        mLlocs = db.open().getLlocs();
-    } catch (SQLException e) {
-        // Si trobem cap error ho mostrem al log y tornem la llista buida
-        Log.e(TAG, getResources().getString(R.string.error_db), e);
-        mLlocs = new ArrayList<Lloc>();
-    } finally {
-        db.close();
-    }
-}
-
-/**
- * TODO: això ha de anar en una classe apart, a l'activitat ha d'arribar sempre el resultat o
- * la llista buida.
- * Categories de proves
- */
+    /**
+     * Connecta amb el web service i obté la llista completa de categories.
+     */
     private void initCategories() {
-        //db.initCategories(); // TODO: Eliminar, això refà la taula cada vegada
-
         mCategories = new ArrayList<Categoria>();
         mCategories.add(new Categoria(0, getResources().getString(R.string.show_all_llocs), null));
 
-        // Mostrem el dialog
-        //final ProgressDialog dialog = new ProgressDialog(this);
-        //dialog.setMessage(getResources().getString(R.string.dialog_wait));
-        //dialog.show();
-
-        descarregaEnCurs(true);
+        donwloadInProgress(true);
 
         new RetrieveData().getCategories(new OnTaskCompleted() {
             @Override
@@ -516,23 +463,10 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 // Ocultem el dialog
                 //dialog.dismiss();
                 mCategories.addAll(result);
-                descarregaEnCurs(false);
+                donwloadInProgress(false);
             }
         });
     }
-/*
-
-        try {
-            mCategories = db.open().getCategories();
-        } catch (SQLException e) {
-            // Si trobem cap error ho mostrem al log y tornem la llista buida
-            Log.e(TAG, getResources().getString(R.string.error_db), e);
-            mCategories = new ArrayList<Categoria>();
-        } finally {
-            db.close();
-        }
-    }
-*/
 
     /**
      * Inicialitza el gestor de localització i el listener que respondrà als canvis de localització.
@@ -596,29 +530,26 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * Agualitza la posició del usuari a la classe Lloc per la última localització coneguda.
+     * Actualitza la posició del usuari a la classe Lloc per la última localització coneguda.
      */
     public void updateLloc() {
         Lloc.sPosition = getLastKnownPosition();
     }
 
     /**
-     * Aquest métode es crida al començar i finalitzar la descarrega de dades i
-     * imatges. Mentre hi ha descarregues en curs es mostra la barra de progres
-     * i es desactiva el botó de refresh.
+     * Aquest mètode es crida al començar i finalitzar la descarrega de dades i imatges. Mentre hi
+     * ha descarregues en curs es mostra el dialog de progress i es bloqueja la pantalla.
      *
-     * @param descarrega si es true indica que inicia la descarrega en cas contrari
-     *                   s'indica que finalitza la descarrega.
+     * @param descarrega si es true indica que inicia la descarrega en cas contrari s'indica que
+     *                   finalitza la descarrega.
      */
     @Override
-    public synchronized void descarregaEnCurs(boolean descarrega) {
+    public synchronized void donwloadInProgress(boolean descarrega) {
         // Actualitzem el comptador
         if (descarrega) {
             descarregues++;
-            Log.d(TAG, "Descarregues en curs: " + descarregues);
         } else {
             descarregues--;
-            Log.d(TAG, "Descarregues en curs: " + descarregues);
         }
 
         if (descarregues > 0) {
@@ -631,26 +562,17 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
                 }
 
                 dialog.setCancelable(false);
-                Log.d(TAG, "Creem Dialog");
             }
 
             if (!dialog.isShowing()) {
                 dialog.setMessage(getResources().getString(R.string.dialog_wait));
                 dialog.show();
-                Log.d(TAG, "Mostrem Dialog");
-            } else {
-                Log.d(TAG, "Ja s'està mostrant");
             }
 
         } else {
-            // No queden més descarregues pendents
-
-            // Ocultem la barra de progrés
+            // No queden més descarregues pendents, ocultem la barra de progrés
             if (dialog.isShowing()) dialog.dismiss();
             dialog = null;
-            Log.d(TAG, "Ocultem Dialog");
         }
     }
-
-
 }
