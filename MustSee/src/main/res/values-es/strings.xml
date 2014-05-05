@@ -32,6 +32,7 @@
     <string name="error_no_text">Error, no hay ningún texto para enviar</string>
     <string name="post_error">Error al enviar el comentario, por favor vuelve a intentarlo</string>
     <string name="auth_error">Error de autenticación</string>
+    <string name="download_error">Error descargando datos, por favor intentalo más tarde</string>
 
     <!-- Dialogs -->
     <string name="dialog_wait">Por favor, espera...</string>

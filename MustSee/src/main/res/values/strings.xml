@@ -32,6 +32,7 @@
     <string name="error_no_text">Error, there is no text to send</string>
     <string name="post_error">Error posting comment, please retry.</string>
     <string name="auth_error">Authentication error</string>
+    <string name="download_error">Error downloading data, please try again later.</string>
 
     <!-- Dialogs -->
     <string name="dialog_wait">Please wait...</string>
@@ -40,6 +41,7 @@
     <string name="comentari_send">Comment send</string>
     <string name="auth_success">You are now authenticated</string>
     <string name="show_all_llocs">Show all</string>
+
 
 
 </resources>

@@ -220,7 +220,6 @@ public class DetailFragment extends MustSeeFragment implements View.OnClickListe
                 mCustomAdapter.clear();
                 for (Comentari comentari : (List<Comentari>) result) {
                     mCustomAdapter.add(comentari);
-                    Log.d(TAG, "Afegit un comentari al adapter");
                 }
                 // La ordenem
                 mCustomAdapter.sort();

@@ -19,10 +19,10 @@ import ioc.mustsee.downloaders.OnTaskCompleted;
 public class RetrieveData {
     private static final String TAG = "RetrieveData";
 
-    private static final String URL_LLOCS = "http://mustseers.hol.es/api/v1/llocs.xml";
-    private static final String URL_CATEGORIES = "http://mustseers.hol.es/api/v1/categories.xml";
-    private static final String URL_AUTH = "http://mustseers.hol.es/api/v1/auth.xml";
-    private static final String URL_COMMENT_FROM_LLOC = "http://mustseers.hol.es/api/v1/comentaris/llocs/";
+    private static final String URL_LLOCS = "http://mustseers.byethost15.com/api/v1/llocs.xml";
+    private static final String URL_CATEGORIES = "http://mustseers.byethost15.com/api/v1/categories.xml";
+    private static final String URL_AUTH = "http://mustseers.byethost15.com/api/v1/auth.xml";
+    private static final String URL_COMMENT_FROM_LLOC = "http://mustseers.byethost15.com/api/v1/comentaris/llocs/";
 
     /**
      * Retorna la llista completa de llocs.
@@ -43,7 +43,7 @@ public class RetrieveData {
     }
 
     /**
-     * Retorna una llista amb amb el resultat de la autenticació, per ser correcte només ha de
+     * Retorna una llista amb el resultat de la autenticació, per ser correcte només ha de
      * retornar un booleà que serà true.
      *
      * @param callback objecte que rebrà la resposta

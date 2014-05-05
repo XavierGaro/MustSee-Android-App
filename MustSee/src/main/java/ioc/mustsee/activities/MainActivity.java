@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -342,7 +343,6 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     }
 
     /**
-     * TODO: La llista s'ha de filtrar a la base de dades
      * Estableix la llista de llocs filtrada i actualitza els marcadors si hi ha el fragment de
      * mapa carregat.
      *
@@ -426,11 +426,18 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
     private void initLlocs() {
         donwloadInProgress(true);
 
+
         new RetrieveData().getLlocs(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
                 mLlocs = result;
                 donwloadInProgress(false);
+
+                // Si no s'ha rebut cap lloc es que hi ha hagut un error al descarregar
+                if (result.isEmpty()) {
+                    Toast.makeText(MainActivity.this, R.string.download_error, Toast.LENGTH_SHORT).show();
+                            finish();
+                }
 
                 // Recorrem tots els llocs i comprovem si hi ha cap imatge per descarregar
                 List<String> urlImatges = new ArrayList<String>();
@@ -460,10 +467,14 @@ public class MainActivity extends ActionBarActivity implements OnFragmentActionL
         new RetrieveData().getCategories(new OnTaskCompleted() {
             @Override
             public void onTaskCompleted(List result) {
-                // Ocultem el dialog
-                //dialog.dismiss();
                 mCategories.addAll(result);
                 donwloadInProgress(false);
+
+                // Si no s'ha rebut cap categoria es que hi ha hagut un error al descarregar
+                if (result.isEmpty()) {
+                    Toast.makeText(MainActivity.this, R.string.download_error, Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
         });
     }
